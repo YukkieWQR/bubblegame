@@ -125,32 +125,6 @@ function bonusEligible() {
         }
     })
 }
-
-$('.dailyTaskClaim').click(function () {
-    const url = "/daily_task/"
-    let username = $('body').data('username');
-    let csrfToken = $('body').data('csrftoken');
-    const dailyTaskClaim = $('.dailyTaskClaim');
-    const dailyContainer = $('.dailyContainer');
-    $.ajax({
-        url: url,
-        method: "POST",
-        data: {
-            'username': username,
-            'csrfmiddlewaretoken': csrfToken
-        },
-        success: function(response){
-            alert('You have successfully received your reward!');
-            dailyTaskClaim.remove();
-            dailyContainer.append(`<div class="doneButton">Готово</div>`)
-        },
-        error: function(response){
-            alert('Daily bonus already received');
-            dailyTaskClaim.remove();
-            dailyContainer.append(`<div class="doneButton">Готово</div>`)
-        }
-    });
-})
 function taskList() {
         const url = "/get_data_about_user/"
         let username = $('body').data('username');
@@ -169,7 +143,7 @@ function taskList() {
                         let taskName = task.name;
                         let taskCost = task.cost;
                         let taskImg = task.picture.replace('myapp/', '../');
-                        taskCost = parseFloat(taskCost).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+                        taskCost = parseFloat(taskCost).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                         let taskStatus = "Start";
                         let taskPk = null
                         response.tasks.forEach((task) => {
@@ -190,66 +164,63 @@ function taskList() {
                             specialTasks.append(`
                             <div class="taskContainer container${i}" data-taskPk="${taskPk}">
                                 <div class="dailyCount task${i}">
-                                    <div>
-                                        <img src="../static/images/calendar.png" alt="" width="64px" height="auto">
+                                    <div style="margin-right: 14px">
+                                        <img src="../static/images/calendar.png" alt="" width="36px" height="auto">
                                     </div>
                                     <div style="gap: 3px; display: flex; flex-direction: column">
-                                        <div style="display: flex; flex-direction: row; gap: 5px; font: 500 12px var(--second-family); letter-spacing: -0.03em; color: #fff;">
+                                        <div style="display: flex; flex-direction: row; gap: 5px; font: 600 13px var(--font-family); letter-spacing: -0.03em; color: var(--white);">
                                             <div>${taskName}</div>
                                         </div>
-                                        <div style="font: 600 11px var(--second-family); letter-spacing: -0.04em; color: #fff; display: flex; flex-direction: row; align-items: center; gap: 5px">
-                                            <img src="../static/images/airdrop.png" alt="" width="17px">
-                                            <div id="rewardCost">+${taskCost}</div>
+                                        <div style="font: 600 11px var(--font-family);letter-spacing: -0.04em;background: linear-gradient(89deg, #d1317a 0%, #da294c 17.57%, #dd263d 35.33%, #e87d31 81.66%, #eda62c 91.09%, #f2d026 98.64%);background-clip: text;-webkit-background-clip: text;-webkit-text-fill-color: transparent; display: flex; flex-direction: row; align-items: center; gap: 5px">
+                                            <div id="rewardCost">+ ${taskCost} BUBBLES</div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="doneButton start${i}">Готово</div>
+                                <div class="doneButton start${i}">Done</div>
                             </div>
                         `);
                         } else if (taskStatus === "Claim") {
                             specialTasks.append(`
                             <div class="taskContainer container${i}" data-taskPk="${taskPk}">
                                 <div class="dailyCount task${i}">
-                                    <div>
-                                        <img src="../static/images/calendar.png" alt="" width="64px" height="auto">
+                                    <div style="margin-right: 14px;">
+                                        <img src="../static/images/calendar.png" alt="" width="36px" height="auto">
                                     </div>
                                     <div style="gap: 3px; display: flex; flex-direction: column">
-                                        <div style="display: flex; flex-direction: row; gap: 5px; font: 500 12px var(--second-family); letter-spacing: -0.03em; color: #fff;">
+                                        <div style="display: flex; flex-direction: row; gap: 5px; font: 600 13px var(--font-family); letter-spacing: -0.03em; color: var(--white);">
                                             <div>${taskName}</div>
                                         </div>
                                         <div style="font: 600 11px var(--second-family); letter-spacing: -0.04em; color: #fff; display: flex; flex-direction: row; align-items: center; gap: 5px">
-                                            <img src="../static/images/airdrop.png" alt="" width="17px">
-                                            <div id="rewardCost">+${taskCost}</div>
+                                            <div id="rewardCost">+ ${taskCost} BUBBLES</div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="claimButton start${i}">Получить</div>
+                                <div class="claimButton start${i}">Claim</div>
                             </div>
                         `);
                         } else {
                             specialTasks.append(`
                             <div class="taskContainer container${i}" data-taskPk="${taskPk}">
                                 <div class="dailyCount task${i}">
-                                    <div>
-                                        <img src="../static/images/calendar.png" alt="" width="64px" height="auto">
+                                    <div style="margin-right: 14px;">
+                                        <img src="../static/images/calendar.png" alt="" width="36px" height="auto">
                                     </div>
                                     <div style="gap: 3px; display: flex; flex-direction: column">
-                                        <div style="display: flex; flex-direction: row; gap: 5px; font: 500 12px var(--second-family); letter-spacing: -0.03em; color: #fff;">
+                                        <div style="display: flex; flex-direction: row; gap: 5px; font: 600 13px var(--font-family); letter-spacing: -0.03em; color: var(--white);">
                                             <div>${taskName}</div>
                                         </div>
                                         <div style="font: 600 11px var(--second-family); letter-spacing: -0.04em; color: #fff; display: flex; flex-direction: row; align-items: center; gap: 5px">
-                                            <img src="../static/images/airdrop.png" alt="" width="17px">
-                                            <div id="rewardCost">+${taskCost}</div>
+                                            <div id="rewardCost">+ ${taskCost} BUBBLES</div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="startButton start${i}">Начать</div>
+                                <div class="startButton start${i}">Start</div>
                             </div>
                         `);
                         }
                     });
                 } else {
-                    specialTasks.append('<div class="noFriends">Заданий нет</div>');
+                    specialTasks.append('<div class="noFriends">No tasks yet</div>');
                 }
             },
             error: function(response){
@@ -279,13 +250,13 @@ $(document).ready(function() {
             },
             success: function(response){
                 if (button.hasClass('startButton')) {
-                    button.removeClass('startButton').addClass('claimButton').text('Получить');
+                    button.removeClass('startButton').addClass('claimButton').text('Claim');
                     const redirectUrl = response.link;
                     Telegram.WebApp.ready();
                     Telegram.WebApp.expand();
                     Telegram.WebApp.openLink(redirectUrl);
                 } else if (button.hasClass('claimButton')) {
-                    button.removeClass('claimButton').addClass('doneButton').text('Готово');
+                    button.removeClass('claimButton').addClass('doneButton').text('Done');
                 }
             },
             error: function(response){

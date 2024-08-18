@@ -74,8 +74,10 @@ function getFriendsListData() {
                     friendList.append(`
             <div class="profitClaim">
                 <div class="friendName">
-                    <img src="../static/images/userAvatar.png" alt="" height="29px" width="29px">
-                    ${friendName}
+                    <img src="../static/images/userAvatar.png" alt="" height="36px">
+                    <div class="friendsCount">8,488</div>Friends
+                    <img src="../static/images/ellipse.png" alt="" height="24px">
+                    <div class="earnedContainer">33,333 Earned</div>
                 </div>
             </div>`);
                 }

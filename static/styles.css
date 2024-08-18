@@ -868,10 +868,9 @@ img {
     justify-content: center;
     gap: 9px;
     padding: 5px 0;
-    font: 700 19px var(--second-family);
-    letter-spacing: -0.01em;
-    text-align: center;
-    color: #fff;
+    font: 600 18px var(--font-family);
+    letter-spacing: -0.02em;
+    color: var(--white);
 }
 .mineMenu {
     display: flex;

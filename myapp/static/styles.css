@@ -1,12 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Nova+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nova+Mono&display=swap');
 :root {
-    --font-family: "Roboto", sans-serif;
-    --second-family: "Montserrat", sans-serif;
-    --third-family: "SF Pro Display", sans-serif;
-    --font3: "Inter", sans-serif;
+    --font-family: "Montserrat", sans-serif;
+    --second-family: "Nova Mono", sans-serif;
 }
 :root {
-    --main: #4362f6;
-    --gray: #606265;
+    --gray-nav-bar: #7f7f7f;
+    --black: #000;
+    --white: #fff;
 }
 body {
     display: flex;
@@ -33,7 +34,7 @@ img {
     height: 100vh;
     display: flex;
     flex-direction: column;
-    background: #1c1f24;
+    background: #19181d;
 }
 .wheel-container {
     position: relative;
@@ -245,12 +246,11 @@ img {
 .main {
     display: flex;
     width: inherit;
-    height: 100%;
+    height: 85%;
     align-items: center;
     position: relative;
     flex-direction: column;
-    margin: 0.25rem 0;
-    margin-bottom: 61px;
+    margin-bottom: 86px;
 }
 .clickButton {
     position: absolute;
@@ -291,37 +291,38 @@ img {
     display: flex;
     align-items: center;
     justify-content: center;
-    font: 800 17px var(--second-family);
-    letter-spacing: -0.02em;
-    color: #fff;
-    border-radius: 16px;
-    width: 89px;
-    height: 45px;
-    background: #1c3460;
+    font: 600 13px var(--font-family);
+    letter-spacing: -0.03em;
+    color: var(--white);
+    border-radius: 14px;
+    width: 60px;
+    height: 29px;
+    background: #727272;
 }
 .doneButton {
     display: flex;
     align-items: center;
     justify-content: center;
-    font: 800 17px var(--second-family);
-    letter-spacing: -0.02em;
-    color: var(--gray);
-    border-radius: 16px;
-    width: 89px;
-    height: 45px;
-    background: #151515;
+    font: 600 13px var(--font-family);
+    letter-spacing: -0.03em;
+    color: var(--white);
+    border-radius: 14px;
+    width: 60px;
+    height: 29px;
+    background: #727272;
+    opacity: 0.3;
 }
 .startButton {
     display: flex;
     align-items: center;
     justify-content: center;
-    font: 800 17px var(--second-family);
-    letter-spacing: -0.02em;
-    color: #fff;
-    border-radius: 16px;
-    width: 89px;
-    height: 45px;
-    background: var(--main);
+    font: 600 13px var(--font-family);
+    letter-spacing: -0.03em;
+    color: var(--white);
+    border-radius: 14px;
+    width: 60px;
+    height: 29px;
+    background: linear-gradient(89deg, #d1317a 0%, #da294c 17.57%, #dd263d 35.33%, #e87d31 81.66%, #eda62c 91.09%, #f2d026 98.64%);
 }
 .booster {
     display: flex;
@@ -372,10 +373,10 @@ img {
     background: #151515;
 }
 .menuSection {
-    font: 700 10px var(--second-family);
+    font: 600 10px var(--font-family);
     letter-spacing: -0.04em;
     text-align: center;
-    color: var(--gray);
+    color: var(--gray-nav-bar);
     gap: 0.5rem;
     display: flex;
     align-items: center;
@@ -405,10 +406,13 @@ img {
     background: #6588cc;
 }
 .activePage {
-    font: 600 10px var(--second-family);
+    font: 600 10px var(--font-family);
     letter-spacing: -0.04em;
     text-align: center;
-    color: #fff !important;
+    background: linear-gradient(89deg, #d1317a 0%, #da294c 17.57%, #dd263d 35.33%, #e87d31 81.66%, #eda62c 91.09%, #f2d026 98.64%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 .dailyBoost {
     display: flex;
@@ -577,18 +581,18 @@ img {
     color: #fff;
 }
 .inviteFriendsHeader {
-    margin: 15px 0;
-    font: 700 27px var(--second-family);
+    margin: 15px 2rem 0 2rem;
+    font: 500 28px var(--font-family);
     letter-spacing: -0.01em;
     text-align: center;
-    color: #fff;
+    color: var(--white);
 }
 .inviteContainer {
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: -webkit-fill-available;
-    margin: 5px 1rem;
+    margin: 5px 1rem 46px 1rem;
     gap: 11px;
 }
 .copyInvite {
@@ -604,13 +608,13 @@ img {
     display: flex;
     align-items: center;
     justify-content: center;
-    font: 800 17px var(--second-family);
-    letter-spacing: -0.02em;
-    color: #fff;
-    border-radius: 20px;
+    font: 700 15px var(--font-family);
+    letter-spacing: -0.03em;
+    color: var(--white);
+    border-radius: 8px;
     width: 100%;
     height: 53px;
-    background: linear-gradient(180deg, #d74242 0%, #cb2b2b 100%);
+    background: linear-gradient(89deg, #d1317a 0%, #da294c 17.57%, #dd263d 35.33%, #e87d31 81.66%, #eda62c 91.09%, #f2d026 98.64%);
 }
 .inviteFriendsReward {
     display: flex;
@@ -628,11 +632,12 @@ img {
     padding: 18px 16px;
 }
 #rewardCost {
-    display: flex;
-    flex-direction: row;
-    font: 600 12px var(--second-family);
-    letter-spacing: -0.03em;
-    color: #fff;
+    font: 600 11px var(--font-family);
+    letter-spacing: -0.04em;
+    background: linear-gradient(89deg, #d1317a 0%, #da294c 17.57%, #dd263d 35.33%, #e87d31 81.66%, #eda62c 91.09%, #f2d026 98.64%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 .profitContainer {
     display: flex;
@@ -652,8 +657,6 @@ img {
     border-radius: 20px;
     width: -webkit-fill-available;
     margin: 8px 0;
-    padding: 5px 4px 5px 20px;
-    background: #2455b6;
 }
 .friendsContainer {
     display: flex;
@@ -663,9 +666,24 @@ img {
     margin: 0 1rem;
 }
 .friendsContainerHeader {
-    font: 700 15px var(--second-family);
+    font: 600 18px var(--font-family);
+    letter-spacing: -0.02em;
+    color: var(--white);
+}
+.refferalText {
+    font: 500 16px var(--font-family);
     letter-spacing: -0.03em;
-    color: #fff;
+    text-align: center;
+    color: var(--white);
+    margin: 0 2rem 28px 2rem;
+}
+.earnedContainer {
+    font: 600 18px var(--font-family);
+    letter-spacing: -0.02em;
+    background: linear-gradient(89deg, #d1317a 0%, #da294c 17.57%, #dd263d 35.33%, #e87d31 81.66%, #eda62c 91.09%, #f2d026 98.64%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 .friendList {
     display: flex;
@@ -733,9 +751,10 @@ img {
     justify-content: flex-start;
     width: -webkit-fill-available;
     margin: 0 1rem;
-    font: 700 15px var(--second-family);
-    letter-spacing: -0.03em;
-    color: #fff;
+    margin-top: 40px;
+    font: 600 18px var(--font-family);
+    letter-spacing: -0.02em;
+    color: var(--white);
 }
 .taskContainer {
     display: flex;
@@ -746,7 +765,6 @@ img {
     width: -webkit-fill-available;
     margin: 8px 1rem;
     padding: 0 4px 0 0;
-    background: #2455b6;
 }
 .dailyCount {
     display: flex;
@@ -967,10 +985,9 @@ img {
     justify-content: center;
     gap: 9px;
     padding: 5px 0;
-    font: 700 19px var(--second-family);
-    letter-spacing: -0.01em;
-    text-align: center;
-    color: #fff;
+    font: 600 18px var(--font-family);
+    letter-spacing: -0.02em;
+    color: var(--white);
 }
 .mineMenu {
     display: flex;
@@ -1152,6 +1169,42 @@ img {
         transform: rotate(360deg);
     }
 }
+#wallet {
+    font: 1000 28px var(--second-family);
+    letter-spacing: -0.01em;
+    background: linear-gradient(89deg, #d1317a 0%, #da294c 17.57%, #dd263d 35.33%, #e87d31 81.66%, #eda62c 91.09%, #f2d026 98.64%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.bubbles {
+    font: 400 20px var(--font-family);
+    letter-spacing: -0.02em;
+    color: var(--white);
+    margin-top: 0.5rem;
+}
+.claimBubbles {
+    position: absolute;
+    bottom: 0;
+    border-radius: 8px;
+    width: 90%;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: 700 15px var(--font-family);
+    letter-spacing: -0.03em;
+    color: var(--white);
+    background: linear-gradient(89deg, #d1317a 0%, #da294c 17.57%, #dd263d 35.33%, #e87d31 81.66%, #eda62c 91.09%, #f2d026 98.64%);
+}
+.friendsCount {
+    font: 600 18px var(--font-family);
+    letter-spacing: -0.02em;
+    background: linear-gradient(89deg, #d1317a 0%, #da294c 17.57%, #dd263d 35.33%, #e87d31 81.66%, #eda62c 91.09%, #f2d026 98.64%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 .footer {
     position: fixed;
     bottom: 0;
@@ -1159,10 +1212,10 @@ img {
     width: 100%;
     padding-bottom: 15px;
     padding-top: 10px;
-    /* border-radius: 12px 12px 0 0; */
+    border-radius: 12px 12px 0 0;
     height: 61px;
     display: flex;
-    background: #191a1d;
+    background: #121212;
     align-items: center;
     justify-content: space-between;
 }
