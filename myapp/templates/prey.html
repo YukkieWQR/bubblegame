@@ -1,0 +1,95 @@
+<body data-username="{{ user.username }}" data-csrfToken="{{ csrf_token }}">
+<div class="header">
+    <div class="userInfo">
+        <div class="userAvatar" style="height: 39px">
+            <img src="../static/images/userAvatar.png" alt="" style="border-radius: 100%; height: 39px; width: 39px">
+        </div>
+        <div class="userName">
+            <div class="userNameContainer">{{ user.username }}</div>
+            <div style="font: 500 11px var(--font-family); letter-spacing: -0.01em; text-align: left; color: #fff;">CEO</div>
+        </div>
+    </div>
+    <div class="headerButtons">
+        <div class="levelInfoMain">
+            <div id="level">{{ userlevelname }}</div>
+            <div class="pointsCount">
+                <div class="currentPoints" id="level_count" style="margin-right: 5px;">{{ user.level }}</div>
+                <div class="neededPoints">/ 10</div>
+            </div>
+        </div>
+        <div class="profitInfoMain">
+            Прибыль в час
+            <div class="infoData">
+                <img src="../static/images/coinTask.png" alt="" height="17px">
+                <div id="coins_per_hour"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main">
+    <div class="preyHeader">Prey of the Pride</div>
+    <div class="totalShareBalance">
+        <div class="totalHeader">Total Share Balance</div>
+        <div class="totalCount">
+            <img src="../static/images/coinTask.png" alt="" height="24px">
+            <div class="totalCounter"></div>
+        </div>
+    </div>
+    <div class="totalContainer">
+        <div class="containerHeader">Total Touchers</div>
+        <div class="valueContainer" id="total_touch">
+
+        </div>
+    </div>
+    <div class="totalContainer">
+        <div class="containerHeader">Total Profit per Hour</div>
+        <div class="valueContainer">
+            Coming soon
+        </div>
+    </div>
+    <div class="totalContainer">
+        <div class="containerHeader">Total Players</div>
+        <div class="valueContainer" id="total_plays">
+
+        </div>
+    </div>
+</div>
+<div class="footer">
+    <div class="menuSection" id="game">
+        <div>
+            <img src="../static/images/game_unactive.png" alt="" style="opacity: 0.3">
+            Биржа
+        </div>
+    </div>
+    <div class="menuSection mine" id="mine">
+        <div>
+            <img src="../static/images/mine.png" alt="" style="opacity: 0.3">
+            Слоты
+        </div>
+    </div>
+    <div class="menuSection tasks">
+        <div>
+            <img src="../static/images/tasks.png" alt="" style="opacity: 0.3">
+            Задания
+        </div>
+    </div>
+    <div class="menuSection friends">
+        <div>
+            <img src="../static/images/friends.png" alt="" style="opacity: 0.3">
+            Друзья
+        </div>
+    </div>
+    <div class="menuSection coin activePage airdrop">
+        <div>
+            <img src="../static/images/airdrop.png" alt="">
+            Airdrop
+        </div>
+    </div>
+    <script src="../static/scripts/prey.js"></script>
+    <style>
+        .container {
+            background: #151515;
+        }
+    </style>
+</div>
+</body>

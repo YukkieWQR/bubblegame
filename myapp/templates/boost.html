@@ -1,0 +1,193 @@
+<style>
+    .main {
+        align-items: unset;
+    }
+</style>
+<body data-username="{{ user.username }}" data-csrfToken="{{ csrf_token }}">
+    <div class="header">
+        <div class="userInfo">
+            <div class="userAvatar" style="height: 39px">
+                <img src="../static/images/userAvatar.png" alt="" style="border-radius: 100%; height: 39px; width: 39px">
+            </div>
+            <div class="userName">
+                <div class="userNameContainer">{{ user.username }}</div>
+                <div style="font: 500 11px var(--font-family); letter-spacing: -0.01em; text-align: left; color: #fff;">CEO</div>
+            </div>
+        </div>
+        <div class="headerButtons">
+            <div class="levelInfoMain">
+                <div id="level">{{ userlevelname }}</div>
+                <div class="pointsCount">
+                    <div class="currentPoints" id="level_count" style="margin-right: 5px;">{{ user.level }}</div>
+                    <div class="neededPoints">/ 10</div>
+                </div>
+            </div>
+            <div class="profitInfoMain">
+                Прибыль в час
+                <div class="infoData">
+                    <img src="../static/images/coinTask.png" alt="" height="17px">
+                    <div id="coins_per_hour"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main">
+        <div class="coinsCount">
+            <img src="../static/images/coin.png" alt="" height="22px" width="24px">
+            <div id="wallet">{{ user.wallet|floatformat:"0" }}</div>
+        </div>
+        <div class="dailyBoosters">
+            <h2 class="boosterHeader">Free daily boosters</h2>
+            <div class="dailyBoost">
+                <div class="dailyBoostContainer" id="turbo">
+                    <img src="../static/images/activateBoost.png" alt="" width="36px" height="36px">
+                    <div style="gap: 5px; display: flex; flex-direction: column">
+                        Turbo
+                    </div>
+                </div>
+                <div class="dailyBoostContainer" id="fullEnergy">
+                    <img src="../static/images/boostCount.png" alt="" width="34px" height="34px">
+                    <div style="gap: 5px; display: flex; flex-direction: column">
+                        Full Energy
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="specialBoosters">
+            <h2 class="boosterHeader">Special boosters</h2>
+            <div class="specialBoost">
+                <div class="specialBoostContainer" id="Multitap">
+                    <img src="../static/images/multitap.png" alt="" width="30px" height="30px">
+                    <div style="gap: 3px; display: flex; flex-direction: column">
+                        <div style="display: flex; flex-direction: row; gap: 5px">
+                            <div>Multitap</div>
+                            <div style="display: flex; flex-direction: row; font: 600 12px var(--second-family); letter-spacing: -0.03em; color: var(--gray);">
+                                <div id="multitap_lvl"></div>lvl
+                            </div>
+                        </div>
+                        <div style="font: 600 11px var(--second-family); letter-spacing: -0.04em; color: #fff; display: flex; flex-direction: row; align-items: center">
+                            <img src="../static/images/airdrop.png" alt="" width="24px">
+                            <div id="multitap_cost"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="specialBoostContainer" id="energyLimit">
+                    <img src="../static/images/energyLimit.png" alt="" width="28px" height="28px">
+                    <div style="gap: 3px; display: flex; flex-direction: column">
+                        <div style="display: flex; flex-direction: row; gap: 5px">
+                            <div>Energy limit</div>
+                            <div style="display: flex; flex-direction: row; font: 600 12px var(--second-family); letter-spacing: -0.03em; color: var(--gray);">
+                                <div id="energyLimit_lvl"></div>lvl
+                            </div>
+                        </div>
+                        <div style="font: 600 11px var(--second-family); letter-spacing: -0.04em; color: #fff; display: flex; flex-direction: row; align-items: center">
+                            <img src="../static/images/airdrop.png" alt="" width="24px">
+                            <div id="energyLimit_cost"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="menuSection activePage" id="game">
+            <div>
+                <img src="../static/images/game.png" alt="">
+                Биржа
+            </div>
+        </div>
+        <div class="menuSection mine" id="mine">
+            <div>
+                <img src="../static/images/mine.png" alt="" style="opacity: 0.3">
+                Слоты
+            </div>
+        </div>
+        <div class="menuSection tasks">
+            <div>
+                <img src="../static/images/tasks.png" alt="" style="opacity: 0.3">
+                Задания
+            </div>
+        </div>
+        <div class="menuSection friends">
+            <div>
+                <img src="../static/images/friends.png" alt="" style="opacity: 0.3">
+                Друзья
+            </div>
+        </div>
+        <div class="menuSection coin airdrop">
+            <div>
+                <img src="../static/images/airdrop.png" alt="" style="opacity: 0.3">
+                Airdrop
+            </div>
+        </div>
+    </div>
+
+<div id="menu" class="hidden menu1">
+    <div id="closeButton1">
+        <img src="../static/images/close.png" alt="" width="21px">
+    </div>
+    <div class="menuMain">
+        <img src="../static/images/turbo.png" alt="" width="72px" height="72px">
+        <h2>Turbo</h2>
+        Increase the amount of coins you get per tap per 30 sec. x5 per your tap level)
+    </div>
+    <div style="font: 700 26px var(--second-family); letter-spacing: -0.01em; text-align: center; color: #fff; height: 100%; display: flex; align-items: center; justify-content: center">
+        Free
+    </div>
+    <div id="button" class="button1">
+        Get it
+    </div>
+</div>
+<div id="menu" class="hidden menu2">
+    <div id="closeButton2">
+        <img src="../static/images/close.png" alt="" width="21px">
+    </div>
+    <div class="menuMain">
+        <img src="../static/images/boostCountMenu.png" alt="" width="72px" height="72px">
+        <h2>Full Energy</h2>
+        Recharge your energy to the maximum and do extra taps
+    </div>
+    <div style="font: 700 26px var(--second-family); letter-spacing: -0.01em; text-align: center; color: #fff; height: 100%; display: flex; align-items: center; justify-content: center">
+        Free
+    </div>
+    <div id="button" class="button2">
+        Get it
+    </div>
+</div>
+<div id="menu" class="hidden menu3">
+    <div id="closeButton3">
+        <img src="../static/images/close.png" alt="" width="21px">
+    </div>
+    <div class="menuMain">
+        <img src="../static/images/multitapMenu.png" alt="" width="72px" height="72px">
+        <h2>Multitap</h2>
+        Increase the amount of coins you ger per tap (+1 per tap for each level)
+    </div>
+    <div style="font: 700 26px var(--second-family); letter-spacing: -0.01em; text-align: center; color: #fff; height: 100%; display: flex; align-items: center; justify-content: center">
+        <img src="../static/images/airdrop.png" alt="" width="24px">
+        <div id="multitap_cost_full">122,001</div>
+    </div>
+    <div id="button" class="button3">
+        Get it
+    </div>
+</div>
+<div id="menu" class="hidden menu4">
+    <div id="closeButton4">
+        <img src="../static/images/close.png" alt="" width="21px">
+    </div>
+    <div class="menuMain">
+        <img src="../static/images/energyLimitMenu.png" alt="" width="72px" height="72px">
+        <h2>Energy limit</h2>
+        Increase the limit of energy storage (+500 energy for each level)
+    </div>
+    <div style="font: 700 26px var(--second-family); letter-spacing: -0.01em; text-align: center; color: #fff; height: 100%; display: flex; align-items: center; justify-content: center">
+        <img src="../static/images/airdrop.png" alt="" width="24px">
+        <div id="energyLimit_cost_full">122,001</div>
+    </div>
+    <div id="button" class="button4">
+        Get it
+    </div>
+    <script src="../static/scripts/boost.js"></script>
+</div>
+</body>
+</html>

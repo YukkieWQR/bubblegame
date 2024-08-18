@@ -1,0 +1,297 @@
+<!-- index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../static/styles.css">
+    <script src="../static/scripts/jquery-3.7.1.min.js"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <title>SlotCo Mobile</title>
+</head>
+<body data-username="{{ user.username }}" data-csrfToken="{{ csrf_token }}" data-cpt="{{ user.tap_efficiency }}">
+<div id="splash-screen">
+    <div class="splash-content">
+        <img src="../static/images/slotcoLogo.png" alt="" style="width: 90%; height: unset; position: absolute; z-index: 1;">
+        <div class="tonSplash-wrapper">
+            <img src="../static/images/tonSplash.png" alt="" class="tonSplash" style="width: 64px;height: 64px;">
+            <img src="../static/images/loadingImg.png" class="rotating-stripe" alt="" style="position: absolute; width: 91px; height: 91px; z-index: 1;">
+        </div>
+        <img src="../static/images/splash.png" alt="Splash Logo">
+    </div>
+</div>
+    <div class="container">
+        <div id="dynamicContent">
+            <style>
+                .clickButton {
+                    margin-top: 31px;
+                }
+                .booster {
+                    position: fixed;
+                    bottom: 72px;
+                }
+                .main {
+                    display: flex;
+                    width: inherit;
+                    height: 100%;
+                    align-items: center;
+                    position: relative;
+                    flex-direction: column;
+                    margin: 0.25rem 0;
+                    margin-bottom: 61px;
+                    border-radius: 27px 27px 0 0;
+                    border-top: 4px solid #2456b7;
+                    background: linear-gradient(180deg, #100925 0%, #3e228b 100%);
+                    padding-top: 15px;
+                }
+                .container {
+                    position: relative;
+                    overflow: auto;
+                    width: 100%;
+                    height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                    background: #1a0949;
+                    background-image: url(../static/images/background.png);
+                    background-size: auto;
+                    background-repeat: repeat;
+                    background-position: center;
+                }
+                .claimButton {
+                    border-radius: 8px;
+                    width: 102px;
+                    height: 33px;
+                    font: 800 14px var(--font-family);
+                    letter-spacing: -0.03em;
+                    color: #fff;
+                }
+                #dynamicContent {
+                    height: 120%;
+                }
+                *,
+                *::before,
+                *::after {
+                    -webkit-box-sizing: inherit;
+                    -moz-box-sizing: inherit;
+                    box-sizing: inherit;
+                }
+            </style>
+            <div style="position: fixed; width: 100%; height: 100%">
+                <div class="header">
+                    <div class="userInfo">
+                        <div class="userAvatar" style="height: 39px">
+                            <img src="../static/images/userAvatar.png" alt="" style="border-radius: 100%; height: 39px; width: 39px">
+                        </div>
+                        <div class="userName">
+                            <div class="userNameContainer">{{ user.username }}</div>
+                            <div style="font: 500 11px var(--font-family); letter-spacing: -0.01em; text-align: left; color: #fff;">CEO</div>
+                        </div>
+                    </div>
+                    <div class="headerButtons">
+                        <div class="levelInfoMain">
+                            <div id="level">{{ userlevelname }}</div>
+                            <div class="pointsCount">
+                                <div class="currentPoints" id="level_count" style="margin-right: 5px;">{{ user.level }}</div>
+                                <div class="neededPoints">/ 10</div>
+                            </div>
+                        </div>
+                        <div class="profitInfoMain">
+                            Прибыль в час
+                            <div class="infoData">
+                                <img src="../static/images/coinTask.png" alt="" height="17px">
+                                <div id="coins_per_hour"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <div class="main">
+                <div class="dailyActivities">
+                    <div class="dailyActivityContainer dailyRewardPage">
+                        <img src="../static/images/dailyReward.png" alt="">
+                        Ежедневная награда
+                    </div>
+                    <div class="dailyActivityContainer cipherPage">
+                        <img src="../static/images/dailyCipher.png" alt="">
+                        Ежедневный шифр
+                    </div>
+                    <div class="dailyActivityContainer comboPage">
+                        <img src="../static/images/dailyCombo.png" alt="">
+                        Комбо
+                    </div>
+                    <div class="dailyActivityContainer wheelPage">
+                        <img src="../static/images/dailyLottery.png" alt="">
+                        Лотерея
+                    </div>
+                </div>
+                <div class="miningClaim">
+                    <div class="miningText">
+                        Слоты
+                    </div>
+                    <div class="miningCount">
+                        <img src="../static/images/coinTask.png" alt="" height="22px">
+                        <div class="miningCountDigits"></div>
+                    </div>
+                    <div class="claimButton miningClaimButton" style="border-radius: 8px;width: 102px;height: 33px; ">
+                        Получить
+                    </div>
+                </div>
+                <div class="coinsCount">
+                    <img src="../static/images/coinTask.png" alt="" height="35px">
+                    <div id="wallet">{{ user.wallet|floatformat:"0" }}</div>
+                </div>
+                <div class="slotMachine">
+                    <img src="../static/images/slots.png" alt="" style="position: absolute; width: 19rem; bottom: 0; z-index: 1;">
+                    <div class="doors">
+                        <div class="door">
+                            <div class="boxes">
+                                <div class="box">?</div>
+                            </div>
+                        </div>
+                        <div class="door">
+                            <div class="boxes">
+                                <div class="box">?</div>
+                            </div>
+                        </div>
+                        <div class="door">
+                            <div class="boxes">
+                                <div class="box">?</div>
+                            </div>
+                        </div>
+                    </div>
+                <div id="spinner" class="spin-button"></div>
+                    <svg width="375" height="499" viewBox="0 0 375 499" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: absolute; width: 100%; z-index: 0; bottom: -130px; left: 0;">
+                        <g opacity="0.6">
+                            <g opacity="0.6" filter="url(#filter0_f_51_4453)">
+                                <circle cx="81" cy="137" r="55" fill="#01B3D7" />
+                            </g>
+                            <g filter="url(#filter1_f_51_4453)">
+                                <circle cx="297" cy="206" r="55" fill="#01B3D7" />
+                            </g>
+                            <g filter="url(#filter2_f_51_4453)">
+                                <circle cx="56" cy="381" r="55" fill="#01B3D7" />
+                            </g>
+                            <g filter="url(#filter3_f_51_4453)">
+                                <circle cx="80" cy="311" r="55" fill="#E80928" />
+                            </g>
+                            <g filter="url(#filter4_f_51_4453)">
+                                <circle cx="279" cy="148" r="55" fill="#E80928" />
+                            </g>
+                            <g filter="url(#filter5_f_51_4453)">
+                                <circle cx="297" cy="386" r="55" fill="#E80928" />
+                            </g>
+                            <g filter="url(#filter6_f_51_4453)">
+                                <circle cx="190" cy="135" r="55" fill="#E80928" />
+                            </g>
+                            <g filter="url(#filter7_f_51_4453)">
+                                <circle cx="147" cy="142" r="55" fill="#FAF0B5" />
+                            </g>
+                            <g filter="url(#filter8_f_51_4453)">
+                                <circle cx="99" cy="230" r="55" fill="#FAF0B5" />
+                            </g>
+                            <g opacity="0.4" filter="url(#filter9_f_51_4453)">
+                                <circle cx="219" cy="113" r="55" fill="#FAF0B5" />
+                            </g>
+                            <g filter="url(#filter10_f_51_4453)">
+                                <circle cx="281" cy="339" r="55" fill="#FAF0B5" />
+                            </g>
+                        </g>
+                        <defs>
+                            <filter id="filter0_f_51_4453" x="-32" y="24" width="226" height="226" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                                <feGaussianBlur stdDeviation="29" result="effect1_foregroundBlur_51_4453" />
+                            </filter>
+                            <filter id="filter1_f_51_4453" x="184" y="93" width="226" height="226" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                                <feGaussianBlur stdDeviation="29" result="effect1_foregroundBlur_51_4453" />
+                            </filter>
+                            <filter id="filter2_f_51_4453" x="-57" y="268" width="226" height="226" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                                <feGaussianBlur stdDeviation="29" result="effect1_foregroundBlur_51_4453" />
+                            </filter>
+                            <filter id="filter3_f_51_4453" x="-33" y="198" width="226" height="226" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                                <feGaussianBlur stdDeviation="29" result="effect1_foregroundBlur_51_4453" />
+                            </filter>
+                            <filter id="filter4_f_51_4453" x="166" y="35" width="226" height="226" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                                <feGaussianBlur stdDeviation="29" result="effect1_foregroundBlur_51_4453" />
+                            </filter>
+                            <filter id="filter5_f_51_4453" x="184" y="273" width="226" height="226" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                                <feGaussianBlur stdDeviation="29" result="effect1_foregroundBlur_51_4453" />
+                            </filter>
+                            <filter id="filter6_f_51_4453" x="77" y="22" width="226" height="226" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                                <feGaussianBlur stdDeviation="29" result="effect1_foregroundBlur_51_4453" />
+                            </filter>
+                            <filter id="filter7_f_51_4453" x="34" y="29" width="226" height="226" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                                <feGaussianBlur stdDeviation="29" result="effect1_foregroundBlur_51_4453" />
+                            </filter>
+                            <filter id="filter8_f_51_4453" x="-14" y="117" width="226" height="226" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                                <feGaussianBlur stdDeviation="29" result="effect1_foregroundBlur_51_4453" />
+                            </filter>
+                            <filter id="filter9_f_51_4453" x="106" y="0" width="226" height="226" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                                <feGaussianBlur stdDeviation="29" result="effect1_foregroundBlur_51_4453" />
+                            </filter>
+                            <filter id="filter10_f_51_4453" x="168" y="226" width="226" height="226" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                                <feGaussianBlur stdDeviation="29" result="effect1_foregroundBlur_51_4453" />
+                            </filter>
+                        </defs>
+                    </svg>
+                </div>
+            </div>
+            <div class="footer">
+                <div class="menuSection activePage" id="game">
+                    <div>
+                        <img src="../static/images/game.png" alt="">
+                        Биржа
+                    </div>
+                </div>
+                <div class="menuSection mine" id="mine">
+                    <div>
+                        <img src="../static/images/mine.png" alt="" style="opacity: 0.3">
+                        Слоты
+                    </div>
+                </div>
+                <div class="menuSection tasks">
+                    <div>
+                        <img src="../static/images/tasks.png" alt="" style="opacity: 0.3">
+                        Задания
+                    </div>
+                </div>
+                <div class="menuSection friends">
+                    <div>
+                        <img src="../static/images/friends.png" alt="" style="opacity: 0.3">
+                        Друзья
+                    </div>
+                </div>
+                <div class="menuSection coin airdrop">
+                    <div>
+                        <img src="../static/images/airdrop.png" alt="" style="opacity: 0.3">
+                        Airdrop
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="../static/scripts/main.js"></script>
+        <script src="../static/scripts/splash.js"></script>
+    </div>
+</body>
+</html>

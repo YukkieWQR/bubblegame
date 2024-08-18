@@ -1,0 +1,126 @@
+<body data-username="{{ user.username }}" data-csrfToken="{{ csrf_token }}" data-cpt="{{ user.tap_efficiency }}">
+<style>
+    .clickButton {
+        margin-top: 31px;
+    }
+    .booster {
+        position: fixed;
+        bottom: 72px;
+    }
+    .miningClaim {
+        position: fixed;
+        bottom: 141px;
+    }
+    .main {
+        display: flex;
+        width: inherit;
+        height: 100%;
+        align-items: center;
+        position: relative;
+        flex-direction: column;
+        margin: 0.25rem 0;
+        margin-bottom: 61px;
+        border-radius: 27px 27px 0 0;
+        border-top: 4px solid #2456b7;
+        background: linear-gradient(180deg, #100925 0%, #3e228b 100%);
+        padding-top: 15px;
+    }
+    .container {
+        position: relative;
+        overflow: auto;
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background: #1a0949;
+        background-image: url(../static/images/background.png);
+        background-size: auto;
+        background-repeat: repeat;
+        background-position: center;
+    }
+    #dynamicContent {
+        height: 120%;
+    }
+    *,
+    *::before,
+    *::after {
+        -webkit-box-sizing: inherit;
+        -moz-box-sizing: inherit;
+        box-sizing: inherit;
+    }
+</style>
+<div style="position: fixed; width: 100%; height: 100%">
+    <div class="header">
+        <div class="userInfo">
+            <div class="userAvatar" style="height: 39px">
+                <img src="../static/images/userAvatar.png" alt="" style="border-radius: 100%; height: 39px; width: 39px">
+            </div>
+            <div class="userName">
+                <div class="userNameContainer">{{ user.username }}</div>
+                <div style="font: 500 11px var(--font-family); letter-spacing: -0.01em; text-align: left; color: #fff;">CEO</div>
+            </div>
+        </div>
+        <div class="headerButtons">
+            <div class="levelInfoMain">
+                <div id="level">{{ userlevelname }}</div>
+                <div class="pointsCount">
+                    <div class="currentPoints" id="level_count" style="margin-right: 5px;">{{ user.level }}</div>
+                    <div class="neededPoints">/ 10</div>
+                </div>
+            </div>
+            <div class="profitInfoMain">
+                Прибыль в час
+                <div class="infoData">
+                    <img src="../static/images/coinTask.png" alt="" height="17px">
+                    <div id="coins_per_hour"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main">
+        <div class="coinsCount">
+            <img src="../static/images/coinTask.png" alt="" height="40px">
+            <div id="wallet">{{ user.wallet|floatformat:"0" }}</div>
+        </div>
+        <div class="wheel-container">
+            <img src="../static/images/lightning.png" alt="" style="position: absolute; opacity: 0.6; width: 350px; height: 381.27px;">
+            <img id="wheel" src="../static/images/wheel.png" alt="Wheel of Fortune">
+            <img id="arrow" src="../static/images/wheelArrow.png" alt="Arrow">
+        </div>
+        <button id="spinButton"></button>
+    </div>
+    <div class="footer">
+        <div class="menuSection activePage" id="game">
+            <div>
+                <img src="../static/images/game.png" alt="">
+                Биржа
+            </div>
+        </div>
+        <div class="menuSection mine" id="mine">
+            <div>
+                <img src="../static/images/mine.png" alt="" style="opacity: 0.3">
+                Слоты
+            </div>
+        </div>
+        <div class="menuSection tasks">
+            <div>
+                <img src="../static/images/tasks.png" alt="" style="opacity: 0.3">
+                Задания
+            </div>
+        </div>
+        <div class="menuSection friends">
+            <div>
+                <img src="../static/images/friends.png" alt="" style="opacity: 0.3">
+                Друзья
+            </div>
+        </div>
+        <div class="menuSection coin airdrop">
+            <div>
+                <img src="../static/images/airdrop.png" alt="" style="opacity: 0.3">
+                Airdrop
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../static/scripts/wheel.js"></script>
+</body>

@@ -1,0 +1,72 @@
+<body data-username="{{ user.username }}" data-csrfToken="{{ csrf_token }}">
+<div class="main">
+    <div class="taskCoinContainer">
+        <div class="taskCoin"></div>
+    </div>
+    <div class="tasksHeader">Заработай больше монет</div>
+    <div style="margin-bottom: 43px; width: 100%">
+        <div class="dailyTasks">Ежедневные задания</div>
+        <div class="taskContainer dailyContainer">
+            <div class="dailyCount">
+                <div>
+                    <img src="../static/images/calendar.png" alt="" width="64px" height="auto">
+                </div>
+                <div style="gap: 3px; display: flex; flex-direction: column">
+                    <div style="display: flex; flex-direction: row; gap: 5px; font: 500 12px var(--second-family); letter-spacing: -0.03em; color: #fff;">
+                        <div>Ежедневная награда</div>
+                    </div>
+                    <div style="font: 600 11px var(--second-family); letter-spacing: -0.04em; color: #fff; display: flex; flex-direction: row; align-items: center; gap: 5px">
+                        <img src="../static/images/airdrop.png" alt="" width="17px">
+                        <div id="rewardCost">+5 000</div>
+                    </div>
+                </div>
+            </div>
+            <div class="claimButton dailyTaskClaim">Получить</div>
+        </div>
+    </div>
+    <div style="margin-bottom: 43px; width: 100%">
+        <div class="dailyTasks">Особые задания</div>
+        <div id="specialTasks">
+
+        </div>
+    </div>
+</div>
+<div class="footer">
+    <div class="menuSection" id="game">
+        <div>
+            <img src="../static/images/game_unactive.png" alt="" style="opacity: 0.3">
+            Биржа
+        </div>
+    </div>
+    <div class="menuSection mine" id="mine">
+        <div>
+            <img src="../static/images/mine.png" alt="" style="opacity: 0.3">
+            Слоты
+        </div>
+    </div>
+    <div class="menuSection tasks activePage">
+        <div>
+            <img src="../static/images/tasks_active.png" alt="">
+            Задания
+        </div>
+    </div>
+    <div class="menuSection friends">
+        <div>
+            <img src="../static/images/friends.png" alt="" style="opacity: 0.3">
+            Друзья
+        </div>
+    </div>
+    <div class="menuSection coin airdrop">
+        <div>
+            <img src="../static/images/airdrop.png" alt="" style="opacity: 0.3">
+            Airdrop
+        </div>
+    </div>
+    <script src="../static/scripts/tasks.js"></script>
+    <style>
+        .container {
+            background: linear-gradient(180deg, #100925 0%, #3e228b 100%);
+        }
+    </style>
+</div>
+</body>

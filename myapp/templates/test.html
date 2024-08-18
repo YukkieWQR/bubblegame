@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подвыезжающее меню</title>
+    <style>
+        #menu {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 66.6%;
+            background-color: rgba(0, 0, 0, 0.5); /* прозрачный серый фон */
+            transition: transform 0.3s;
+            z-index: 999; /* выше чем остальной контент */
+        }
+
+        .hidden {
+            transform: translateY(100%);
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* затемнение */
+            z-index: 998; /* ниже чем меню, но выше чем остальной контент */
+        }
+
+    </style>
+</head>
+<body>
+
+<button id="toggleMenu">Меню</button>
+<div id="menu" class="hidden">
+    <ul>
+        <li><a href="#">Главная</a></li>
+        <li><a href="#">О нас</a></li>
+        <li><a href="#">Услуги</a></li>
+        <li><a href="#">Контакты</a></li>
+    </ul>
+</div>
+
+<div class="overlay"></div>
+
+
+<script>
+    const toggleMenu = document.getElementById('toggleMenu');
+    const menu = document.getElementById('menu');
+    const overlay = document.querySelector('.overlay');
+
+    toggleMenu.addEventListener('click', function() {
+        menu.classList.toggle('hidden');
+        overlay.style.display = menu.classList.contains('hidden') ? 'none' : 'block';
+    });
+
+    overlay.addEventListener('click', function() {
+        menu.classList.add('hidden');
+        overlay.style.display = 'none';
+    });
+
+    window.addEventListener('scroll', function() {
+        if (menu.classList.contains('hidden')) {
+            menu.classList.remove('hidden');
+            overlay.style.display = 'block';
+        }
+    });
+</script>
+</body>
+</html>

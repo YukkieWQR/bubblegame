@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Invite Friends</title>
+    <link rel="stylesheet" href="../static/styles/styles.css"> <!-- Ensure this path is correct -->
+</head>
+<body data-username="{{ user.username }}" data-csrfToken="{{ csrf_token }}" data-cpt="{{ user.tap_efficiency }}">
+    <div class="header">
+        <div class="userInfo">
+            <div class="userAvatar" style="height: 39px">
+                <img src="../static/images/userAvatar.png" alt="" style="border-radius: 100%; height: 39px; width: 39px">
+            </div>
+            <div class="userName">
+                <div class="userNameContainer">{{ user.username }}</div>
+                <div style="font: 500 11px var(--font-family); letter-spacing: -0.01em; text-align: left; color: #fff;">CEO</div>
+            </div>
+        </div>
+        <div class="headerButtons">
+            <div class="levelInfoMain">
+                <div id="level">{{ userlevelname }}</div>
+                <div class="pointsCount">
+                    <div class="currentPoints" id="level_count" style="margin-right: 5px;">{{ user.level }}</div>
+                    <div class="neededPoints">/ 10</div>
+                </div>
+            </div>
+            <div class="profitInfoMain">
+                Прибыль в час
+                <div class="infoData">
+                    <img src="../static/images/coinTask.png" alt="" height="17px">
+                    <div id="coins_per_hour"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main">
+        <div class="inviteFriendsHeader">Приглашай друзей</div>
+        <div class="inviteFriendsReward" id="energyLimit">
+            <img src="../static/images/gift.png" alt="" width="36px" height="36px">
+            <div style="gap: 3px; display: flex; flex-direction: column">
+                <div style="display: flex; flex-direction: row; gap: 5px">
+                    <div>Пригласи друга</div>
+                </div>
+                <div style="font: 600 11px var(--second-family); letter-spacing: -0.04em; color: #fff; display: flex; flex-direction: row; align-items: center; gap: 5px">
+                    <img src="../static/images/airdrop.png" alt="" width="17px">
+                    <div id="rewardCost">+5 000&nbsp;&nbsp;&nbsp;&nbsp;<div style="font: 500 12px var(--second-family); letter-spacing: -0.03em; color: #fff;">для тебя и твоего друга</div></div>
+                </div>
+            </div>
+        </div>
+        <div class="inviteFriendsReward" id="energyLimit">
+            <img src="../static/images/sale.png" alt="" width="34px" height="34px">
+            <div style="gap: 3px; display: flex; flex-direction: column">
+                <div style="display: flex; flex-direction: row; gap: 5px">
+                    <div>Дополнительный доход от друзей</div>
+                </div>
+                <div style="font: 500 12px var(--second-family); letter-spacing: -0.03em; color: #fff; display: flex; flex-direction: row; align-items: center; height: 24px">
+                    Получай 2% монет твоего друга
+                </div>
+            </div>
+        </div>
+        <div class="inviteContainer">
+            <div class="inviteButton" id="generate-referral-link">Пригласить друзей</div>
+            <div class="copyInvite" id="copyButton"><img src="../static/images/copy.png" alt="" width="22px" height="28px"></div>
+        </div>
+        <div class="profitContainer">
+            <div>Доход с твоих друзей</div>
+            <div class="profitClaim">
+                <div class="miningCount">
+                    <img src="../static/images/coinTask.png" alt="" height="24px">
+                    <div id="counter"></div>
+                </div>
+                <div class="claimButton" id="applyBonus">
+                    Получить
+                </div>
+            </div>
+        </div>
+        <div class="friendsContainer">
+            <div style="display: flex; justify-content: space-between; align-items: center; width: inherit; margin-bottom: 17px">
+                <div class="friendsContainerHeader">Список друзей</div>
+                <img src="../static/images/reload.png" alt="" width="30px" height="30px">
+            </div>
+            <div class="friendList">
+                <div class="noFriends">У тебя еще нет приглашенных друзей</div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="menuSection" id="game">
+            <div>
+                <img src="../static/images/game_unactive.png" alt="" style="opacity: 0.3">
+                Биржа
+            </div>
+        </div>
+        <div class="menuSection mine" id="mine">
+            <div>
+                <img src="../static/images/mine.png" alt="" style="opacity: 0.3">
+                Слоты
+            </div>
+        </div>
+        <div class="menuSection tasks">
+            <div>
+                <img src="../static/images/tasks.png" alt="" style="opacity: 0.3">
+                Задания
+            </div>
+        </div>
+        <div class="menuSection friends activePage">
+            <div>
+                <img src="../static/images/friends_active.png" alt="">
+                Друзья
+            </div>
+        </div>
+        <div class="menuSection coin airdrop">
+            <div>
+                <img src="../static/images/airdrop.png" alt="" style="opacity: 0.3">
+                Airdrop
+            </div>
+        </div>
+    </div>
+    <script src="../static/scripts/friends.js"></script>
+    <style>
+        .container {
+            background: linear-gradient(180deg, #100925 0%, #3e228b 100%);
+        }
+        .referral-link-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        #referral-link {
+            color: white;
+            font-size: 18px;
+        }
+    </style>
+</body>
+</html>

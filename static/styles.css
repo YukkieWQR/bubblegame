@@ -1,0 +1,988 @@
+:root {
+    --font-family: "Roboto", sans-serif;
+    --second-family: "Montserrat", sans-serif;
+    --third-family: "SF Pro Display", sans-serif;
+    --font3: "Inter", sans-serif;
+}
+:root {
+    --main: #4362f6;
+    --gray: #606265;
+}
+body {
+    display: flex;
+    user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    flex-direction: row;
+    justify-content: center;
+    margin: 0;
+}
+#purchase-energy-limit-btn:active {
+    transform: scale(95%);
+}
+img {
+    pointer-events: none;
+}
+.container {
+    max-width: 36rem;
+    position: relative;
+    overflow: auto;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #1c1f24;
+}
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px 15px;
+}
+.userInfo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 9px;
+    max-width: 200px;
+}
+.userName {
+    font: 700 19px var(--second-family);
+    letter-spacing: -0.01em;
+    text-align: center;
+    color: #fff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.headerButtons {
+    display: flex;
+    gap: 7px;
+    flex-direction: row;
+}
+.langButton {
+    font: 700 15px var(--second-family);
+    letter-spacing: -0.01em;
+    text-align: center;
+    color: #fff;
+}
+.rectangle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    width: 40px;
+    height: 40px;
+    background: #282b30;
+}
+.clickerInfo {
+    display: flex;
+    flex-direction: row;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    gap: 0.5rem;
+    margin: 20px 0;
+    align-items: center;
+    justify-content: space-between;
+}
+.infoCard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.25rem;
+    border-radius: 9px;
+    width: 100%;
+    position: relative;
+    height: 55px;
+    background: #282b30;
+}
+.infoText {
+    font: 600 10px var(--second-family);
+    letter-spacing: -0.04em;
+    text-align: center;
+    color: #fff;
+}
+.infoData {
+    font: 700 18px var(--second-family);
+    letter-spacing: -0.02em;
+    text-align: center;
+    color: #fff;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+.levelInfo {
+    font: 800 11px var(--second-family);
+    letter-spacing: -0.04em;
+    color: #fff;
+}
+.pointsCount {
+    display: flex;
+    flex-direction: row;
+}
+.currentPoints {
+    font: 800 11px var(--second-family);
+    letter-spacing: -0.04em;
+    color: #fff;
+}
+.neededPoints {
+    font: 800 11px var(--second-family);
+    color: var(--gray);
+}
+.coinsCount {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    font: 700 26px var(--second-family);
+    letter-spacing: -0.01em;
+    text-align: center;
+    color: #fff;
+}
+.main {
+    display: flex;
+    width: inherit;
+    height: 100%;
+    align-items: center;
+    position: relative;
+    flex-direction: column;
+    margin: 0.25rem 0;
+    margin-bottom: 61px;
+}
+.clickButton {
+    position: absolute;
+}
+.clickButton img {
+    height: 23rem;
+}
+.miningClaim {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 20px;
+    width: 95%;
+    padding: 5px 4px;
+    background: #2c2f34;
+}
+.miningText {
+    font: 800 17px var(--second-family);
+    letter-spacing: -0.02em;
+    color: #fff;
+    margin-left: 20px;
+}
+.miningCount {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font: 700 17px var(--second-family);
+    letter-spacing: -0.01em;
+    text-align: center;
+    color: #fff;
+}
+.claimButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: 800 17px var(--second-family);
+    letter-spacing: -0.02em;
+    color: #fff;
+    border-radius: 16px;
+    width: 89px;
+    height: 45px;
+    background: #1c3460;
+}
+.doneButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: 800 17px var(--second-family);
+    letter-spacing: -0.02em;
+    color: var(--gray);
+    border-radius: 16px;
+    width: 89px;
+    height: 45px;
+    background: #151515;
+}
+.startButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: 800 17px var(--second-family);
+    letter-spacing: -0.02em;
+    color: #fff;
+    border-radius: 16px;
+    width: 89px;
+    height: 45px;
+    background: var(--main);
+}
+.booster {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 85%;
+    margin: 25px 0;
+}
+.currentBoostPoints {
+    font: 700 14px var(--second-family);
+    letter-spacing: -0.03em;
+    text-align: center;
+    color: #fff;
+}
+.maxBoostPoints {
+    font: 700 14px var(--second-family);
+    color: var(--gray);
+}
+.boostCount {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.activateBoost {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font: 700 14px var(--second-family);
+    letter-spacing: -0.03em;
+    text-align: center;
+    color: #fff;
+}
+#notButton {
+    display: flex;
+    align-items: center;
+    margin: 0 auto;
+    padding: 16px;
+    justify-content: center;
+    border-radius: 20px;
+    width: 274px;
+    height: 53px;
+    font: 800 17px var(--second-family);
+    letter-spacing: -0.02em;
+    text-align: center;
+    color: var(--gray);
+    background: #151515;
+}
+.menuSection {
+    font: 700 10px var(--second-family);
+    letter-spacing: -0.04em;
+    text-align: center;
+    color: var(--gray);
+    gap: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 15px;
+    height: 53px;
+    width: inherit;
+    margin: 0 0.175rem;
+    padding: 0.2rem 0;
+}
+.menuSection img {
+    height: 33px;
+    width: 33px;
+}
+.menuSection div {
+    display: flex;
+    gap: 0.4rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+.active {
+    font: 600 10px var(--second-family);
+    letter-spacing: -0.04em;
+    text-align: center;
+    color: #fff !important;
+    background: #1c1f24;
+}
+.dailyBoost {
+    display: flex;
+    flex-direction: row;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    gap: 0.5rem;
+    margin: 9px 0;
+    align-items: center;
+    justify-content: space-between;
+}
+.dailyBoostContainer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row;
+    border-radius: 20px;
+    width: 100%;
+    background: #2c2f34;
+    font: 500 12px var(--second-family);
+    letter-spacing: -0.03em;
+    color: #fff;
+    gap: 10px;
+    padding: 10px 14px;
+}
+.boosterHeader {
+    font: 700 15px var(--second-family);
+    letter-spacing: -0.03em;
+    color: #fff;
+    margin: 0 1rem;
+}
+.specialBoost {
+    display: flex;
+    flex-direction: column;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    gap: 0.5rem;
+    margin: 9px 0;
+    align-items: center;
+    justify-content: space-between;
+}
+.specialBoostContainer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row;
+    border-radius: 20px;
+    width: 93%;
+    background: #2c2f34;
+    font: 500 12px var(--second-family);
+    letter-spacing: -0.03em;
+    color: #fff;
+    gap: 10px;
+    padding: 10px 14px;
+}
+#menu {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    border-radius: 35px 35px 0 0;
+    padding: 1.1rem;
+    bottom: 0;
+    left: 0;
+    width: 91%;
+    height: 66.6%;
+    background: #2c2f34;
+    transition: transform 0.3s;
+    z-index: 999;
+}
+#button {
+    display: flex;
+    align-items: center;
+    margin: 0 auto;
+    padding: 16px;
+    justify-content: center;
+    border-radius: 20px;
+    width: 274px;
+    height: 53px;
+    background: var(--main);
+    font: 800 17px var(--second-family);
+    letter-spacing: -0.02em;
+    color: #fff;
+}
+.menuMain h2{
+    margin: 0.5rem;
+    font: 700 27px var(--second-family);
+    letter-spacing: -0.01em;
+    color: #fff;
+}
+.menuMain {
+    font: 400 12px / 120% var(--second-family);
+    text-align: center;
+    color: #fff;
+}
+.hidden {
+    transform: translateY(100%);
+}
+#closeButton1 {
+    display: flex;
+    justify-content: flex-end;
+}
+#closeButton2 {
+    display: flex;
+    justify-content: flex-end;
+}
+#closeButton3 {
+    display: flex;
+    justify-content: flex-end;
+}
+#closeButton4 {
+    display: flex;
+    justify-content: flex-end;
+}
+.mineSelector {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 11px;
+    width: 92%;
+    margin: 18px;
+    height: 52px;
+    background: #2c2f34;
+}
+#closeButton {
+    display: flex;
+    justify-content: flex-end;
+}
+.profitPerHour {
+    display: flex;
+    height: -webkit-fill-available;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font: 500 15px / 110% var(--second-family);
+    color: #fff;
+}
+.menuMainMine {
+    height: 14rem;
+}
+.profitCount {
+    display: flex;
+    flex-direction: row;
+    font: 600 14px var(--second-family);
+    color: #fff;
+    align-items: center;
+    gap: 3px;
+}
+.mineCat {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 11px;
+    width: 100%;
+    height: 41px;
+    font: 600 16px var(--second-family);
+    letter-spacing: -0.03em;
+    text-align: center;
+    margin: 0 5px;
+    color: rgba(255, 255, 255, 0.5);
+}
+.mineMenu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font: 600 25px var(--second-family);
+    letter-spacing: -0.03em;
+    text-align: center;
+    color: #fff;
+}
+.inviteFriendsHeader {
+    margin: 15px 0;
+    font: 700 27px var(--second-family);
+    letter-spacing: -0.01em;
+    text-align: center;
+    color: #fff;
+}
+.inviteContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: -webkit-fill-available;
+    margin: 5px 1rem;
+    gap: 11px;
+}
+.copyInvite {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    width: 64px;
+    height: 53px;
+    background: var(--main);
+}
+.inviteButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: 800 17px var(--second-family);
+    letter-spacing: -0.02em;
+    color: #fff;
+    border-radius: 20px;
+    width: 100%;
+    height: 53px;
+    background: var(--main);
+}
+.inviteFriendsReward {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row;
+    border-radius: 20px;
+    width: 84%;
+    margin: 5px 0;
+    /* height: 85px; */
+    background: #2c2f34;
+    font: 600 16px var(--second-family);
+    letter-spacing: -0.03em;
+    color: #fff;
+    gap: 10px;
+    padding: 18px 16px;
+}
+#rewardCost {
+    display: flex;
+    flex-direction: row;
+    font: 600 12px var(--second-family);
+    letter-spacing: -0.03em;
+    color: #fff;
+}
+.profitContainer {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    width: -webkit-fill-available;
+    margin: 10px 1rem 54px 1rem;
+    font: 800 17px var(--second-family);
+    letter-spacing: -0.02em;
+    color: #fff;
+}
+.profitClaim {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 20px;
+    width: -webkit-fill-available;
+    margin: 8px 0;
+    padding: 5px 4px 5px 20px;
+    background: #2c2f34;
+}
+.friendsContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: -webkit-fill-available;
+    margin: 0 1rem;
+}
+.friendsContainerHeader {
+    font: 700 15px var(--second-family);
+    letter-spacing: -0.03em;
+    color: #fff;
+}
+.friendList {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: -webkit-fill-available;
+}
+.noFriends {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    width: inherit;
+    height: 85px;
+    background: #2c2f34;
+    font: 700 18px var(--second-family);
+    letter-spacing: -0.02em;
+    color: rgba(255,255,255,0.3);
+}
+.taskCoin {
+    position: relative;
+    width: 122px; /* Размер изображения */
+    height: 122px;
+    background: url('../static/images/coinTask.png') no-repeat center center;
+    background-size: contain;
+    margin: 27px;
+    margin-bottom: 9px;
+}
+.taskCoin::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit;
+    z-index: -1;
+    filter: blur(20px);
+    box-shadow: 0 0 20px 10px rgba(0, 0, 255, 0.7);
+}
+.taskCoinContainer {
+    position: relative;
+}
+.taskCoinContainer::before {
+    content: '';
+    position: absolute;
+    top: -17%;
+    left: -25%;
+    width: 150%;
+    height: 150%;
+    background: radial-gradient(circle, rgba(0, 0, 255, 0.4) 0%, rgba(0, 0, 255, 0) 70%);
+    z-index: 0;
+}
+.tasksHeader {
+    font: 700 27px var(--second-family);
+    letter-spacing: -0.01em;
+    text-align: center;
+    color: #fff;
+    margin-bottom: 68px;
+    z-index: 1;
+}
+.dailyTasks {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: -webkit-fill-available;
+    margin: 0 1rem;
+    font: 700 15px var(--second-family);
+    letter-spacing: -0.03em;
+    color: #fff;
+}
+.taskContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 20px;
+    width: -webkit-fill-available;
+    margin: 8px 1rem;
+    padding: 5px 4px 5px 20px;
+    background: #2c2f34;
+}
+.dailyCount {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    gap: 11px;
+}
+.airdropHeader {
+    font: 700 27px var(--second-family);
+    letter-spacing: -0.01em;
+    text-align: center;
+    color: #fff;
+}
+.airdropRoute {
+    width: -webkit-fill-available;
+    margin: 0 1rem 36px 1rem;
+}
+.waypointStatus {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row;
+    gap: 18px;
+    font: 700 15px var(--second-family);
+    letter-spacing: -0.03em;
+    color: #fff;
+}
+.secondWaypoint {
+    margin-top: -5px;
+}
+.waypointPassed {
+    border-radius: 50%;
+    height: 18px;
+    width: 18px;
+    background: linear-gradient(90deg, #5775ff 0%, #5a32fa 100%);
+}
+.waypointReached {
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    border-color: #5a32fa;
+    border-width: 2px;
+    border-style: solid;
+}
+.waypointDontReached {
+    border-radius: 50%;
+    height: 18px;
+    width: 18px;
+    background: var(--gray);
+}
+.waypoint svg {
+    width: 18px;
+    height: 35px;
+    margin: 5px 0;
+}
+.waypointNameDontReached {
+    font: 700 15px var(--second-family);
+    letter-spacing: -0.03em;
+    color: var(--gray);
+}
+.tasksList {
+    width: -webkit-fill-available;
+    margin: 0 1rem;
+    margin-bottom: 70px;
+}
+.tasksListHeader {
+    font: 700 15px var(--second-family);
+    letter-spacing: -0.03em;
+    color: #fff;
+}
+.airdropContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 20px;
+    width: -webkit-fill-available;
+    margin: 8px 0;
+    padding: 5px 4px 5px 20px;
+    background: #2c2f34;
+}
+.airdropCount {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 11px;
+    font: 500 12px var(--second-family);
+    letter-spacing: -0.03em;
+    color: #fff;
+}
+#splash-screen {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: white; /* or any color or image you prefer */
+    display: none; /* Hide by default */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it's on top */
+}
+
+#splash-screen.visible {
+    display: flex; /* Show when JavaScript adds the 'visible' class */
+}
+
+#splash-screen .splash-content {
+    /* Add styles for the content inside the splash screen */
+}
+.blur {
+    filter: blur(74px);
+    position: absolute;
+    left: 0;
+    bottom: -9rem;
+    width: 100%;
+    height: 370px;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.54) 0%, #000 100%);
+}
+#splash-screen img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+.contactsContainer {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    width: -webkit-fill-available;
+    margin: 0 5rem;
+    height: 54px;
+    left: 0px;
+    bottom: 45px;
+    z-index: 2;
+}
+.contactsContainer img{
+    position: relative !important;
+    width: 54px !important;
+    height: 54px !important;
+}
+.preyButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    width: -webkit-fill-available;
+    margin: 0 1rem;
+    height: 53px;
+    background: var(--main);
+    font: 800 17px var(--second-family);
+    letter-spacing: -0.02em;
+    color: #fff;
+}
+.preyHeader {
+    font: 700 27px var(--second-family);
+    letter-spacing: -0.01em;
+    text-align: center;
+    color: #fff;
+    margin-bottom: 26px;
+}
+.totalShareBalance {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: -webkit-fill-available;
+    margin: 0 1rem 129px 1rem;
+    font: 600 13px var(--second-family);
+    letter-spacing: -0.03em;
+    color: var(--gray);
+}
+.totalCount {
+    display: flex;
+    gap: 17px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+.totalCounter {
+    font: 700 26px var(--second-family);
+    letter-spacing: -0.01em;
+    text-align: center;
+    color: #fff;
+}
+.totalContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+    width: -webkit-fill-available;
+    margin: 0 1rem 20px 1rem;
+}
+.containerHeader {
+    width: inherit;
+    font: 600 16px var(--second-family);
+    letter-spacing: -0.03em;
+    color: #fff;
+}
+.valueContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    width: -webkit-fill-available;
+    background: #2c2f34;
+    height: 48px;
+    font: 700 26px var(--second-family);
+    letter-spacing: -0.01em;
+    text-align: center;
+    color: #fff;
+}
+.friendName {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 5px 0;
+    font: 700 19px var(--second-family);
+    letter-spacing: -0.01em;
+    text-align: center;
+    color: #fff;
+}
+.mineMenu {
+    display: flex;
+    width: -webkit-fill-available;
+    padding: 0 1rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 10px;
+    height: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.containerName {
+    font: 500 12px var(--second-family);
+    letter-spacing: -0.03em;
+    color: #fff;
+}
+.mineContainer {
+    display: flex;
+    width: calc(50% - 5px);
+    justify-content: space-between;
+    flex-direction: column;
+    border-radius: 23px;
+    background: #2c2f34;
+}
+.containerInfo {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 11px 0;
+    gap: 7px;
+}
+.profitInfo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font: 500 12px var(--second-family);
+    letter-spacing: -0.04em;
+    color: #fff;
+    opacity: 0.3;
+    gap: 10px;
+}
+.profitDigits {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    gap: 4px;
+}
+.upgradeInfo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: -webkit-fill-available;
+    flex-direction: column;
+    font: 600 11px var(--second-family);
+    letter-spacing: -0.04em;
+    color: #fff;
+    height: 36px;
+}
+.upgradePrice {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 7px;
+}
+.mineImg {
+    padding-top: 7px;
+}
+.menuDescription {
+    font: 400 12px / 120% var(--second-family);
+    text-align: center;
+    color: #fff;
+}
+.menu {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    border-radius: 35px 35px 0 0;
+    padding: 1.1rem;
+    bottom: 0;
+    left: 0;
+    width: 91%;
+    background: #2c2f34;
+    transition: transform 0.3s;
+    z-index: 999;
+    gap: 15px;
+}
+.button {
+    display: flex;
+    align-items: center;
+    margin: 0 auto;
+    padding: 16px;
+    justify-content: center;
+    border-radius: 20px;
+    width: 274px;
+    background: var(--main);
+    font: 800 17px var(--second-family);
+    letter-spacing: -0.02em;
+    color: #fff;
+}
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding-bottom: 15px;
+    border-radius: 12px 12px 0 0;
+    height: 61px; /* Задайте фиксированную высоту вашего footer */
+    background: #282b30;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

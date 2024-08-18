@@ -1,0 +1,106 @@
+<!-- index-2.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home Page</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+        }
+        button {
+            background-color: #555;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            transition-duration: 0.4s;
+        }
+        button:hover {
+            background-color: white;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    {% if user.username %}
+        <p>Welcome, {{ user.username }}!</p>
+        <p>Level: <span id="level">{{ user.level }}</span></p>
+        <p>Wallet: $<span id="wallet">{{ user.wallet }}</span></p>
+        <p>Coins per Tap: <span id="coins_per_tap">{{ user.coins_per_tap }}</span></p>
+        <p>Energy: <span id="energy">{{ user.energy }}</span></p>
+        <p>Multitap Level: <span id="multitap_level">{{ user.multitap_level }}</span></p>
+        <p>Tap Efficiency: <span id="tap_efficiency">{{ user.tap_efficiency }}</span></p>
+        <p>Energy Limit Level: <span id="energy_limit_level">{{ user.energy_limit_level }}</span></p>
+        <button id="increment-btn">CLICK</button>
+        <button id="purchase-multitap-btn">Purchase Multitap</button>
+        <button id="purchase-energy-limit-btn">Purchase Energy Limit</button>
+    {% else %}
+        <p>You are not welcome, guest</p>
+    {% endif %}
+
+    <script>
+        $(document).ready(function(){
+            $('#increment-btn').click(function(){
+                $.ajax({
+                    url: "{% url 'increment_wallet' %}",
+                    method: "POST",
+                    data: {
+                        'username': '{{ user.username }}',
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response){
+                        $('#wallet').text(response.new_wallet);
+                        $('#level').text(response.new_level);
+                        $('#coins_per_tap').text(response.coins_per_tap);
+                        $('#energy').text(response.energy);
+                    }
+                });
+            });
+
+            $('#purchase-multitap-btn').click(function(){
+                $.ajax({
+                    url: "{% url 'purchase_multitap' %}",
+                    method: "POST",
+                    data: {
+                        'username': '{{ user.username }}',
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response){
+                        $('#wallet').text(response.new_wallet);
+                        $('#multitap_level').text(response.new_multitap_level);
+                        $('#tap_efficiency').text(response.new_tap_efficiency);
+                    },
+                    error: function(response){
+                        alert(response.responseJSON.error);
+                    }
+                });
+            });
+
+            $('#purchase-energy-limit-btn').click(function(){
+                $.ajax({
+                    url: "{% url 'purchase_energy_limit' %}",
+                    method: "POST",
+                    data: {
+                        'username': '{{ user.username }}',
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response){
+                        $('#wallet').text(response.new_wallet);
+                        $('#energy_limit_level').text(response.new_energy_limit_level);
+                        $('#energy').text(response.new_energy);
+                    },
+                    error: function(response){
+                        alert(response.responseJSON.error);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
