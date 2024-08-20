@@ -18,11 +18,14 @@ urlpatterns = [
     path('load_wheel_page/', load_wheel_page, name='load_wheel_page'),
     path('get_data_about_user/', get_data_about_user, name='get_data_about_user'),
     path('update_task_status/', update_task_status, name='update_task_status'),
-    path('apply_bonus/', apply_bonus_view, name='apply_bonus'),  # Updated to use username as a path parameter
     path('statistics/', statistics_view, name='statistics'),
     path('bonus_eligibility/', bonus_eligibility, name='bonus_eligibility'),
     path('get_user_bonus/', get_user_bonus, name='get_user_bonus'),
     path('three_friends_task/', three_friends_task, name='three_friends_task'),
     path('three_friends_task/', three_friends_task_reward, name='three_friends_task'),
+
+    path('update_task_status/', update_task_status, name='update_task_status'),
+    path('update_task_timer_status/', update_task_timer_status, name='update_task_timer_status'),
+    path('update_task_timer_status_bool/', update_task_timer_status_bool, name='update_task_timer_status_bool'),
 
 ]

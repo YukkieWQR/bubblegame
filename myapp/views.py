@@ -238,6 +238,7 @@ def get_data_about_user(request):
 
         user_tasks = TaskUser.objects.filter(user=user).select_related('task')
         task_data = list(Task.objects.all().values('id', 'name', 'cost', 'picture'))
+        task_timer_data = list(Task_Timer.objects.all().values('id', 'name', 'cost', 'picture'))
 
         level = user.level
         userlevelname = level_names.get(level, 'Unknown')
@@ -266,6 +267,8 @@ def get_data_about_user(request):
             'next_energy_level': min(user.multitap_level, 20),
 
             'tasks': task_data,
+            'task_timer': task_timer_data,
+
             'user_tasks': list(user_tasks.values('task__name', 'status')),
             'users_invited': users_invited,
         }
@@ -304,10 +307,81 @@ def update_task_status(request):
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 
+def update_task_timer_status(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        task_pk = request.POST.get('task_pk')
+
+        user = get_object_or_404(UserProfile, username=username)
+        task = get_object_or_404(Task_Timer, pk=task_pk)
+
+        task_user, created = TaskUser_Timer.objects.get_or_create(user=user, task=task)
+
+        if created:
+            now = timezone.now()
+            task_user.timer = now
+            task_user.timer.save()
+            task_user.status_change()
+        else:
+            task_user.status_change()
+            if task_user.status == 3:  # Status 'Done'
+                user.wallet += task.cost
+                user.save()
+
+        task_user.save()
+
+        return JsonResponse({
+            'username': user.username,
+            'wallet': user.wallet,
+            'task': task.name,
+            'link': task.link,  # Include the task link in the response
+            'status': task_user.get_status_display(),
+        })
+
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+def update_task_timer_status_bool(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        task_pk = request.POST.get('task_pk')
+
+        user = get_object_or_404(UserProfile, username=username)
+        task = get_object_or_404(Task_Timer, pk=task_pk)
 
 
+        task_user, created = TaskUser_Timer.objects.get_or_create(user=user, task=task)
+        last_called = task_user.timer
+
+        if created:
+            return JsonResponse({
+                'active': True,
+
+            })
 
 
+        else:
+            task_user.status_change()
+            if task_user.status == 3:  # Status 'Done'
+                user.wallet += task.cost
+                user.save()
+
+        task_user.save()
+        now = timezone.now()
+
+        hours_passed = Decimal((now - last_called).total_seconds() / 3600)
+        if hours_passed >= 12:
+
+
+            return JsonResponse({
+                'active': True,
+
+            })
+        else:
+            return JsonResponse({
+                'active': False,
+
+            })
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 
 def statistics_view(request):
