@@ -584,16 +584,12 @@ def bonus_eligibility(request):
 
 def get_user_bonus(request):
     if request.method != 'POST':
-        return HttpResponseBadRequest("Invalid request method.")
 
-    username = request.POST.get('username')
-    if not username:
-        return HttpResponseBadRequest("Username is required.")
+        username = request.POST.get('username')
 
-    try:
-        user = UserProfile.objects.get(username=username)
-    except UserProfile.DoesNotExist:
-        return JsonResponse({'error': 'User not found.'}, status=404)
+
+    user= UserProfile.objects.get(username=username)
+
 
     if not user.users_invited:
         return JsonResponse({'username': user.username, 'invited_users_wallets_sum': 0, 'bonus': 0})
@@ -603,19 +599,19 @@ def get_user_bonus(request):
     invited_users = UserProfile.objects.filter(username__in=invited_usernames)
 
     # Calculate the sum of the wallets of invited users
-    total_wallets_sum = sum(Decimal(invited_user.wallet) for invited_user in invited_users)
+    calculate_bonus = user.calculate_bonus
 
     # Calculate the bonus based on the highest invited wallets sum
     bonus = Decimal(0)
-    if total_wallets_sum > user.highest_invited_wallets_sum:
-        bonus = (total_wallets_sum - user.highest_invited_wallets_sum) * Decimal('0.02')
+    if calculate_bonus > user.highest_invited_wallets_sum:
+        bonus = (calculate_bonus - user.highest_invited_wallets_sum) * Decimal('0.02')
 #        user.highest_invited_wallets_sum = total_wallets_sum
         user.save()
 
     # Prepare the response data
     response_data = {
         'username': user.username,
-        'invited_users_wallets_sum': float(total_wallets_sum),
+        'invited_users_wallets_sum': float(calculate_bonus),
         'bonus': float(bonus)
     }
 
