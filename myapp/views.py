@@ -54,7 +54,6 @@ def index(request):
 
     if username:
         user, created = UserProfile.objects.get_or_create(username=username)
-        user.regenerate_energy()
 
         # Update energy limit based on the user's energy_limit_level
         user.energy_limit = energy_limit_level_digits.get(user.energy_limit_level, 1000)
@@ -393,7 +392,6 @@ def get_data_about_user(request):
             20: 10500,
         }
 
-        user.regenerate_energy()
 
         # Convert users_invited to a list if it's stored as JSON string
         if isinstance(user.users_invited, str):
@@ -581,7 +579,6 @@ def bonus_eligibility(request):
 
 
 
-
 def get_user_bonus(request):
     username = request.POST.get('username')
 
@@ -593,14 +590,38 @@ def get_user_bonus(request):
     if not user.users_invited:
         return JsonResponse({'username': user.username, 'invited_users_wallets_sum': 0, 'bonus': 0, 'depth_lists': []})
 
-    # Calculate bonus and get depth lists
-    bonus = user.calculate_bonus()
+    # Get depth lists
     depth_lists = user.get_depth_lists()
+
+    # Debugging output
+    print("Depth lists:", depth_lists)
+    if not all(isinstance(level, list) for level in depth_lists):
+        return JsonResponse({'error': 'Invalid format for depth_lists'}, status=500)
 
     # Calculate the sum of the wallets of invited users
     invited_usernames = [u.strip() for u in user.users_invited.split(',')]
     invited_users = UserProfile.objects.filter(username__in=invited_usernames)
     total_wallets_sum = sum(user.wallet for user in invited_users)
+
+    # Define bonus multipliers by depth level
+    bonus_multipliers = {
+        0: Decimal('0.40'),  # Index 0 corresponds to level 1
+        1: Decimal('0.20'),  # Index 1 corresponds to level 2
+        2: Decimal('0.10'),  # Index 2 corresponds to level 3
+        3: Decimal('0.05'),  # Index 3 corresponds to level 4
+        4: Decimal('0.02'),  # Index 4 corresponds to level 5
+        5: Decimal('0.01'),  # Index 5 corresponds to level 6
+    }
+
+    # Calculate the bonus
+    bonus = Decimal('0.00')
+    for level_index, usernames in enumerate(depth_lists):
+        multiplier = bonus_multipliers.get(level_index, Decimal('0.00'))
+        for username in usernames:
+            # Assuming the wallet of each user in the depth list is considered for bonus calculation
+            user_wallet = UserProfile.objects.filter(username=username).values_list('wallet', flat=True).first()
+            if user_wallet:
+                bonus += multiplier * Decimal(user_wallet)
 
     # Prepare the response data
     response_data = {
@@ -611,43 +632,47 @@ def get_user_bonus(request):
     }
 
     return JsonResponse(response_data)
-def get_user_bonus_into_wallet(request):
-    if request.method != 'POST':
-        return HttpResponseBadRequest("Invalid request method.")
 
-    username = request.POST.get('username')
-    if not username:
-        return HttpResponseBadRequest("Username is required.")
 
-    try:
-        user = UserProfile.objects.get(username=username)
-    except UserProfile.DoesNotExist:
-        return JsonResponse({'error': 'User not found.'}, status=404)
 
-    if not user.users_invited:
-        return JsonResponse({'username': user.username, 'invited_users_wallets_sum': 0, 'bonus': 0})
 
-    # Split the users_invited field to get individual usernames, and strip any surrounding whitespace
-    invited_usernames = [u.strip() for u in user.users_invited.split(',')]
-    invited_users = UserProfile.objects.filter(username__in=invited_usernames)
-
-    # Calculate the sum of the wallets of invited users
-    total_wallets_sum = sum(Decimal(invited_user.wallet) for invited_user in invited_users)
-
-    # Calculate the bonus based on the highest invited wallets sum
-    bonus = Decimal(0)
-    if total_wallets_sum > user.highest_invited_wallets_sum:
-        bonus = (total_wallets_sum - user.highest_invited_wallets_sum) * Decimal('0.02')
-        user.highest_invited_wallets_sum = total_wallets_sum
-        user.wallet += bonus
-        user.save()
-
-    # Prepare the response data
-    response_data = {
-        'username': user.username,
-        'invited_users_wallets_sum': float(total_wallets_sum),
-        'bonus': float(bonus)
-    }
-
-    return JsonResponse(response_data)
+# def get_user_bonus_into_wallet(request):
+#     if request.method != 'POST':
+#         return HttpResponseBadRequest("Invalid request method.")
+#
+#     username = request.POST.get('username')
+#     if not username:
+#         return HttpResponseBadRequest("Username is required.")
+#
+#     try:
+#         user = UserProfile.objects.get(username=username)
+#     except UserProfile.DoesNotExist:
+#         return JsonResponse({'error': 'User not found.'}, status=404)
+#
+#     if not user.users_invited:
+#         return JsonResponse({'username': user.username, 'invited_users_wallets_sum': 0, 'bonus': 0})
+#
+#     # Split the users_invited field to get individual usernames, and strip any surrounding whitespace
+#     invited_usernames = [u.strip() for u in user.users_invited.split(',')]
+#     invited_users = UserProfile.objects.filter(username__in=invited_usernames)
+#
+#     # Calculate the sum of the wallets of invited users
+#     total_wallets_sum = sum(Decimal(invited_user.wallet) for invited_user in invited_users)
+#
+#     # Calculate the bonus based on the highest invited wallets sum
+#     bonus = Decimal(0)
+#     if total_wallets_sum > user.highest_invited_wallets_sum:
+#         bonus = (total_wallets_sum - user.highest_invited_wallets_sum) * Decimal('0.02')
+#         user.highest_invited_wallets_sum = total_wallets_sum
+#         user.wallet += bonus
+#         user.save()
+#
+#     # Prepare the response data
+#     response_data = {
+#         'username': user.username,
+#         'invited_users_wallets_sum': float(total_wallets_sum),
+#         'bonus': float(bonus)
+#     }
+#
+#     return JsonResponse(response_data)
 

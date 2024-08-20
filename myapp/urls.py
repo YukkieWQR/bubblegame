@@ -26,7 +26,6 @@ urlpatterns = [
     path('daily_task/', daily_task, name='daily_task'),
     path('bonus_eligibility/', bonus_eligibility, name='bonus_eligibility'),
     path('get_user_bonus/', get_user_bonus, name='get_user_bonus'),
-    path('get_user_bonus_into_wallet/', get_user_bonus_into_wallet, name='get_user_bonus_into_wallet'),
     path('daily_energy/', daily_energy, name='daily_energy'),
     path('daily_energy_bonus_eligibility/', daily_energy_bonus_eligibility, name='daily_energy_bonus_eligibility'),
     path('daily_turbo_bonus_eligibility/', daily_turbo_bonus_eligibility, name='daily_turbo_bonus_eligibility'),
