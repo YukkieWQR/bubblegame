@@ -305,16 +305,7 @@ def update_task_status(request):
 
 
 
-def apply_bonus_view(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        user = UserProfile.objects.get(username=username)
-        bonus = user.apply_bonus()
-        return JsonResponse({
-            'username': user.username,
-            'new_wallet': user.wallet,
-            'bonus_applied': bonus
-        })
+
 
 
 
