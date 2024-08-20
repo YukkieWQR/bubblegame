@@ -1,8 +1,6 @@
 from .models import *
 from django.shortcuts import render
-from .models import UserProfile
 from django.db.models import Sum
-from django.http import JsonResponse, HttpResponseBadRequest
 from decimal import Decimal
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
@@ -164,169 +162,6 @@ def index_referral(request):
 
     return render(request, 'index.html', context)
 
-def increment_wallet(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        user = UserProfile.objects.get(username=username)
-        user.regenerate_energy()
-        now = timezone.now()
-        if user.daily_turbo_last_daily_bonus and (now - user.daily_turbo_last_daily_bonus) <= timedelta(seconds=30):
-            increment_amount = user.tap_efficiency * 5
-        else:
-            increment_amount = user.tap_efficiency
-
-        user.wallet += increment_amount
-        user.energy -= user.tap_efficiency
-        user.check_level_up()
-        user.save()
-        return JsonResponse({
-            'new_wallet': user.wallet,
-            'new_level': user.level,
-            'coins_per_tap': user.tap_efficiency,
-            'energy': user.energy,
-            'efficiencypertap': user.tap_efficiency,
-        })
-    return JsonResponse({'error': 'Invalid request'}, status=400)
-
-def purchase_multitap(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        user = UserProfile.objects.get(username=username)
-        user.regenerate_energy()
-        if user.purchase_multitap():
-            return JsonResponse({
-                'new_wallet': user.wallet,
-                'new_multitap_level': user.multitap_level,
-                'new_tap_efficiency': user.tap_efficiency,
-            })
-        else:
-            return JsonResponse({'error': 'Not enough funds or max level reached'}, status=400)
-    return JsonResponse({'error': 'Invalid request'}, status=400)
-
-def update_energy(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        user = UserProfile.objects.get(username=username)
-        user.regenerate_energy()
-        return JsonResponse({
-            'energy': user.energy
-        })
-
-def purchase_energy_limit(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        user = UserProfile.objects.get(username=username)
-        user.regenerate_energy()
-        if user.purchase_energy_limit():
-            return JsonResponse({
-                'new_wallet': user.wallet,
-                'new_energy_limit_level': user.energy_limit_level,
-                'new_energy': user.energy,
-            })
-        else:
-            return JsonResponse({'error': 'Not enough funds or max level reached'}, status=400)
-    return JsonResponse({'error': 'Invalid request'}, status=400)
-
-
-def daily_energy(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        try:
-            user = UserProfile.objects.get(username=username)
-            user.set_energy_to_limit()
-            now = timezone.now()
-            user.daily_energy_last_daily_bonus = now  # Update the timestamp
-            user.save()  # Save the changes to the database
-            return JsonResponse({'status': 'success'}, status=200)
-        except UserProfile.DoesNotExist:
-            return JsonResponse({'error': 'User not found'}, status=404)
-    else:
-        return JsonResponse({'error': 'Invalid request'}, status=400)
-
-def daily_energy_bonus_eligibility(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        try:
-            user = UserProfile.objects.get(username=username)
-            now = timezone.now()
-            last_bonus = user.daily_energy_last_daily_bonus
-            bonus_eligible = False
-            if user.daily_turbo_last_daily_bonus and (now - user.daily_turbo_last_daily_bonus) <= timedelta(seconds=30):
-                bonus_eligible = True
-            if last_bonus is None or now - last_bonus >= timedelta(hours=24):
-                bonus_eligible = True
-
-            return JsonResponse({'bonus_eligible': bonus_eligible})
-        except UserProfile.DoesNotExist:
-            return JsonResponse({'error': 'User not found'}, status=404)
-    return JsonResponse({'error': 'Invalid request method'}, status=400)
-
-def daily_energy_bonus_eligibility(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        try:
-            user = UserProfile.objects.get(username=username)
-            now = timezone.now()
-            last_bonus = user.daily_energy_last_daily_bonus
-            bonus_eligible = False
-            if user.daily_turbo_last_daily_bonus and (now - user.daily_turbo_last_daily_bonus) <= timedelta(seconds=30):
-                bonus_eligible = True
-            if last_bonus is None or now - last_bonus >= timedelta(hours=24):
-                bonus_eligible = True
-
-            return JsonResponse({'bonus_eligible': bonus_eligible})
-        except UserProfile.DoesNotExist:
-            return JsonResponse({'error': 'User not found'}, status=404)
-    return JsonResponse({'error': 'Invalid request method'}, status=400)
-
-def daily_energy_bonus_eligibilit_for_button(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        try:
-            user = UserProfile.objects.get(username=username)
-            now = timezone.now()
-
-            bonus_eligible = False
-            if user.daily_turbo_last_daily_bonus and (now - user.daily_turbo_last_daily_bonus) <= timedelta(seconds=30):
-                bonus_eligible = True
-
-
-            return JsonResponse({'bonus_eligible': bonus_eligible})
-        except UserProfile.DoesNotExist:
-            return JsonResponse({'error': 'User not found'}, status=404)
-    return JsonResponse({'error': 'Invalid request method'}, status=400)
-
-def daily_turbo(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        try:
-            user = UserProfile.objects.get(username=username)
-            now = timezone.now()
-            user.daily_turbo_last_daily_bonus = now  # Update the timestamp
-            user.save()  # Save the changes to the database
-
-            return JsonResponse({'success': 'Turbo activated!'}, status=200)
-        except UserProfile.DoesNotExist:
-            return JsonResponse({'error': 'User not found'}, status=404)
-    else:
-        return JsonResponse({'error': 'Invalid request'}, status=400)
-
-def daily_turbo_bonus_eligibility(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        try:
-            user = UserProfile.objects.get(username=username)
-            now = timezone.now()
-            last_bonus = user.daily_turbo_last_daily_bonus
-            bonus_eligible = False
-
-            if last_bonus is None or now - last_bonus >= timedelta(hours=24):
-                bonus_eligible = True
-
-            return JsonResponse({'bonus_eligible': bonus_eligible})
-        except UserProfile.DoesNotExist:
-            return JsonResponse({'error': 'User not found'}, status=404)
-    return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 def load_boost_html(request):
     return render(request, 'boost.html')
@@ -469,52 +304,6 @@ def update_task_status(request):
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 
-def daily_task(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-
-        user = get_object_or_404(UserProfile, username=username)
-
-        now = timezone.now()
-        if user.last_daily_bonus:
-            time_since_last_bonus = now - user.last_daily_bonus
-            if time_since_last_bonus < timedelta(days=1):
-                return JsonResponse({'error': 'Daily bonus already received'}, status=400)
-
-        user.wallet += 5000  # Add bonus
-        user.last_daily_bonus = now  # Update the timestamp
-
-        user.save()
-
-        return JsonResponse({
-            'username': user.username,
-            'wallet': user.wallet,
-        })
-
-    return JsonResponse({'error': 'Invalid request method'}, status=400)
-
-def daily_task_timer(request):
-    if request.method == 'GET':
-        username = request.GET.get('username')
-
-        user = get_object_or_404(UserProfile, username=username)
-
-        now = timezone.now()
-        if user.last_daily_bonus:
-            time_since_last_bonus = now - user.last_daily_bonus
-            if time_since_last_bonus < timedelta(days=1):
-                time_remaining = timedelta(days=1) - time_since_last_bonus
-                return JsonResponse({
-                    'username': user.username,
-                    'time_until_next_bonus': str(time_remaining)
-                })
-
-        return JsonResponse({
-            'username': user.username,
-            'time_until_next_bonus': 'You can claim your bonus now'
-        })
-
-    return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 def apply_bonus_view(request):
     if request.method == 'POST':
@@ -652,6 +441,7 @@ def get_user_bonus_into_wallet(request):
 
     # Calculate the sum of the wallets of invited users
     invited_usernames = [u.strip() for u in user.users_invited.split(',')]
+    invited_users = UserProfile.objects.filter(username__in=invited_usernames)
 
     # Define bonus multipliers by depth level
     bonus_multipliers = {
@@ -726,4 +516,50 @@ def get_user_bonus_into_wallet(request):
 #     }
 #
 #     return JsonResponse(response_data)
+
+
+def three_friends_task(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+
+        if not username:
+            return JsonResponse({'error': 'Username not provided'}, status=400)
+
+        try:
+            user = UserProfile.objects.get(username=username)
+        except UserProfile.DoesNotExist:
+            return JsonResponse({'error': 'User not found'}, status=404)
+
+        users_invited = user.users_invited
+        users_invited = users_invited.split(',')
+        users_invited = [invited_user for invited_user in users_invited if invited_user]
+
+        if len(users_invited) > 3:
+            status = True
+        else:
+            status = False
+
+        return JsonResponse({
+            'status': status
+        })
+
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+def three_friends_task_reward(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+
+        if not username:
+            return JsonResponse({'error': 'Username not provided'}, status=400)
+
+        try:
+            user = UserProfile.objects.get(username=username)
+        except UserProfile.DoesNotExist:
+            return JsonResponse({'error': 'User not found'}, status=404)
+
+        user.wallet + 3333
+
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+
 
