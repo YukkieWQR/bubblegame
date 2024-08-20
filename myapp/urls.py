@@ -31,23 +31,11 @@ urlpatterns = [
     path('daily_energy_bonus_eligibility/', daily_energy_bonus_eligibility, name='daily_energy_bonus_eligibility'),
     path('daily_turbo_bonus_eligibility/', daily_turbo_bonus_eligibility, name='daily_turbo_bonus_eligibility'),
     path('daily_turbo/', daily_turbo, name='daily_turbo'),
-    path('buy_mining_card/', buy_mining_card, name='buy_mining_card'),
-    path('get_mining_bonus/', get_mining_bonus, name='get_mining_bonus'),
-    path('get_mining_bonus_into_wallet/', get_mining_bonus_into_wallet, name='get_mining_bonus_into_wallet'),
-    path('check_mining_card_status/', check_mining_card_status, name='check_mining_card_status'),
+
     path('daily_energy_bonus_eligibilit_for_button/', daily_energy_bonus_eligibilit_for_button, name='daily_energy_bonus_eligibilit_for_button'),
-
-    path('mining_card_1/', mining_card_1, name='mining_card_1'),
-    path('mining_card_2/', mining_card_2, name='mining_card_2'),
-    path('mining_card_3/', mining_card_3, name='mining_card_3'),
-    path('mining_card_4/', mining_card_4, name='mining_card_4'),
-
 
     path('daily_task_timer/', daily_task_timer, name='daily_task_timer'),
-    path('langs/', langs, name='langs'),
 
     path('daily_energy_bonus_eligibilit_for_button/', daily_energy_bonus_eligibilit_for_button, name='daily_energy_bonus_eligibilit_for_button'),
 
-    path('get_slot_spin_result/', get_slot_spin_result, name='get_slot_spin_result'),
-    path('get_wheel_spin_result/', get_wheel_spin_result, name='get_wheel_spin_result'),
     ]
