@@ -133,8 +133,6 @@ def index_referral(request):
         user.regenerate_energy()
 
         if not user.invited_by:
-            user.wallet += 5000
-            invitor.wallet += 5000
 
             user.invited_by = invitor.username
             invitor.users_invited += f"{username},"
@@ -581,32 +579,38 @@ def bonus_eligibility(request):
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 
+
+
+
 def get_user_bonus(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
+    username = request.POST.get('username')
 
-        if not username:
-            return JsonResponse({'error': 'Username is required'}, status=400)
+    try:
+        user = UserProfile.objects.get(username=username)
+    except UserProfile.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
 
-        try:
-            user = UserProfile.objects.get(username=username)
-        except UserProfile.DoesNotExist:
-            return JsonResponse({'error': 'User not found'}, status=404)
+    if not user.users_invited:
+        return JsonResponse({'username': user.username, 'invited_users_wallets_sum': 0, 'bonus': 0, 'depth_lists': []})
 
-        # Calculate the bonus
-        bonus = user.calculate_bonus()
+    # Calculate bonus and get depth lists
+    bonus = user.calculate_bonus()
+    depth_lists = user.get_depth_lists()
 
-        # Prepare the response data
-        response_data = {
-            'username': user.username,
-            'invited_users_wallets_sum': float(user.highest_invited_wallets_sum),
-            'bonus': float(bonus)
-        }
+    # Calculate the sum of the wallets of invited users
+    invited_usernames = [u.strip() for u in user.users_invited.split(',')]
+    invited_users = UserProfile.objects.filter(username__in=invited_usernames)
+    total_wallets_sum = sum(user.wallet for user in invited_users)
 
-        return JsonResponse(response_data)
+    # Prepare the response data
+    response_data = {
+        'username': user.username,
+        'invited_users_wallets_sum': float(total_wallets_sum),
+        'bonus': float(bonus),
+        'depth_lists': depth_lists,
+    }
 
-    return JsonResponse({'error': 'Invalid request method'}, status=405)
-
+    return JsonResponse(response_data)
 def get_user_bonus_into_wallet(request):
     if request.method != 'POST':
         return HttpResponseBadRequest("Invalid request method.")
