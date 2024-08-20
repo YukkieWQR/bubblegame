@@ -409,7 +409,7 @@ def get_data_about_user(request):
         energy_limit = energy_limit_level_digits.get(user.energy_limit_level, 'Unknown')
         energy_bonus_for_level = 500 * int(level)
         energy_limit = energy_limit + energy_bonus_for_level
-        print(energy_limit)
+
         now = timezone.now()
         if user.daily_turbo_last_daily_bonus and (now - user.daily_turbo_last_daily_bonus) <= timedelta(seconds=30):
             increment_amount = user.tap_efficiency * 5
@@ -594,14 +594,12 @@ def get_user_bonus(request):
     depth_lists = user.get_depth_lists()
 
     # Debugging output
-    print("Depth lists:", depth_lists)
+
     if not all(isinstance(level, list) for level in depth_lists):
         return JsonResponse({'error': 'Invalid format for depth_lists'}, status=500)
 
     # Calculate the sum of the wallets of invited users
     invited_usernames = [u.strip() for u in user.users_invited.split(',')]
-    invited_users = UserProfile.objects.filter(username__in=invited_usernames)
-    total_wallets_sum = sum(user.wallet for user in invited_users)
 
     # Define bonus multipliers by depth level
     bonus_multipliers = {
@@ -626,7 +624,6 @@ def get_user_bonus(request):
     # Prepare the response data
     response_data = {
         'username': user.username,
-        'invited_users_wallets_sum': float(total_wallets_sum),
         'bonus': float(bonus),
         'depth_lists': depth_lists,
     }
@@ -634,6 +631,60 @@ def get_user_bonus(request):
     return JsonResponse(response_data)
 
 
+def get_user_bonus_into_wallet(request):
+    username = request.POST.get('username')
+
+    try:
+        user = UserProfile.objects.get(username=username)
+    except UserProfile.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
+
+    if not user.users_invited:
+        return JsonResponse({'username': user.username, 'invited_users_wallets_sum': 0, 'bonus': 0, 'depth_lists': []})
+
+    # Get depth lists
+    depth_lists = user.get_depth_lists()
+
+    # Debugging output
+
+    if not all(isinstance(level, list) for level in depth_lists):
+        return JsonResponse({'error': 'Invalid format for depth_lists'}, status=500)
+
+    # Calculate the sum of the wallets of invited users
+    invited_usernames = [u.strip() for u in user.users_invited.split(',')]
+
+    # Define bonus multipliers by depth level
+    bonus_multipliers = {
+        0: Decimal('0.40'),  # Index 0 corresponds to level 1
+        1: Decimal('0.20'),  # Index 1 corresponds to level 2
+        2: Decimal('0.10'),  # Index 2 corresponds to level 3
+        3: Decimal('0.05'),  # Index 3 corresponds to level 4
+        4: Decimal('0.02'),  # Index 4 corresponds to level 5
+        5: Decimal('0.01'),  # Index 5 corresponds to level 6
+    }
+
+    # Calculate the bonus
+    bonus = Decimal('0.00')
+    for level_index, usernames in enumerate(depth_lists):
+        multiplier = bonus_multipliers.get(level_index, Decimal('0.00'))
+        for username in usernames:
+            # Assuming the wallet of each user in the depth list is considered for bonus calculation
+            user_wallet = UserProfile.objects.filter(username=username).values_list('wallet', flat=True).first()
+            if user_wallet:
+                bonus += multiplier * Decimal(user_wallet)
+
+
+    # user.highest_invited_wallets_sum = bonus
+    user.wallet += bonus
+    user.save()
+
+    response_data = {
+        'username': user.username,
+        'bonus': float(bonus),
+        'depth_lists': depth_lists,
+    }
+
+    return JsonResponse(response_data)
 
 
 # def get_user_bonus_into_wallet(request):
