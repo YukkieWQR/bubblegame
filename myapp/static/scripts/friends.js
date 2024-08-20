@@ -18,8 +18,9 @@ function getFriendsData() {
         }
     });
 }
-$(document).ready(function () {
-    const url = "/get_mining_bonus/"
+
+(function () {
+    const url = "/get_user_bonus/"
     let username = $('body').data('username');
     let csrfToken = $('body').data('csrftoken');
     $.ajax({
@@ -30,29 +31,14 @@ $(document).ready(function () {
             'csrfmiddlewaretoken': csrfToken
         },
         success: function(response){
-            let walletAmount = parseFloat(response.bonus).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-            $('.miningCountDigits').text(walletAmount)
-            function formatMiningAmount(amount) {
-                const parsedAmount = parseFloat(amount);
 
-                if (parsedAmount >= 1000000) {
-                    return (parsedAmount / 1000000).toFixed(1) + 'M'; // Для миллионов
-                } else if (parsedAmount >= 100000) {
-                    return (parsedAmount / 1000).toFixed(0) + 'K'; // Для тысяч
-                } else {
-                    return parsedAmount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " "); // Обычный форматирование
-                }
-            }
-
-            let miningAmount = formatMiningAmount(response.income_per_hour);
-
-            $('#coins_per_hour').text("+" + miningAmount);
         },
         error: function(response){
             alert('Error loading content');
         }
     });
-})
+})()
+
 function getFriendsListData() {
     const url = "/get_data_about_user/"
     let username = $('body').data('username');
