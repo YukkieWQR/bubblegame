@@ -204,29 +204,6 @@ def get_data_about_user(request):
             10: 'The King'
         }
 
-        energy_limit_level_digits = {
-            1: 1000,
-            2: 1500,
-            3: 2000,
-            4: 2500,
-            5: 3000,
-            6: 3500,
-            7: 4000,
-            8: 4500,
-            9: 5000,
-            10: 5500,
-            11: 6000,
-            12: 6500,
-            13: 7000,
-            14: 7500,
-            15: 8000,
-            16: 8500,
-            17: 9000,
-            18: 9500,
-            19: 10000,
-            20: 10500,
-        }
-
 
         # Convert users_invited to a list if it's stored as JSON string
         if isinstance(user.users_invited, str):
@@ -242,29 +219,19 @@ def get_data_about_user(request):
 
         level = user.level
         userlevelname = level_names.get(level, 'Unknown')
-        energy_limit = energy_limit_level_digits.get(user.energy_limit_level, 'Unknown')
-        energy_bonus_for_level = 500 * int(level)
-        energy_limit = energy_limit + energy_bonus_for_level
 
-        now = timezone.now()
-        if user.daily_turbo_last_daily_bonus and (now - user.daily_turbo_last_daily_bonus) <= timedelta(seconds=30):
-            increment_amount = user.tap_efficiency * 5
-        else:
-            increment_amount = user.tap_efficiency
 
 
         response_data = {
-            'efficiencypertap': increment_amount,
+
             'user': user.username,
             'userlevelname': userlevelname,
-            'energy_limit_level_digits': energy_limit,
+
             'new_wallet': user.wallet,
             'new_energy_limit_level': user.energy_limit_level,
             'new_energy': user.energy,
             'energy': user.energy,
             'new_level': user.level,
-
-            'next_energy_level': min(user.multitap_level, 20),
 
             'tasks': task_data,
             'task_timer': task_timer_data,
