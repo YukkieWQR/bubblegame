@@ -1,6 +1,6 @@
-function getFriendsData() {
-    const url = "/get_user_bonus/"
-    let username = $('body').data('username');
+function getFriendData(name, callback) {
+    const url = "/get_user_bonus/";
+    let username = name;
     let csrfToken = $('body').data('csrftoken');
     $.ajax({
         url: url,
@@ -9,38 +9,24 @@ function getFriendsData() {
             'username': username,
             'csrfmiddlewaretoken': csrfToken
         },
-        success: function(response){
-            let bonusAmount = parseFloat(response.bonus).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-            $('#counter').text(bonusAmount);
+        success: function(response) {
+            // Calculate the correct friend count by summing the lengths of all non-empty lists
+            let depthLists = response.depth_lists;
+            let friendCount = depthLists.reduce((count, list) => count + list.length, 0);
+
+            // Call the callback function with the bonus value and corrected friendCount
+            if (callback && typeof callback === "function") {
+                callback(response.bonus, friendCount);
+            }
         },
-        error: function(response){
+        error: function(response) {
             alert('Error loading content');
         }
     });
 }
 
-(function () {
-    const url = "/get_user_bonus/"
-    let username = $('body').data('username');
-    let csrfToken = $('body').data('csrftoken');
-    $.ajax({
-        url: url,
-        method: "POST",
-        data: {
-            'username': username,
-            'csrfmiddlewaretoken': csrfToken
-        },
-        success: function(response){
-
-        },
-        error: function(response){
-            alert('Error loading content');
-        }
-    });
-})()
-
 function getFriendsListData() {
-    const url = "/get_data_about_user/"
+    const url = "/get_user_bonus/";
     let username = $('body').data('username');
     let csrfToken = $('body').data('csrftoken');
     $.ajax({
@@ -50,28 +36,37 @@ function getFriendsListData() {
             'username': username,
             'csrfmiddlewaretoken': csrfToken
         },
-        success: function(response){
+        success: function(response) {
             const friendList = $('.friendList');
-            friendList.empty(); // Очищаем список друзей перед добавлением новых имен
+            friendList.empty(); // Clear the friends list before adding new names
 
-            if (response.users_invited.length > 0) {
-                for (let i = 0; i < response.users_invited.length; i++) {
-                    let friendName = response.users_invited[i];
-                    friendList.append(`
-            <div class="profitClaim">
-                <div class="friendName">
-                    <img src="../static/images/userAvatar.png" alt="" height="36px">
-                    <div class="friendsCount">8,488</div>Friends
-                    <img src="../static/images/ellipse.png" alt="" height="24px">
-                    <div class="earnedContainer">33,333 Earned</div>
-                </div>
-            </div>`);
+            // Retrieve friends only from the first element of depth_lists
+            const firstList = response.depth_lists[0];
+
+            if (firstList && firstList.length > 0) {
+                let friendCount = firstList.length; // Number of friends in the first list
+
+                for (let j = 0; j < firstList.length; j++) {
+                    let friendName = firstList[j];
+
+                    // Call getFriendData with the friend's name and a callback function
+                    getFriendData(friendName, function(bonus, friendCount) {
+                        friendList.append(`
+                            <div class="profitClaim">
+                                <div class="friendName">
+                                    <img src="../static/images/userAvatar.png" alt="" height="36px">
+                                    <div class="friendsCount">${friendCount}</div>Friends
+                                    <img src="../static/images/ellipse.png" alt="" height="24px">
+                                    <div class="earnedContainer">${bonus} Earned</div>
+                                </div>
+                            </div>`);
+                    });
                 }
             } else {
                 friendList.append('<div class="noFriends">You haven\'t invited anyone yet</div>');
             }
         },
-        error: function(response){
+        error: function(response) {
             alert('Error loading content');
         }
     });

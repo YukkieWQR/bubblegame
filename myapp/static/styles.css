@@ -698,7 +698,6 @@ img {
     border-radius: 20px;
     width: inherit;
     height: 85px;
-    background: #2c2f34;
     font: 700 18px var(--second-family);
     letter-spacing: -0.02em;
     color: rgba(255,255,255,0.3);

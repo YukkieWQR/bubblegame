@@ -100,31 +100,6 @@ $('.airdrop').click(function () {
         }
     });
 });
-
-function bonusEligible() {
-    const url = "/bonus_eligibility/"
-    let username = $('body').data('username');
-    let csrfToken = $('body').data('csrftoken');
-    const dailyTaskClaim = $('.dailyTaskClaim');
-    const dailyContainer = $('.dailyContainer');
-    $.ajax({
-        url: url,
-        method: "POST",
-        data: {
-            'username': username,
-            'csrfmiddlewaretoken': csrfToken
-        },
-        success: function (response) {
-            if (response.bonus_eligible === false) {
-                dailyTaskClaim.remove();
-                dailyContainer.append(`<div class="doneButton">Done</div>`)
-            }
-        },
-        error: function (response) {
-            alert('Error loading content');
-        }
-    })
-}
 function taskList() {
         const url = "/get_data_about_user/"
         let username = $('body').data('username');
@@ -228,6 +203,125 @@ function taskList() {
             }
         });
 }
+function getDailyTaskTimer() {
+    const url = "/daily_task_timer/";
+    let username = $('body').data('username');
+    let csrfToken = $('body').data('csrftoken');
+
+    $.ajax({
+        url: url,
+        method: "GET",
+        data: {
+            'username': username,
+            'csrfmiddlewaretoken': csrfToken
+        },
+        success: function(response){
+            const timePattern = /^\d+:\d+:\d+(\.\d+)?$/;
+
+            $('.timerSet').removeClass('timer2');
+            $('.timerSet').removeClass('timer');
+
+            if (timePattern.test(response.time_until_next_bonus)) {
+                let timeParts = response.time_until_next_bonus.split(':');
+                let hours = parseInt(timeParts[0], 10);
+                let minutes = parseInt(timeParts[1], 10);
+                let seconds = Math.floor(parseFloat(timeParts[2]));
+
+                $('.timerSet').addClass('timer2');
+
+                // Функция для обновления таймера
+                function updateTimer() {
+                    if (seconds < 0) {
+                        // Если время истекло, остановить таймер и обновить текст
+                        clearInterval(timerInterval);
+                        $('.timer2').text('You can claim your bonus now!');
+                    } else {
+                        // Форматирование времени
+                        let roundedTime = String(hours).padStart(2, '0') + ':' +
+                            String(minutes).padStart(2, '0') + ':' +
+                            String(seconds).padStart(2, '0');
+
+
+                        $('.timer2').text(roundedTime);
+
+                        // Уменьшаем секунды
+                        seconds--;
+
+                        // Если секунды становятся отрицательными, уменьшаем минуты и сбрасываем секунды
+                        if (seconds < 0) {
+                            seconds = 59;
+                            minutes--;
+                            if (minutes < 0) {
+                                minutes = 59;
+                                hours--;
+                            }
+                        }
+                    }
+                }
+
+                // Обновляем таймер каждую секунду
+                let timerInterval = setInterval(updateTimer, 1000);
+                updateTimer(); // Сразу вызываем для отображения первого значения
+            } else {
+                $('.timerSet').addClass('timer');
+                $('.timer').text('You can claim your bonus now!'); // Уведомляем о некорректных данных
+            }
+        },
+        error: function(response){
+            alert('Error loading content');
+        }
+    });
+}
+function bonusEligible() {
+    const url = "/update_task_timer_status_bool/"
+    let username = $('body').data('username');
+    let csrfToken = $('body').data('csrftoken');
+    const dailyTaskClaim = $('.dailyTaskClaim');
+    const dailyContainer = $('.dailyContainer');
+    $.ajax({
+        url: url,
+        method: "POST",
+        data: {
+            'username': username,
+            'csrfmiddlewaretoken': csrfToken
+        },
+        success: function (response) {
+            if (response.bonus_eligible === false) {
+                dailyTaskClaim.remove();
+                dailyContainer.append(`<div class="doneButton">Done</div>`)
+            }
+        },
+        error: function (response) {
+            alert('Error loading content');
+        }
+    })
+}
+
+$('.dailyTaskClaim').click(function () {
+    const url = "/update_task_timer_status/"
+    let username = $('body').data('username');
+    let csrfToken = $('body').data('csrftoken');
+    const dailyTaskClaim = $('.dailyTaskClaim');
+    const dailyContainer = $('.dailyContainer');
+    $.ajax({
+        url: url,
+        method: "POST",
+        data: {
+            'username': username,
+            'csrfmiddlewaretoken': csrfToken
+        },
+        success: function(response){
+            dailyTaskClaim.remove();
+            dailyContainer.append(`<div class="doneButton">Done</div>`)
+            getDailyTaskTimer()
+        },
+        error: function(response){
+            alert('Daily bonus already received');
+            dailyTaskClaim.remove();
+            dailyContainer.append(`<div class="doneButton">Done</div>`)
+        }
+    });
+})
 
 $(document).ready(function() {
     const url = "/update_task_status/";
