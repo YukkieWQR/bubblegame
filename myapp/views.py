@@ -307,49 +307,45 @@ def update_task_timer_status(request):
 
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 
+
 def update_task_timer_status_bool(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         task_pk = request.POST.get('task_pk')
 
+        # Get or create the user
         user = get_object_or_404(UserProfile, username=username)
-        task = get_object_or_404(Task_Timer, pk=task_pk)
 
+        # Get or create the task
+        task, created = Task_Timer.objects.get_or_create(pk=task_pk)
 
-        task_user, created = TaskUser_Timer.objects.get_or_create(user=user, task=task)
+        # Get or create the task-user relationship
+        task_user, created_task_user = TaskUser_Timer.objects.get_or_create(user=user, task=task)
         last_called = task_user.timer
 
-        if created:
-            return JsonResponse({
-                'active': True,
+        # If the task-user relationship was just created, return active as True
+        if created_task_user:
+            return JsonResponse({'active': True})
 
-            })
-
-
-        else:
-            task_user.status_change()
-            if task_user.status == 3:  # Status 'Done'
-                user.wallet += task.cost
-                user.save()
+        # Update task_user status
+        task_user.status_change()
+        if task_user.status == 3:  # Status 'Done'
+            user.wallet += task.cost
+            user.save()
 
         task_user.save()
+
+        # Calculate the hours passed since the last timer call
         now = timezone.now()
-
         hours_passed = Decimal((now - last_called).total_seconds() / 3600)
+
+        # Check if 12 hours have passed
         if hours_passed >= 12:
-
-
-            return JsonResponse({
-                'active': True,
-
-            })
+            return JsonResponse({'active': True})
         else:
-            return JsonResponse({
-                'active': False,
+            return JsonResponse({'active': False})
 
-            })
     return JsonResponse({'error': 'Invalid request method'}, status=400)
-
 
 def statistics_view(request):
     if request.method == 'POST':
