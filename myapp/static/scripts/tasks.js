@@ -59,7 +59,8 @@ $('.friends').click(function () {
         success: function(response){
             // Update the content on the page with the received HTML
             $('#dynamicContent').html(response);
-            getNewData();
+            getNewData(); // Synchronize with server on friends page load
+            getFriendsListData()
         },
         error: function(response){
             alert('Error loading content');
@@ -100,6 +101,66 @@ $('.airdrop').click(function () {
         }
     });
 });
+function threeFriendsTaskEligible(disabledElem) {
+    const url = "/three_friends_task/";
+    let username = $('body').data('username');
+    let csrfToken = $('body').data('csrftoken');
+    $.ajax({
+        url: url,
+        method: "POST",
+        data: {
+            'username': username,
+            'csrfmiddlewaretoken': csrfToken
+        },
+        success: function(response){
+            if (!response.status) {
+                disabledElem.disabled = true;  // Properly disable the button
+                disabledElem.style.opacity = '0.5';  // Visually indicate it's disabled
+            }
+        },
+        error: function(response){
+            console.error('Error checking eligibility.');
+        }
+    });
+}
+
+(function () {
+    let friendsTaskClaim = document.querySelector('.friendsTaskClaim');
+    let friendsTaskClaimContainer = document.querySelector('.taskClaimContainer');
+
+    // Call the function to check eligibility
+    threeFriendsTaskEligible(friendsTaskClaim);
+
+    friendsTaskClaim.addEventListener('click', function () {
+
+        if (friendsTaskClaim.disabled) {
+            event.preventDefault();  // Prevent the click event if button is disabled
+            return;  // Stop further execution
+        }
+
+        const url = "/three_friends_task_reward/";
+        let username = $('body').data('username');
+        let csrfToken = $('body').data('csrftoken');
+        $.ajax({
+            url: url,
+            method: "POST",
+            data: {
+                'username': username,
+                'csrfmiddlewaretoken': csrfToken
+            },
+            success: function(response){
+                friendsTaskClaimContainer.innerHTML = ''; // Clear the container
+                friendsTaskClaimContainer.innerHTML = `
+                    <div class="doneButton">Done</div>
+                `;
+            },
+            error: function(response){
+                console.error('Error processing reward.');
+            }
+        });
+    });
+})();
+
 function taskList() {
         const url = "/get_data_about_user/"
         let username = $('body').data('username');
@@ -195,7 +256,7 @@ function taskList() {
                         }
                     });
                 } else {
-                    specialTasks.append('<div class="noFriends">No tasks yet</div>');
+                    specialTasks.append('<div class="noFriends">No special tasks yet</div>');
                 }
             },
             error: function(response){

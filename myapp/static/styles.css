@@ -664,6 +664,7 @@ img {
     align-items: flex-start;
     width: -webkit-fill-available;
     margin: 0 1rem;
+    margin-bottom: 50px;
 }
 .friendsContainerHeader {
     font: 600 18px var(--font-family);
@@ -698,7 +699,7 @@ img {
     border-radius: 20px;
     width: inherit;
     height: 85px;
-    font: 700 18px var(--second-family);
+    font: 700 18px var(--font-family);
     letter-spacing: -0.02em;
     color: rgba(255,255,255,0.3);
 }
