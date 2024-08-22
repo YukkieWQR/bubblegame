@@ -14,61 +14,19 @@ def index(request):
 
     context = {}
 
-    level_names = {
-        1: 'Bronze',
-        2: 'Silver',
-        3: 'Gold',
-        4: 'Platinum',
-        5: 'Diamond',
-        6: 'Master',
-        7: 'Grandmaster',
-        8: 'Elite',
-        9: 'Legendary',
-        10: 'The King'
-    }
 
-    energy_limit_level_digits = {
-        1: 1000,
-        2: 1500,
-        3: 2000,
-        4: 2500,
-        5: 3000,
-        6: 3500,
-        7: 4000,
-        8: 4500,
-        9: 5000,
-        10: 5500,
-        11: 6000,
-        12: 6500,
-        13: 7000,
-        14: 7500,
-        15: 8000,
-        16: 8500,
-        17: 9000,
-        18: 9500,
-        19: 10000,
-        20: 10500,
-    }
 
     if username:
         user, created = UserProfile.objects.get_or_create(username=username)
 
         # Update energy limit based on the user's energy_limit_level
-        user.energy_limit = energy_limit_level_digits.get(user.energy_limit_level, 1000)
-        user.save()
 
-        level = user.level
-        userlevelname = level_names.get(level, 'Unknown')
-        energy_limit = energy_limit_level_digits.get(user.energy_limit_level, 'Unknown')
-        energy_bonus_for_level = 500 * int(level)
-        energy_limit = energy_limit + energy_bonus_for_level
 
         efficiencypertap = f'+{user.tap_efficiency}'
 
         context['efficiencypertap'] = efficiencypertap
         context['user'] = user
-        context['userlevelname'] = userlevelname
-        context['energy_limit_level_digits'] = energy_limit
+
         context['energy_limit'] = user.energy_limit  # Add this line
         context['referral_link'] = None
 
@@ -211,7 +169,6 @@ def get_data_about_user(request):
             users_invited = user.users_invited.strip().split(',')
 
             # Remove any leading/trailing whitespace from each item and enclose in double quotes
-            users_invited = [f'{item.strip()}' for item in users_invited]
 
         user_tasks = TaskUser.objects.filter(user=user).select_related('task')
         task_data = list(Task.objects.all().values('id', 'name', 'cost', 'picture'))
@@ -219,6 +176,12 @@ def get_data_about_user(request):
 
         level = user.level
         userlevelname = level_names.get(level, 'Unknown')
+        users_invited = user.users_invited
+        users_invited = users_invited.split(',')
+        users_invited = [invited_user for invited_user in users_invited if invited_user]
+
+        if len(users_invited) > 3 and user.recieved_threefriends_reward == False:
+            user.wallet + 3333
 
 
 
@@ -238,6 +201,7 @@ def get_data_about_user(request):
 
             'user_tasks': list(user_tasks.values('task__name', 'status')),
             'users_invited': users_invited,
+            'recieved_threefriends_reward' : user.recieved_threefriends_reward,
         }
 
         return JsonResponse(response_data)
@@ -563,6 +527,8 @@ def three_friends_task(request):
         users_invited = [invited_user for invited_user in users_invited if invited_user]
 
         if len(users_invited) > 3:
+            user.wallet + 3333
+
             status = True
         else:
             status = False
@@ -573,21 +539,59 @@ def three_friends_task(request):
 
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 
-def three_friends_task_reward(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-
-        if not username:
-            return JsonResponse({'error': 'Username not provided'}, status=400)
-
-        try:
-            user = UserProfile.objects.get(username=username)
-        except UserProfile.DoesNotExist:
-            return JsonResponse({'error': 'User not found'}, status=404)
-
-        user.wallet + 3333
-
-    return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 
+
+
+
+
+
+def get_bonus(request):
+    username = request.POST.get('username')
+
+    user = UserProfile.objects.select_for_update().get(username=username)
+
+    now = timezone.now()
+    last_daily_bonus = user.last_daily_bonus
+
+    if last_daily_bonus is None:
+        last_bonus_time = now
+        user.last_daily_bonus = now
+        user.save()
+    else:
+        last_bonus_time = last_daily_bonus
+
+    hours_passed = Decimal((now - last_bonus_time).total_seconds() / 3600)
+
+    # Bonus calculation logic
+    total_bonus = Decimal(333)  # Total bonus for 12 hours
+    income_per_hour = total_bonus / 12  # Calculate bonus per hour
+    accumulated_bonus = income_per_hour * hours_passed  # Calculate accumulated bonus
+
+    if hours_passed >= 12:
+        status = True
+        time_until_next_bonus = 0
+        accumulated_bonus = total_bonus  # Cap the bonus at the total if 12 or more hours have passed
+    else:
+        status = False
+        time_until_next_bonus = 12 - hours_passed
+
+    # Prepare the response data
+    response_data = {
+        'status': status,
+        'income_per_hour': float(accumulated_bonus),  # Accumulated bonus
+        'time_until_active': float(time_until_next_bonus),  # Convert to float for JSON serialization
+    }
+
+    return JsonResponse(response_data)
+
+def get_daily_bonus_into_wallet(request):
+    username = request.POST.get('username')
+
+    user = UserProfile.objects.select_for_update().get(username=username)
+    user.wallet + 333
+    now = timezone.now()
+    user.last_daily_bonus = now
+    user.save()
+    return JsonResponse({'Success'})
 
