@@ -22,10 +22,11 @@ urlpatterns = [
     path('bonus_eligibility/', bonus_eligibility, name='bonus_eligibility'),
     path('get_user_bonus/', get_user_bonus, name='get_user_bonus'),
     path('three_friends_task/', three_friends_task, name='three_friends_task'),
-    path('three_friends_task/', three_friends_task_reward, name='three_friends_task'),
 
     path('update_task_status/', update_task_status, name='update_task_status'),
     path('update_task_timer_status/', update_task_timer_status, name='update_task_timer_status'),
     path('update_task_timer_status_bool/', update_task_timer_status_bool, name='update_task_timer_status_bool'),
 
+    path('get_bonus/', get_bonus, name='get_bonus'),
+    path('get_daily_bonus_into_wallet/', get_daily_bonus_into_wallet, name='get_daily_bonus_into_wallet'),
 ]
