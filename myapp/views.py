@@ -595,3 +595,43 @@ def get_daily_bonus_into_wallet(request):
     user.save()
     return JsonResponse({'Success'})
 
+def hour12_task(request):
+    username = request.POST.get('username')
+
+    user = UserProfile.objects.select_for_update().get(username=username)
+    link = "https://www.youtube.com/"
+
+
+
+    now = timezone.now()
+    last_daily_bonus = user.last_12h_task
+
+    if last_daily_bonus is None:
+        last_bonus_time = now
+        user.last_12h_task = now
+        user.save()
+    else:
+        last_bonus_time = last_daily_bonus
+
+    hours_passed = Decimal((now - last_bonus_time).total_seconds() / 3600)
+
+    if hours_passed >= 12:
+        status = True
+        bonus = 300
+        user.wallet + bonus
+        user.last_12h_task = now
+        time_until_next_bonus = 0
+        user.save()
+    else:
+        status = False
+        time_until_next_bonus = 12 - hours_passed
+    response_data = {
+        'status' : status,
+        'bonus' : bonus,
+        'time_until_next_bonus' : time_until_next_bonus,
+        'link' : link
+        }
+
+    return JsonResponse(response_data)
+
+

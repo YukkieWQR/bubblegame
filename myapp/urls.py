@@ -29,4 +29,6 @@ urlpatterns = [
 
     path('get_bonus/', get_bonus, name='get_bonus'),
     path('get_daily_bonus_into_wallet/', get_daily_bonus_into_wallet, name='get_daily_bonus_into_wallet'),
+    path('hour12_task/', hour12_task, name='hour12_task'),
 ]
+
