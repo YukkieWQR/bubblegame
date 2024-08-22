@@ -1184,10 +1184,8 @@ img {
     margin-top: 0.5rem;
 }
 .claimBubbles {
-    position: absolute;
-    bottom: 0;
     border-radius: 8px;
-    width: 90%;
+    width: 100%;
     height: 54px;
     display: flex;
     align-items: center;
@@ -1196,6 +1194,52 @@ img {
     letter-spacing: -0.03em;
     color: var(--white);
     background: linear-gradient(89deg, #d1317a 0%, #da294c 17.57%, #dd263d 35.33%, #e87d31 81.66%, #eda62c 91.09%, #f2d026 98.64%);
+}
+.claimBubblesProgress {
+    border-radius: 8px;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    background: #121212;
+}
+.farmingText {
+    font: 700 15px var(--font-family);
+    letter-spacing: -0.03em;
+    background: linear-gradient(90deg, #dd273d 0%, #e14d37 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.progressCount {
+    font: 400 15px var(--second-family);
+    letter-spacing: -0.03em;
+    background: linear-gradient(90deg, #e24e37 0%, #e67032 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.farmingInfo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 82%;
+    gap: 9px;
+}
+.timerInfo {
+    float: right;
+    font: 500 12px var(--font-family);
+    letter-spacing: -0.03em;
+    background: linear-gradient(90deg, #ea8e2f 0%, #eb962d 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.claimBubblesContainer {
+    position: absolute;
+    bottom: 0;
+    width: 90%;
 }
 .friendsCount {
     font: 600 18px var(--font-family);

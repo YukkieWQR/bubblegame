@@ -32,6 +32,153 @@ window.addEventListener('load', function() {
     sessionStorage.clear(); // Очищаем sessionStorage при загрузке страницы
 });
 
+(function () {
+    const bonusUrl = "/get_bonus/";
+    const claimUrl = "/get_daily_bonus_into_wallet/";
+    let claimBubblesContainer = $('.claimBubblesContainer');
+    let username = $('body').data('username');
+    let csrfToken = $('body').data('csrftoken');
+
+    function startTimer(duration, display, onComplete) {
+        let timer = duration, hours, minutes;
+        const interval = setInterval(function () {
+            hours = Math.floor(timer / 3600);
+            minutes = Math.floor((timer % 3600) / 60);
+
+            let timeString = '';
+            if (hours > 0) {
+                timeString += hours + 'h ';
+            }
+            timeString += minutes + 'm';
+
+            display.text(timeString);
+
+            if (--timer < 0) {
+                clearInterval(interval);
+                if (onComplete && typeof onComplete === 'function') {
+                    onComplete(); // Execute the callback function when the timer finishes
+                }
+            }
+        }, 1000);
+    }
+
+    function parseTime(timeString) {
+        // Split into hours and the fractional part
+        let [hours, fraction] = timeString.split('.');
+        hours = parseInt(hours, 10);
+        let minutes = Math.round(parseFloat('0.' + fraction) * 60);
+        return (hours * 3600) + (minutes * 60);
+    }
+
+    function displayProgress(response) {
+        claimBubblesContainer.empty();
+        claimBubblesContainer.append(`
+            <div class="claimBubblesProgress">
+                <div class="farmingInfo">
+                    <div class="farmingText">Farming</div>
+                    <div class="progressCount">B ${(response.income_per_hour).toFixed(3)}</div>
+                </div>
+                <div class="timerInfo" id="timerInfo"></div>
+            </div>
+        `);
+
+        const timeUntilActive = parseTime(response.time_until_active.toFixed(2));
+        let timerInfo = $('#timerInfo');
+        let progressCount = $('.progressCount');
+        let tokensEarned = parseFloat(progressCount.text().replace('B ', '')) || 0; // Initialize with the current value
+
+        startTimer(timeUntilActive, timerInfo, function () {
+            claimBubblesContainer.empty();
+            claimBubblesContainer.append(`
+                <div class="claimBubbles">Claim</div>
+            `);
+            $('.claimBubbles').on('click', claimPrize);
+        });
+
+        // Update token count every minute
+        const updateTokenCount = setInterval(function () {
+            $.ajax({
+                url: bonusUrl,
+                method: "POST",
+                data: {
+                    'username': username,
+                    'csrfmiddlewaretoken': csrfToken
+                },
+                success: function (response) {
+                    const incomePerHour = parseFloat(response.income_per_hour);
+                    const tokenIncrementPerMinute = incomePerHour / 60;
+                    tokensEarned += tokenIncrementPerMinute;
+                    progressCount.text(`B ${(tokensEarned).toFixed(3)}`);
+                },
+                error: function () {
+                    alert('Error fetching updated income_per_hour');
+                }
+            });
+        }, 60000); // 60000 milliseconds = 1 minute
+
+        // Stop the interval when the timer finishes
+        setTimeout(function() {
+            clearInterval(updateTokenCount);
+        }, timeUntilActive * 1000);
+    }
+
+    function claimPrize() {
+        getNewData()
+        $.ajax({
+            url: claimUrl,
+            method: "POST",
+            data: {
+                'username': username,
+                'csrfmiddlewaretoken': csrfToken
+            },
+            success: function () {
+                // After successfully claiming the prize, fetch updated data from /get_bonus/
+                $.ajax({
+                    url: bonusUrl,
+                    method: "POST",
+                    data: {
+                        'username': username,
+                        'csrfmiddlewaretoken': csrfToken
+                    },
+                    success: function (response) {
+                        displayProgress(response);
+                    },
+                    error: function () {
+                        alert('Error loading updated content');
+                    }
+                });
+            },
+            error: function () {
+                alert('Error claiming prize');
+            }
+        });
+    }
+
+    // Initial load of bonus data
+    $.ajax({
+        url: bonusUrl,
+        method: "POST",
+        data: {
+            'username': username,
+            'csrfmiddlewaretoken': csrfToken
+        },
+        success: function(response) {
+            if (response.status) {
+                claimBubblesContainer.empty();
+                claimBubblesContainer.append(`
+                    <div class="claimBubbles">Claim</div>
+                `);
+                $('.claimBubbles').on('click', claimPrize);
+            } else {
+                displayProgress(response);
+            }
+        },
+        error: function(){
+            alert('Error loading content');
+        }
+    });
+})();
+
 console.log(sessionStorage.getItem('miningCardHandlerSetUp'))
 $(document).ready(function () {
     // Проверяем, установлен ли already флаг сессии
