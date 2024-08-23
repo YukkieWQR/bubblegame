@@ -280,107 +280,86 @@ function threeFriendsTaskEligible(disabledElem) {
 })();
 
 function taskList() {
-        const url = "/get_data_about_user/"
-        let username = $('body').data('username');
-        let csrfToken = $('body').data('csrftoken');
-        $.ajax({
-            url: url,
-            method: "POST",
-            data: {
-                'username': username,
-                'csrfmiddlewaretoken': csrfToken
-            },
-            success: function(response){
-                const specialTasks = $('#specialTasks')
-                if (response.tasks.length > 0) {
-                    response.tasks.forEach((task, i) => {
-                        let taskName = task.name;
-                        let taskCost = task.cost;
-                        let taskImg = task.picture.replace('myapp/', '../');
-                        taskCost = parseFloat(taskCost).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        let taskStatus = "Start";
-                        let taskPk = null
-                        response.tasks.forEach((task) => {
-                            if (task.name === taskName) {
-                                taskPk = task.id;
-                            }
-                        });
-                        response.user_tasks.forEach((userTask) => {
-                            if (userTask.task__name === taskName) {
-                                if (userTask.status === 3) {
-                                    taskStatus = "Done";
-                                } else if (userTask.status === 2) {
-                                    taskStatus = "Claim";
-                                }
-                            }
-                        });
-                        if (taskStatus === "Done") {
-                            specialTasks.append(`
-                            <div class="taskContainer container${i}" data-taskPk="${taskPk}">
-                                <div class="dailyCount task${i}">
-                                    <div style="margin-right: 14px">
-                                        <img src="${taskImg}" alt="" width="36px" height="auto">
-                                    </div>
-                                    <div style="gap: 3px; display: flex; flex-direction: column">
-                                        <div style="display: flex; flex-direction: row; gap: 5px; font: 600 13px var(--font-family); letter-spacing: -0.03em; color: var(--white);">
-                                            <div>${taskName}</div>
-                                        </div>
-                                        <div style="font: 600 11px var(--font-family);letter-spacing: -0.04em;background: linear-gradient(89deg, #d1317a 0%, #da294c 17.57%, #dd263d 35.33%, #e87d31 81.66%, #eda62c 91.09%, #f2d026 98.64%);background-clip: text;-webkit-background-clip: text;-webkit-text-fill-color: transparent; display: flex; flex-direction: row; align-items: center; gap: 5px">
-                                            <div id="rewardCost">+ ${taskCost} BUBBLES</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="doneButton start${i}">Done</div>
-                            </div>
-                        `);
-                        } else if (taskStatus === "Claim") {
-                            specialTasks.append(`
-                            <div class="taskContainer container${i}" data-taskPk="${taskPk}">
-                                <div class="dailyCount task${i}">
-                                    <div style="margin-right: 14px;">
-                                        <img src="${taskImg}" alt="" width="36px" height="auto">
-                                    </div>
-                                    <div style="gap: 3px; display: flex; flex-direction: column">
-                                        <div style="display: flex; flex-direction: row; gap: 5px; font: 600 13px var(--font-family); letter-spacing: -0.03em; color: var(--white);">
-                                            <div>${taskName}</div>
-                                        </div>
-                                        <div style="font: 600 11px var(--second-family); letter-spacing: -0.04em; color: #fff; display: flex; flex-direction: row; align-items: center; gap: 5px">
-                                            <div id="rewardCost">+ ${taskCost} BUBBLES</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="claimButton start${i}">Claim</div>
-                            </div>
-                        `);
-                        } else {
-                            specialTasks.append(`
-                            <div class="taskContainer container${i}" data-taskPk="${taskPk}">
-                                <div class="dailyCount task${i}">
-                                    <div style="margin-right: 14px;">
-                                        <img src="${taskImg}" alt="" width="36px" height="auto">
-                                    </div>
-                                    <div style="gap: 3px; display: flex; flex-direction: column">
-                                        <div style="display: flex; flex-direction: row; gap: 5px; font: 600 13px var(--font-family); letter-spacing: -0.03em; color: var(--white);">
-                                            <div>${taskName}</div>
-                                        </div>
-                                        <div style="font: 600 11px var(--second-family); letter-spacing: -0.04em; color: #fff; display: flex; flex-direction: row; align-items: center; gap: 5px">
-                                            <div id="rewardCost">+ ${taskCost} BUBBLES</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="startButton start${i}">Start</div>
-                            </div>
-                        `);
+    const url = "/get_data_about_user/";
+    let username = $('body').data('username');
+    let csrfToken = $('body').data('csrftoken');
+    $.ajax({
+        url: url,
+        method: "POST",
+        data: {
+            'username': username,
+            'csrfmiddlewaretoken': csrfToken
+        },
+        success: function(response){
+            const specialTasks = $('#specialTasks');
+            const completedTasks = $('#yourRewards'); // New section for completed tasks
+
+            if (response.tasks.length > 0) {
+                response.tasks.forEach((task, i) => {
+                    let taskName = task.name;
+                    let taskCost = task.cost;
+                    let taskImg = task.picture.replace('myapp/', '../');
+                    taskCost = parseFloat(taskCost).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    let taskStatus = "Start";
+                    let taskPk = null;
+                    response.tasks.forEach((task) => {
+                        if (task.name === taskName) {
+                            taskPk = task.id;
                         }
                     });
-                } else {
-                    specialTasks.append('<div class="noFriends">No special tasks yet</div>');
-                }
-            },
-            error: function(response){
-                alert('Error loading content');
+                    response.user_tasks.forEach((userTask) => {
+                        if (userTask.task__name === taskName) {
+                            if (userTask.status === 3) {
+                                taskStatus = "Done";
+                            } else if (userTask.status === 2) {
+                                taskStatus = "Claim";
+                            }
+                        }
+                    });
+
+                    // Container styles for taskName and taskCost
+                    let containerStyles = taskStatus === "Done"
+                        ? 'display: flex; flex-direction: row; width: 100%; justify-content: space-between;'
+                        : 'gap: 3px; display: flex; flex-direction: column;';
+
+                    // Styles for .dailyCount when moved to completed tasks
+                    let dailyCountStyles = taskStatus === "Done"
+                        ? 'justify-content: flex-start; width: 100%;'
+                        : '';
+
+                    let taskHtml = `
+                        <div class="taskContainer container${i}" data-taskPk="${taskPk}">
+                            <div class="dailyCount task${i}" style="${dailyCountStyles}">
+                                <div style="margin-right: 14px;">
+                                    <img src="${taskImg}" alt="" width="36px" height="auto">
+                                </div>
+                                <div style="${containerStyles}">
+                                    <div style="display: flex; flex-direction: row; gap: 5px; font: 600 13px var(--font-family); letter-spacing: -0.03em; color: var(--white);">
+                                        <div>${taskName}</div>
+                                    </div>
+                                    <div style="font: 600 11px var(--second-family); letter-spacing: -0.04em; color: #fff; display: flex; flex-direction: row; align-items: center; gap: 5px">
+                                        <div id="rewardCost">+ ${taskCost} BUBBLES</div>
+                                    </div>
+                                </div>
+                            </div>
+                            ${taskStatus !== 'Done' ? `<div class="${taskStatus === 'Claim' ? 'claimButton' : 'startButton'} start${i}">${taskStatus}</div>` : ''}
+                        </div>
+                    `;
+
+                    if (taskStatus === "Done") {
+                        completedTasks.append(taskHtml); // Append to completed tasks section
+                    } else {
+                        specialTasks.append(taskHtml);
+                    }
+                });
+            } else {
+                specialTasks.append('<div class="noFriends">No special tasks yet</div>');
             }
-        });
+        },
+        error: function(response){
+            alert('Error loading content');
+        }
+    });
 }
 
 $('.dailyTaskClaim').click(function () {
@@ -413,8 +392,8 @@ $(document).ready(function() {
     const url = "/update_task_status/";
 
     $('#specialTasks').on('click', '.startButton, .claimButton', function() {
-        let taskName = $(this).closest('.taskContainer').find('.taskName').text();
-        let taskPk = $(this).closest('.taskContainer').data('taskpk');
+        let taskContainer = $(this).closest('.taskContainer');
+        let taskPk = taskContainer.data('taskpk');
         let username = $('body').data('username');
         let csrfToken = $('body').data('csrftoken');
 
@@ -436,7 +415,25 @@ $(document).ready(function() {
                     Telegram.WebApp.expand();
                     Telegram.WebApp.openLink(redirectUrl);
                 } else if (button.hasClass('claimButton')) {
-                    button.removeClass('claimButton').addClass('doneButton').text('Done');
+                    // Move task to the completed tasks section
+                    $('#yourRewards').append(taskContainer);
+
+                    // Remove the button
+                    button.remove();
+
+                    // Apply new styles to .dailyCount when moved to completed tasks
+                    taskContainer.find('.dailyCount').css({
+                        'justify-content': 'flex-start',
+                        'width': '100%'
+                    });
+
+                    // Apply new styles to the container holding taskName and taskCost
+                    taskContainer.find('.dailyCount > div:nth-child(2)').css({
+                        'display': 'flex',
+                        'flex-direction': 'row',
+                        'width': '100%',
+                        'justify-content': 'space-between'
+                    });
                 }
             },
             error: function(response){
@@ -444,5 +441,5 @@ $(document).ready(function() {
             }
         });
     });
-
 });
+
