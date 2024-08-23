@@ -518,45 +518,38 @@ def get_3fr_bonus_into_wallet(request):
 def hour_task(request):
     username = request.POST.get('username')
 
-    try:
-        user = UserProfile.objects.select_for_update().get(username=username)
-        link = "https://www.youtube.com/"
+    user = UserProfile.objects.select_for_update().get(username=username)
 
-        now = timezone.now()
-        last_12h_task = user.last_12h_task
+    now = timezone.now()
+    last_12h_task = user.last_12h_task
 
-        if last_12h_task is None:
-            last_bonus_time = now
-            user.last_12h_task = now
-            user.save()
-        else:
-            last_bonus_time = last_12h_task
+    if last_12h_task is None:
+        last_task_time = now
+        user.last_12h_task = now
+        user.save()
+    else:
+        last_task_time = last_12h_task
 
-        hours_passed = Decimal((now - last_bonus_time).total_seconds() / 3600)
+    hours_passed = Decimal((now - last_task_time).total_seconds() / 3600)
 
-        if hours_passed >= 12:
-            status = True
-            bonus = 300
-            user.wallet += bonus  # Add bonus to the wallet
-            user.last_12h_task = now
-            time_until_next_bonus = 0
-            user.save()
-        else:
-            status = False
-            bonus = 0
-            time_until_next_bonus = 12 - hours_passed
+    # Bonus calculation logic
+    total_bonus = Decimal(333)  # Total bonus for 12 hours
+    income_per_hour = total_bonus / 12  # Calculate bonus per hour
+    accumulated_bonus = income_per_hour * hours_passed  # Calculate accumulated bonus
 
-        response_data = {
-            'status': status,
-            'bonus': bonus,
-            'time_until_next_bonus': time_until_next_bonus,
-            'link': link
-        }
+    if hours_passed >= 12:
+        status = True
+        time_until_next_bonus = 0
+        accumulated_bonus = total_bonus  # Cap the bonus at the total if 12 or more hours have passed
+    else:
+        status = False
+        time_until_next_bonus = 12 - hours_passed
 
-        return JsonResponse(response_data)
+    # Prepare the response data
+    response_data = {
+        'status': status,
+        'income_per_hour': float(accumulated_bonus),  # Accumulated bonus
+        'time_until_active': float(time_until_next_bonus),  # Convert to float for JSON serialization
+    }
 
-    except UserProfile.DoesNotExist:
-        return JsonResponse({'error': 'User not found'}, status=404)
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
-
+    return JsonResponse(response_data)
