@@ -540,15 +540,15 @@ def get_daily_bonus_into_wallet(request):
         return JsonResponse({'error': str(e)}, status=500)
 
 
+
 def get_3fr_bonus_into_wallet(request):
     username = request.POST.get('username')
 
 
     user = UserProfile.objects.select_for_update().get(username=username)
-    user.wallet + 3333
+    user.wallet += 3333  # Add 3333 to the wallet
     user.recieved_threefriends_reward = True
-
-    user.save
+    user.save()  # Save the changes
 
     response_data = {
         'username': username,
