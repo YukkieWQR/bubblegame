@@ -319,7 +319,7 @@ function taskList() {
                             <div class="taskContainer container${i}" data-taskPk="${taskPk}">
                                 <div class="dailyCount task${i}">
                                     <div style="margin-right: 14px">
-                                        <img src="../static/images/calendar.png" alt="" width="36px" height="auto">
+                                        <img src="${taskImg}" alt="" width="36px" height="auto">
                                     </div>
                                     <div style="gap: 3px; display: flex; flex-direction: column">
                                         <div style="display: flex; flex-direction: row; gap: 5px; font: 600 13px var(--font-family); letter-spacing: -0.03em; color: var(--white);">
@@ -338,7 +338,7 @@ function taskList() {
                             <div class="taskContainer container${i}" data-taskPk="${taskPk}">
                                 <div class="dailyCount task${i}">
                                     <div style="margin-right: 14px;">
-                                        <img src="../static/images/calendar.png" alt="" width="36px" height="auto">
+                                        <img src="${taskImg}" alt="" width="36px" height="auto">
                                     </div>
                                     <div style="gap: 3px; display: flex; flex-direction: column">
                                         <div style="display: flex; flex-direction: row; gap: 5px; font: 600 13px var(--font-family); letter-spacing: -0.03em; color: var(--white);">
@@ -357,7 +357,7 @@ function taskList() {
                             <div class="taskContainer container${i}" data-taskPk="${taskPk}">
                                 <div class="dailyCount task${i}">
                                     <div style="margin-right: 14px;">
-                                        <img src="../static/images/calendar.png" alt="" width="36px" height="auto">
+                                        <img src="${taskImg}" alt="" width="36px" height="auto">
                                     </div>
                                     <div style="gap: 3px; display: flex; flex-direction: column">
                                         <div style="display: flex; flex-direction: row; gap: 5px; font: 600 13px var(--font-family); letter-spacing: -0.03em; color: var(--white);">
