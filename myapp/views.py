@@ -22,18 +22,12 @@ def index(request):
         # Update energy limit based on the user's energy_limit_level
 
 
-        efficiencypertap = f'+{user.tap_efficiency}'
 
-        context['efficiencypertap'] = efficiencypertap
         context['user'] = user
 
-        context['energy_limit'] = user.energy_limit  # Add this line
+
         context['referral_link'] = None
 
-        if request.method == 'POST':
-            if 'generate_referral_link' in request.POST:
-
-                context['referral_link'] = f'https://yukkie.pythonanywhere.com/register/?token={referral.token}'
 
     return render(request, 'index.html', context)
 
@@ -44,42 +38,6 @@ def index_referral(request):
 
     invitor_username = request.GET.get('invitor')
     context = {}
-
-    level_names = {
-        1: 'Bronze',
-        2: 'Silver',
-        3: 'Gold',
-        4: 'Platinum',
-        5: 'Diamond',
-        6: 'Master',
-        7: 'Grandmaster',
-        8: 'Elite',
-        9: 'Legendary',
-        10: 'The King'
-    }
-
-    energy_limit_level_digits = {
-        1: 1000,
-        2: 1500,
-        3: 2000,
-        4: 2500,
-        5: 3000,
-        6: 3500,
-        7: 4000,
-        8: 4500,
-        9: 5000,
-        10: 5500,
-        11: 6000,
-        12: 6500,
-        13: 7000,
-        14: 7500,
-        15: 8000,
-        16: 8500,
-        17: 9000,
-        18: 9500,
-        19: 10000,
-        20: 10500,
-    }
 
 
     if username and invitor_username:
@@ -95,28 +53,15 @@ def index_referral(request):
             invitor.save()
 
         # Update energy limit based on the user's energy_limit_level
-        user.energy_limit = energy_limit_level_digits.get(user.energy_limit_level, 1000)
+
         user.save()
 
-        level = user.level
-        userlevelname = level_names.get(level, 'Unknown')
-        energy_limit = energy_limit_level_digits.get(user.energy_limit_level, 'Unknown')
-        energy_bonus_for_level = 500 * int(level)
-        energy_limit = energy_limit + energy_bonus_for_level
 
-        efficiencypertap = f'+{user.tap_efficiency}'
-
-        context['efficiencypertap'] = efficiencypertap
         context['user'] = user
-        context['userlevelname'] = userlevelname
-        context['energy_limit_level_digits'] = energy_limit
-        context['energy_limit'] = user.energy_limit  # Add this line
+
+
         context['referral_link'] = None
 
-        if request.method == 'POST':
-            if 'generate_referral_link' in request.POST:
-
-                context['referral_link'] = f'https://yukkie.pythonanywhere.com/register/?token={referral.token}'
 
     return render(request, 'index.html', context)
 
@@ -181,10 +126,13 @@ def get_data_about_user(request):
         users_invited = [invited_user for invited_user in users_invited if invited_user]
 
         if len(users_invited) > 3 and user.recieved_threefriends_reward == False:
-            user.wallet + 3333
-
-
-
+            can_recieve_3fr_reward = True
+        else:
+            can_recieve_3fr_reward = False
+        if user.recieved_threefriends_reward == True:
+            recieved_threefriends_reward = True
+        else:
+            recieved_threefriends_reward = False
         response_data = {
 
             'user': user.username,
@@ -202,9 +150,13 @@ def get_data_about_user(request):
             'user_tasks': list(user_tasks.values('task__name', 'status')),
             'users_invited': users_invited,
             'recieved_threefriends_reward' : user.recieved_threefriends_reward,
+            'can_recieve_3fr_reward': user.can_recieve_3fr_reward,
         }
 
         return JsonResponse(response_data)
+
+
+
 
 
 def update_task_status(request):
@@ -599,6 +551,28 @@ def get_daily_bonus_into_wallet(request):
 
         response_data = {
             'now': now,
+        }
+
+        return JsonResponse(response_data)
+
+    except UserProfile.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+def get_3fr_bonus_into_wallet(request):
+    username = request.POST.get('username')
+
+    try:
+        user = UserProfile.objects.select_for_update().get(username=username)
+        user.wallet + 3333
+        user.recieved_threefriends_reward = True
+
+        user.save
+
+        response_data = {
+            'username': username,
         }
 
         return JsonResponse(response_data)
