@@ -125,6 +125,26 @@ function threeFriendsTaskEligible(disabledElem) {
 }
 
 (function () {
+    const url = "/three_friends_task_reward/";
+    let username = $('body').data('username');
+    let csrfToken = $('body').data('csrftoken');
+    $.ajax({
+        url: url,
+        method: "POST",
+        data: {
+            'username': username,
+            'csrfmiddlewaretoken': csrfToken
+        },
+        success: function(response){
+
+            },
+        error: function(response){
+            console.error('Error processing reward.');
+        }
+    });
+})();
+
+(function () {
     let friendsTaskClaim = document.querySelector('.friendsTaskClaim');
     let friendsTaskClaimContainer = document.querySelector('.taskClaimContainer');
 

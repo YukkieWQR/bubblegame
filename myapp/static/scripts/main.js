@@ -123,7 +123,6 @@ window.addEventListener('load', function() {
     }
 
     function claimPrize() {
-        getNewData()
         $.ajax({
             url: claimUrl,
             method: "POST",
@@ -142,6 +141,7 @@ window.addEventListener('load', function() {
                     },
                     success: function (response) {
                         displayProgress(response);
+                        getNewData()
                     },
                     error: function () {
                         alert('Error loading updated content');
