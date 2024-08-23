@@ -543,23 +543,19 @@ def get_daily_bonus_into_wallet(request):
 def get_3fr_bonus_into_wallet(request):
     username = request.POST.get('username')
 
-    try:
-        user = UserProfile.objects.select_for_update().get(username=username)
-        user.wallet + 3333
-        user.recieved_threefriends_reward = True
 
-        user.save
+    user = UserProfile.objects.select_for_update().get(username=username)
+    user.wallet + 3333
+    user.recieved_threefriends_reward = True
 
-        response_data = {
-            'username': username,
-        }
+    user.save
 
-        return JsonResponse(response_data)
+    response_data = {
+        'username': username,
+    }
 
-    except UserProfile.DoesNotExist:
-        return JsonResponse({'error': 'User not found'}, status=404)
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+    return JsonResponse(response_data)
+
 
 def hour_task(request):
     username = request.POST.get('username')
