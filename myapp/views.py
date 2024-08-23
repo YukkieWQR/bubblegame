@@ -522,7 +522,7 @@ def hour_task(request):
 
     now = timezone.now()
     last_12h_task = user.last_12h_task
-
+    link = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
     if last_12h_task is None:
         last_task_time = now
         user.last_12h_task = now
@@ -549,7 +549,8 @@ def hour_task(request):
     response_data = {
         'status': status,
         'income_per_hour': float(accumulated_bonus),  # Accumulated bonus
-        'time_until_active': float(time_until_next_bonus),  # Convert to float for JSON serialization
+        'time_until_active': float(time_until_next_bonus),
+        'link':link
     }
 
     return JsonResponse(response_data)
