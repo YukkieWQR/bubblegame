@@ -168,7 +168,7 @@ function threeFriendsTaskEligible(disabledElem) {
     let username = $('body').data('username');
     let csrfToken = $('body').data('csrftoken');
 
-    function attachStartButtonListener() {
+    function attachStartButtonListener(redirectUrl) {
         // Attach the event listener to the .startButton
         $('.startButton').on('click', function() {
             const claimUrl = "/get_hour12_bonus_into_wallet/";
@@ -184,6 +184,7 @@ function threeFriendsTaskEligible(disabledElem) {
                     console.log('Reward claimed successfully');
                     // After claiming the reward, start the cycle again
                     fetchTaskData();
+                    Telegram.WebApp.openLink(redirectUrl);
                 },
                 error: function(response) {
                     console.error('Error processing reward.');
@@ -217,7 +218,7 @@ function threeFriendsTaskEligible(disabledElem) {
                     if (taskTimer <= 0) {
                         $('.timerSet').text('Now!');
                     } else {
-                        startCountdown(taskTimer);
+                        startCountdown(taskTimer, response.link);
                     }
 
                 } else {
@@ -226,12 +227,12 @@ function threeFriendsTaskEligible(disabledElem) {
                     $('.12hTaskClaimContainer').attr('disabled', false);
                     $('.12hTaskClaimContainer').html('<div class="startButton">Start</div>');
 
-                    attachStartButtonListener();
+                    attachStartButtonListener(response.link);
 
                     if (taskTimer <= 0) {
                         $('.timerSet').text('Now!');
                     } else {
-                        startCountdown(taskTimer);
+                        startCountdown(taskTimer, response.link);
                     }
                 }
             },
@@ -241,7 +242,7 @@ function threeFriendsTaskEligible(disabledElem) {
         });
     }
 
-    function startCountdown(taskTimer) {
+    function startCountdown(taskTimer, redirectUrl) {
         let totalSeconds = Math.floor(taskTimer * 3600);
 
         let countdown = setInterval(function() {
@@ -256,7 +257,7 @@ function threeFriendsTaskEligible(disabledElem) {
                 $('.timerSet').text('Now!');
 
                 // Re-attach event listener after timer finishes
-                attachStartButtonListener();
+                attachStartButtonListener(redirectUrl);
 
             } else {
                 totalSeconds--;
