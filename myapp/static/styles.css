@@ -1227,6 +1227,14 @@ img {
     width: 82%;
     gap: 9px;
 }
+.timerSet {
+    font: 500 12px var(--font-family);
+    letter-spacing: -0.03em;
+    background: linear-gradient(90deg, #ea8e2f 0%, #eb962d 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 .timerInfo {
     float: right;
     font: 500 12px var(--font-family);

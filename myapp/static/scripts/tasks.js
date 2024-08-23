@@ -102,7 +102,7 @@ $('.airdrop').click(function () {
     });
 });
 function threeFriendsTaskEligible(disabledElem) {
-    const url = "/three_friends_task/";
+    const url = "/get_data_about_user/";
     let username = $('body').data('username');
     let csrfToken = $('body').data('csrftoken');
     $.ajax({
@@ -113,9 +113,12 @@ function threeFriendsTaskEligible(disabledElem) {
             'csrfmiddlewaretoken': csrfToken
         },
         success: function(response){
-            if (!response.status) {
+            if (!response.can_recieve_3fr_reward) {
                 disabledElem.disabled = true;  // Properly disable the button
                 disabledElem.style.opacity = '0.5';  // Visually indicate it's disabled
+                if (response.recieved_threefriends_reward) {
+                    disabledElem.textContent = "Done"
+                }
             }
         },
         error: function(response){
@@ -123,26 +126,6 @@ function threeFriendsTaskEligible(disabledElem) {
         }
     });
 }
-
-(function () {
-    const url = "/three_friends_task_reward/";
-    let username = $('body').data('username');
-    let csrfToken = $('body').data('csrftoken');
-    $.ajax({
-        url: url,
-        method: "POST",
-        data: {
-            'username': username,
-            'csrfmiddlewaretoken': csrfToken
-        },
-        success: function(response){
-
-            },
-        error: function(response){
-            console.error('Error processing reward.');
-        }
-    });
-})();
 
 (function () {
     let friendsTaskClaim = document.querySelector('.friendsTaskClaim');
@@ -158,7 +141,7 @@ function threeFriendsTaskEligible(disabledElem) {
             return;  // Stop further execution
         }
 
-        const url = "/three_friends_task_reward/";
+        const url = "/get_3fr_bonus_into_wallet/";
         let username = $('body').data('username');
         let csrfToken = $('body').data('csrftoken');
         $.ajax({
@@ -179,6 +162,121 @@ function threeFriendsTaskEligible(disabledElem) {
             }
         });
     });
+})();
+
+(function () {
+    const url = "/hour12_task/";
+    let username = $('body').data('username');
+    let csrfToken = $('body').data('csrftoken');
+
+    function attachStartButtonListener() {
+        // Attach the event listener to the .startButton
+        $('.startButton').on('click', function() {
+            const claimUrl = "/get_hour12_bonus_into_wallet/";
+            $.ajax({
+                url: claimUrl,
+                method: "POST",
+                data: {
+                    'username': username,
+                    'csrfmiddlewaretoken': csrfToken
+                },
+                success: function(response) {
+                    // Handle successful reward claim here
+                    console.log('Reward claimed successfully');
+                    // After claiming the reward, start the cycle again
+                    fetchTaskData();
+                },
+                error: function(response) {
+                    console.error('Error processing reward.');
+                }
+            });
+        });
+    }
+
+    function fetchTaskData() {
+        $.ajax({
+            url: url,
+            method: "POST",
+            data: {
+                'username': username,
+                'csrfmiddlewaretoken': csrfToken
+            },
+            success: function(response) {
+                let taskTimer = response.time_until_active;
+
+                if (response.status === false) {
+                    // Status is false: Set button to inactive
+                    $('.12hTaskClaimContainer').css('opacity', '0.5');
+                    $('.12hTaskClaimContainer').attr('disabled', true);
+                    $('.12hTaskClaimContainer').html('<div class="startButton">Start</div>');
+
+                    // Prevent actions if the button is inactive
+                    $('.12hTaskClaimContainer').on('click', function(e) {
+                        e.preventDefault();
+                    });
+
+                    if (taskTimer <= 0) {
+                        $('.timerSet').text('Now!');
+                    } else {
+                        startCountdown(taskTimer);
+                    }
+
+                } else {
+                    // Status is true: Set button to active
+                    $('.12hTaskClaimContainer').css('opacity', '1');
+                    $('.12hTaskClaimContainer').attr('disabled', false);
+                    $('.12hTaskClaimContainer').html('<div class="startButton">Start</div>');
+
+                    attachStartButtonListener();
+
+                    if (taskTimer <= 0) {
+                        $('.timerSet').text('Now!');
+                    } else {
+                        startCountdown(taskTimer);
+                    }
+                }
+            },
+            error: function(response) {
+                console.error('Error processing task.');
+            }
+        });
+    }
+
+    function startCountdown(taskTimer) {
+        let totalSeconds = Math.floor(taskTimer * 3600);
+
+        let countdown = setInterval(function() {
+            if (totalSeconds <= 0) {
+                clearInterval(countdown);
+                console.log('Timer finished');
+
+                // Replace content in .12hTaskClaimContainer and set timer text to 'Now!'
+                $('.12hTaskClaimContainer').empty();
+                $('.12hTaskClaimContainer').html('<div class="startButton">Start</div>');
+                $('.12hTaskClaimContainer').css('opacity', '1');
+                $('.timerSet').text('Now!');
+
+                // Re-attach event listener after timer finishes
+                attachStartButtonListener();
+
+            } else {
+                totalSeconds--;
+                let countdownHours = Math.floor(totalSeconds / 3600);
+                let countdownMinutes = Math.floor((totalSeconds % 3600) / 60);
+                let countdownSeconds = totalSeconds % 60;
+
+                let countdownDisplay = `${countdownHours}h ${countdownMinutes}m`;
+                let countdownDisplayForConsole = `${countdownHours}h ${countdownMinutes}m ${countdownSeconds}s`;
+                console.log(`Countdown: ${countdownDisplayForConsole}`);
+
+                // Update the interface inside .timerSet
+                $('.timerSet').text(countdownDisplay);
+            }
+        }, 1000);
+    }
+
+    // Start the initial fetch of task data
+    fetchTaskData();
 })();
 
 function taskList() {
@@ -283,99 +381,6 @@ function taskList() {
                 alert('Error loading content');
             }
         });
-}
-function getDailyTaskTimer() {
-    const url = "/daily_task_timer/";
-    let username = $('body').data('username');
-    let csrfToken = $('body').data('csrftoken');
-
-    $.ajax({
-        url: url,
-        method: "GET",
-        data: {
-            'username': username,
-            'csrfmiddlewaretoken': csrfToken
-        },
-        success: function(response){
-            const timePattern = /^\d+:\d+:\d+(\.\d+)?$/;
-
-            $('.timerSet').removeClass('timer2');
-            $('.timerSet').removeClass('timer');
-
-            if (timePattern.test(response.time_until_next_bonus)) {
-                let timeParts = response.time_until_next_bonus.split(':');
-                let hours = parseInt(timeParts[0], 10);
-                let minutes = parseInt(timeParts[1], 10);
-                let seconds = Math.floor(parseFloat(timeParts[2]));
-
-                $('.timerSet').addClass('timer2');
-
-                // Функция для обновления таймера
-                function updateTimer() {
-                    if (seconds < 0) {
-                        // Если время истекло, остановить таймер и обновить текст
-                        clearInterval(timerInterval);
-                        $('.timer2').text('You can claim your bonus now!');
-                    } else {
-                        // Форматирование времени
-                        let roundedTime = String(hours).padStart(2, '0') + ':' +
-                            String(minutes).padStart(2, '0') + ':' +
-                            String(seconds).padStart(2, '0');
-
-
-                        $('.timer2').text(roundedTime);
-
-                        // Уменьшаем секунды
-                        seconds--;
-
-                        // Если секунды становятся отрицательными, уменьшаем минуты и сбрасываем секунды
-                        if (seconds < 0) {
-                            seconds = 59;
-                            minutes--;
-                            if (minutes < 0) {
-                                minutes = 59;
-                                hours--;
-                            }
-                        }
-                    }
-                }
-
-                // Обновляем таймер каждую секунду
-                let timerInterval = setInterval(updateTimer, 1000);
-                updateTimer(); // Сразу вызываем для отображения первого значения
-            } else {
-                $('.timerSet').addClass('timer');
-                $('.timer').text('You can claim your bonus now!'); // Уведомляем о некорректных данных
-            }
-        },
-        error: function(response){
-            alert('Error loading content');
-        }
-    });
-}
-function bonusEligible() {
-    const url = "/update_task_timer_status_bool/"
-    let username = $('body').data('username');
-    let csrfToken = $('body').data('csrftoken');
-    const dailyTaskClaim = $('.dailyTaskClaim');
-    const dailyContainer = $('.dailyContainer');
-    $.ajax({
-        url: url,
-        method: "POST",
-        data: {
-            'username': username,
-            'csrfmiddlewaretoken': csrfToken
-        },
-        success: function (response) {
-            if (response.bonus_eligible === false) {
-                dailyTaskClaim.remove();
-                dailyContainer.append(`<div class="doneButton">Done</div>`)
-            }
-        },
-        error: function (response) {
-            alert('Error loading content');
-        }
-    })
 }
 
 $('.dailyTaskClaim').click(function () {

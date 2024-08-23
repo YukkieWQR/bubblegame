@@ -10,11 +10,11 @@ function getFriendData(name, callback) {
             'csrfmiddlewaretoken': csrfToken
         },
         success: function(response) {
-            // Calculate the correct friend count by summing the lengths of all non-empty lists
-            let depthLists = response.depth_lists;
-            let friendCount = depthLists.reduce((count, list) => count + list.length, 0);
+            // Get the first list from depth_lists
+            let firstList = response.depth_lists[0];
+            let friendCount = firstList ? firstList.length : 0; // Handle case where firstList might be undefined
 
-            // Call the callback function with the bonus value and corrected friendCount
+            // Call the callback function with the bonus value and correct friendCount
             if (callback && typeof callback === "function") {
                 callback(response.bonus, friendCount);
             }
@@ -121,7 +121,6 @@ function getNewData() {
             $('#energyLimit_cost_full').text(response.next_energy_upgrade_cost);
             $('#energyLimit_lvl').text(response.next_multitap_level);
             $('#multitap_lvl').text(response.next_energy_level);
-            getFriendsData()
             getFriendsListData()
         },
         error: function(response){
@@ -176,7 +175,6 @@ $('.tasks').click(function () {
             $('#dynamicContent').html(response);
             getNewData(); // Synchronize with server on friends page load
             taskList()
-            bonusEligible()
         },
         error: function(response){
             alert('Error loading content');
