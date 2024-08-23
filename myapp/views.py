@@ -554,3 +554,17 @@ def hour_task(request):
     }
 
     return JsonResponse(response_data)
+def get_hour12_bonus_into_wallet(request):
+    username = request.POST.get('username')
+
+    user = UserProfile.objects.get(username=username)
+    user.wallet += 3333
+    now = timezone.now()
+    user.last_12h_task = now
+    user.save()  # Save the changes
+
+    response_data = {
+        'username': username,
+    }
+
+    return JsonResponse(response_data)
