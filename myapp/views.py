@@ -94,33 +94,13 @@ def get_data_about_user(request):
         username = request.POST.get('username')
         user = get_object_or_404(UserProfile, username=username)
 
-        level_names = {
-            1: 'Bronze',
-            2: 'Silver',
-            3: 'Gold',
-            4: 'Platinum',
-            5: 'Diamond',
-            6: 'Master',
-            7: 'Grandmaster',
-            8: 'Elite',
-            9: 'Legendary',
-            10: 'The King'
-        }
-
-
-        # Convert users_invited to a list if it's stored as JSON string
-        if isinstance(user.users_invited, str):
-            # Remove any leading or trailing commas and split the string by commas
-            users_invited = user.users_invited.strip().split(',')
-
-            # Remove any leading/trailing whitespace from each item and enclose in double quotes
 
         user_tasks = TaskUser.objects.filter(user=user).select_related('task')
         task_data = list(Task.objects.all().values('id', 'name', 'cost', 'picture'))
         task_timer_data = list(Task_Timer.objects.all().values('id', 'name', 'cost', 'picture'))
 
         level = user.level
-        userlevelname = level_names.get(level, 'Unknown')
+
         users_invited = user.users_invited
         users_invited = users_invited.split(',')
         users_invited = [invited_user for invited_user in users_invited if invited_user]
@@ -136,7 +116,6 @@ def get_data_about_user(request):
         response_data = {
 
             'user': user.username,
-            'userlevelname': userlevelname,
 
             'new_wallet': user.wallet,
             'new_energy_limit_level': user.energy_limit_level,
@@ -149,8 +128,8 @@ def get_data_about_user(request):
 
             'user_tasks': list(user_tasks.values('task__name', 'status')),
             'users_invited': users_invited,
-            'recieved_threefriends_reward' : user.recieved_threefriends_reward,
-            'can_recieve_3fr_reward': user.can_recieve_3fr_reward,
+            'recieved_threefriends_reward' : recieved_threefriends_reward,
+            'can_recieve_3fr_reward': can_recieve_3fr_reward,
         }
 
         return JsonResponse(response_data)
