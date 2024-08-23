@@ -14,20 +14,47 @@ def index(request):
 
     context = {}
 
-
-
     if username:
         user, created = UserProfile.objects.get_or_create(username=username)
 
         # Update energy limit based on the user's energy_limit_level
 
-
-
         context['user'] = user
-
-
         context['referral_link'] = None
+        depth_lists = user.get_depth_lists()
 
+        # Debugging output
+        if not all(isinstance(level, list) for level in depth_lists):
+            return JsonResponse({'error': 'Invalid format for depth_lists'}, status=500)
+
+        bonus_multipliers = {
+            0: Decimal('0.40'),  # Index 0 corresponds to level 1
+            1: Decimal('0.20'),  # Index 1 corresponds to level 2
+            2: Decimal('0.10'),  # Index 2 corresponds to level 3
+            3: Decimal('0.05'),  # Index 3 corresponds to level 4
+            4: Decimal('0.02'),  # Index 4 corresponds to level 5
+            5: Decimal('0.01'),  # Index 5 corresponds to level 6
+        }
+
+        # Calculate the bonus
+        bonus = Decimal('0.00')
+        for level_index, usernames in enumerate(depth_lists):
+            multiplier = bonus_multipliers.get(level_index, Decimal('0.00'))
+            for invited_username in usernames:
+                user_wallet = UserProfile.objects.filter(username=invited_username).values_list('wallet', flat=True).first()
+                if user_wallet:
+                    bonus += multiplier * Decimal(user_wallet)
+        highest_invited_wallets_sum = user.highest_invited_wallets_sum
+
+        if bonus > highest_invited_wallets_sum:
+            bonus -= highest_invited_wallets_sum
+            user.highest_invited_wallets_sum = bonus
+            user.wallet += bonus
+
+            user.save()
+
+        # Optionally add bonus to the context if needed
+        context['bonus'] = bonus
 
     return render(request, 'index.html', context)
 
@@ -151,7 +178,7 @@ def update_task_status(request):
         if created:
             task_user.status = 2  # Status 'Start'
         else:
-            task_user.status_change()
+            task_usпer.status_change()
             if task_user.status == 3:  # Status 'Done'
                 user.wallet += task.cost
                 user.save()
@@ -310,17 +337,16 @@ def get_user_bonus(request):
     if not all(isinstance(level, list) for level in depth_lists):
         return JsonResponse({'error': 'Invalid format for depth_lists'}, status=500)
 
-    # Calculate the sum of the wallets of invited users
-    invited_usernames = [u.strip() for u in user.users_invited.split(',')]
 
     # Define bonus multipliers by depth level
     bonus_multipliers = {
-        0: Decimal('0.40'),  # Index 0 corresponds to level 1
-        1: Decimal('0.20'),  # Index 1 corresponds to level 2
-        2: Decimal('0.10'),  # Index 2 corresponds to level 3
-        3: Decimal('0.05'),  # Index 3 corresponds to level 4
-        4: Decimal('0.02'),  # Index 4 corresponds to level 5
-        5: Decimal('0.01'),  # Index 5 corresponds to level 6
+
+        0: Decimal('0.20'),  # Index 1 corresponds to level
+        1: Decimal('0.10'),  # Index 2 corresponds to level
+        2: Decimal('0.05'),  # Index 3 corresponds to level
+        3: Decimal('0.02'),  # Index 4 corresponds to level
+        4: Decimal('0.01'),  # Index 5 corresponds to level
+        5: Decimal('0.00'),  # Index 0 corresponds to level
     }
 
     # Calculate the bonus
@@ -332,7 +358,7 @@ def get_user_bonus(request):
             user_wallet = UserProfile.objects.filter(username=username).values_list('wallet', flat=True).first()
             if user_wallet:
                 bonus += multiplier * Decimal(user_wallet)
-
+    bonus += (user.wallet * Decimal('0.40'))
     # Prepare the response data
     response_data = {
         'username': user.username,
@@ -343,61 +369,6 @@ def get_user_bonus(request):
     return JsonResponse(response_data)
 
 
-def get_user_bonus_into_wallet(request):
-    username = request.POST.get('username')
-
-    try:
-        user = UserProfile.objects.get(username=username)
-    except UserProfile.DoesNotExist:
-        return JsonResponse({'error': 'User not found'}, status=404)
-
-    if not user.users_invited:
-        return JsonResponse({'username': user.username, 'invited_users_wallets_sum': 0, 'bonus': 0, 'depth_lists': []})
-
-    # Get depth lists
-    depth_lists = user.get_depth_lists()
-
-    # Debugging output
-
-    if not all(isinstance(level, list) for level in depth_lists):
-        return JsonResponse({'error': 'Invalid format for depth_lists'}, status=500)
-
-    # Calculate the sum of the wallets of invited users
-    invited_usernames = [u.strip() for u in user.users_invited.split(',')]
-    invited_users = UserProfile.objects.filter(username__in=invited_usernames)
-
-    # Define bonus multipliers by depth level
-    bonus_multipliers = {
-        0: Decimal('0.40'),  # Index 0 corresponds to level 1
-        1: Decimal('0.20'),  # Index 1 corresponds to level 2
-        2: Decimal('0.10'),  # Index 2 corresponds to level 3
-        3: Decimal('0.05'),  # Index 3 corresponds to level 4
-        4: Decimal('0.02'),  # Index 4 corresponds to level 5
-        5: Decimal('0.01'),  # Index 5 corresponds to level 6
-    }
-
-    # Calculate the bonus
-    bonus = Decimal('0.00')
-    for level_index, usernames in enumerate(depth_lists):
-        multiplier = bonus_multipliers.get(level_index, Decimal('0.00'))
-        for username in usernames:
-            # Assuming the wallet of each user in the depth list is considered for bonus calculation
-            user_wallet = UserProfile.objects.filter(username=username).values_list('wallet', flat=True).first()
-            if user_wallet:
-                bonus += multiplier * Decimal(user_wallet)
-
-
-    # user.highest_invited_wallets_sum = bonus
-    user.wallet += bonus
-    user.save()
-
-    response_data = {
-        'username': user.username,
-        'bonus': float(bonus),
-        'depth_lists': depth_lists,
-    }
-
-    return JsonResponse(response_data)
 
 def three_friends_task(request):
     if request.method == 'POST':
