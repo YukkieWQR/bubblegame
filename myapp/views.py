@@ -399,48 +399,6 @@ def get_user_bonus_into_wallet(request):
 
     return JsonResponse(response_data)
 
-
-# def get_user_bonus_into_wallet(request):
-#     if request.method != 'POST':
-#         return HttpResponseBadRequest("Invalid request method.")
-#
-#     username = request.POST.get('username')
-#     if not username:
-#         return HttpResponseBadRequest("Username is required.")
-#
-#     try:
-#         user = UserProfile.objects.get(username=username)
-#     except UserProfile.DoesNotExist:
-#         return JsonResponse({'error': 'User not found.'}, status=404)
-#
-#     if not user.users_invited:
-#         return JsonResponse({'username': user.username, 'invited_users_wallets_sum': 0, 'bonus': 0})
-#
-#     # Split the users_invited field to get individual usernames, and strip any surrounding whitespace
-#     invited_usernames = [u.strip() for u in user.users_invited.split(',')]
-#     invited_users = UserProfile.objects.filter(username__in=invited_usernames)
-#
-#     # Calculate the sum of the wallets of invited users
-#     total_wallets_sum = sum(Decimal(invited_user.wallet) for invited_user in invited_users)
-#
-#     # Calculate the bonus based on the highest invited wallets sum
-#     bonus = Decimal(0)
-#     if total_wallets_sum > user.highest_invited_wallets_sum:
-#         bonus = (total_wallets_sum - user.highest_invited_wallets_sum) * Decimal('0.02')
-#         user.highest_invited_wallets_sum = total_wallets_sum
-#         user.wallet += bonus
-#         user.save()
-#
-#     # Prepare the response data
-#     response_data = {
-#         'username': user.username,
-#         'invited_users_wallets_sum': float(total_wallets_sum),
-#         'bonus': float(bonus)
-#     }
-#
-#     return JsonResponse(response_data)
-
-
 def three_friends_task(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -541,11 +499,11 @@ def get_daily_bonus_into_wallet(request):
 
 
 
+
 def get_3fr_bonus_into_wallet(request):
     username = request.POST.get('username')
 
-
-    user = UserProfile.objects.select_for_update().get(username=username)
+    user = UserProfile.objects.get(username=username)
     user.wallet += 3333  # Add 3333 to the wallet
     user.recieved_threefriends_reward = True
     user.save()  # Save the changes
