@@ -33,5 +33,11 @@ urlpatterns = [
     path('get_hour12_bonus_into_wallet/', get_hour12_bonus_into_wallet, name='get_hour12_bonus_into_wallet'),
     path('get_3fr_bonus_into_wallet/', get_3fr_bonus_into_wallet, name='get_3fr_bonus_into_wallet'),
 
+
+
+    path('telegram_subscription/', telegram_subscription, name='telegram_subscription'),
+
+    path('telegram_subscription_reward/', telegram_subscription_reward, name='telegram_subscription_reward'),
+
 ]
 
