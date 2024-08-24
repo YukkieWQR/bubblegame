@@ -178,7 +178,7 @@ def update_task_status(request):
         if created:
             task_user.status = 2  # Status 'Start'
         else:
-            task_usпer.status_change()
+            task_user.status_change()
             if task_user.status == 3:  # Status 'Done'
                 user.wallet += task.cost
                 user.save()
