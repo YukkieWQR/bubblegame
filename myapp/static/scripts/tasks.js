@@ -266,8 +266,6 @@ function threeFriendsTaskEligible(disabledElem) {
                 let countdownSeconds = totalSeconds % 60;
 
                 let countdownDisplay = `${countdownHours}h ${countdownMinutes}m`;
-                let countdownDisplayForConsole = `${countdownHours}h ${countdownMinutes}m ${countdownSeconds}s`;
-                console.log(`Countdown: ${countdownDisplayForConsole}`);
 
                 // Update the interface inside .timerSet
                 $('.timerSet').text(countdownDisplay);
