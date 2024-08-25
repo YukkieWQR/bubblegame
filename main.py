@@ -55,6 +55,7 @@ async def start(message: types.Message):
 
         await message.answer("Let's start, open the web app.", reply_markup=markup)
 
+
 @dp.message_handler(commands=['check'])
 async def check_subscription(message: types.Message):
     user_id = message.from_user.id
@@ -76,6 +77,7 @@ async def check_subscription(message: types.Message):
         return
 
     try:
+        # Check if the user is a member of the channel
         member = await bot.get_chat_member(chat_id, user_id)
         if member.is_chat_member():
             youtube_url = 'https://www.youtube.com/'  # Replace with your desired YouTube URL
@@ -86,6 +88,8 @@ async def check_subscription(message: types.Message):
             markup = types.InlineKeyboardMarkup()
             markup.add(types.InlineKeyboardButton('Subscribe to the channel', url=channel_url))
             await message.answer("Please subscribe to the channel first.", reply_markup=markup)
+    except ChatNotFound:
+        await message.answer("Username not found.")
     except Exception as e:
         await message.answer("An error occurred while checking your subscription. Please try again later.")
         print(f"Error checking subscription: {e}")
