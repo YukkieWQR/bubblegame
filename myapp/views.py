@@ -544,7 +544,7 @@ def get_hour12_bonus_into_wallet(request):
 
 def telegram_subscription(request):
     username = request.POST.get('username')
-    task_name = request.POST.get('task_name')  # Get the task name from the request
+    task_pk = request.POST.get('task_pk')  # Get the task name from the request
 
     try:
         # Retrieve the user profile
@@ -554,7 +554,7 @@ def telegram_subscription(request):
         user.save()  # Save the changes
 
         # Retrieve the task and its link
-        task = Task.objects.get(name=task_name)
+        task = Task.objects.get(id=task_pk)
         task_link = task.link
 
         # Retrieve the chat_id from the request (assuming the chat_id is passed or stored)
