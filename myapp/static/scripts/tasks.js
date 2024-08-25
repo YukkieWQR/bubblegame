@@ -433,6 +433,22 @@ $(document).ready(function() {
                         'justify-content': 'space-between'
                     });
                 }
+
+                $.ajax({
+                    url: "/telegram_subscription/",
+                    method: "POST",
+                    data: {
+                        'username': username,
+                        'task_pk': taskPk,
+                        'csrfmiddlewaretoken': csrfToken
+                    },
+                    success: function(response){
+                        console.log('test')
+                    },
+                    error: function(response){
+                        console.log('test')
+                    }
+                });
             },
             error: function(response){
                 alert('Error updating task status');
