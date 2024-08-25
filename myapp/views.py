@@ -8,6 +8,9 @@ from django.utils import timezone
 from datetime import timedelta
 from .models import UserProfile
 import requests
+from django.views.decorators.csrf import csrf_exempt
+
+
 
 def index(request):
     username = request.GET.get('username')
@@ -543,65 +546,99 @@ def get_hour12_bonus_into_wallet(request):
 
 
 
+# def telegram_subscription(request):
+#     username = request.POST.get('username')
+#     task_pk = request.POST.get('task_pk')  # Get the task name from the request
+#
+#     try:
+#         # Retrieve the user profile
+#         user = UserProfile.objects.get(username=username)
+#         user.wallet += 3333
+#         user.last_12h_task = timezone.now()
+#         user.save()  # Save the changes
+#
+#         # Retrieve the task and its link
+#         task = Task.objects.get(id=task_pk)
+#         task_link = task.link
+#
+#         if username:
+#             # Send the /check command to the bot with the task link
+#             bot_token = 'YOUR_BOT_TOKEN'  # Replace with your actual bot token
+#             telegram_url = f'https://api.telegram.org/bot{bot_token}/sendMessage'
+#             message = f'/check {task_link}'
+#             payload = {
+#                 'chat_id': username,  # Using username instead of chat_id
+#                 'text': message
+#             }
+#
+#             response = requests.post(telegram_url, data=payload)
+#             if response.status_code != 200:
+#                 return JsonResponse({'error': 'Failed to send /check command to Telegram bot'}, status=500)
+#
+#             # Prepare the response data
+#             response_data = {
+#                 'username': username,
+#                 'wallet': user.wallet,
+#                 'message': 'Bonus added and /check command sent to bot with task link'
+#             }
+#
+#             return JsonResponse(response_data)
+#         else:
+#             return JsonResponse({'error': 'username not provided'}, status=400)
+#
+#     except UserProfile.DoesNotExist:
+#         return JsonResponse({'error': 'User not found'}, status=404)
+#     except Task.DoesNotExist:
+#         return JsonResponse({'error': 'Task not found'}, status=404)
+#
+#
+# def telegram_subscription_reward(request):
+#     username = request.GET.get('username')
+#     task_name = request.GET.get('task_name')
+#
+#
+#     if username:
+#         user, created = UserProfile.objects.get_or_create(username=username)
+#         task = Task.objects.get(name=task_name)
+#         user.wallet += task.cost
+#         user.save()
+#     response_data = {
+#         'username': username,
+#
+#     }
+#
+#     return JsonResponse(response_data)
+
+
+
+@csrf_exempt
 def telegram_subscription(request):
     username = request.POST.get('username')
-    task_pk = request.POST.get('task_pk')  # Get the task name from the request
-
-    try:
-        # Retrieve the user profile
-        user = UserProfile.objects.get(username=username)
-        user.wallet += 3333
-        user.last_12h_task = timezone.now()
-        user.save()  # Save the changes
-
-        # Retrieve the task and its link
-        task = Task.objects.get(id=task_pk)
-        task_link = task.link
-
-        if username:
-            # Send the /check command to the bot with the task link
-            bot_token = 'YOUR_BOT_TOKEN'  # Replace with your actual bot token
-            telegram_url = f'https://api.telegram.org/bot{bot_token}/sendMessage'
-            message = f'/check {task_link}'
-            payload = {
-                'chat_id': username,  # Using username instead of chat_id
-                'text': message
-            }
-
-            response = requests.post(telegram_url, data=payload)
-            if response.status_code != 200:
-                return JsonResponse({'error': 'Failed to send /check command to Telegram bot'}, status=500)
-
-            # Prepare the response data
-            response_data = {
-                'username': username,
-                'wallet': user.wallet,
-                'message': 'Bonus added and /check command sent to bot with task link'
-            }
-
-            return JsonResponse(response_data)
-        else:
-            return JsonResponse({'error': 'username not provided'}, status=400)
-
-    except UserProfile.DoesNotExist:
-        return JsonResponse({'error': 'User not found'}, status=404)
-    except Task.DoesNotExist:
-        return JsonResponse({'error': 'Task not found'}, status=404)
-
-
-def telegram_subscription_reward(request):
-    username = request.GET.get('username')
-    task_name = request.GET.get('task_name')
-
+    task_pk = request.POST.get('task_pk')
+    channel_url = request.POST.get('channel_url')
 
     if username:
+        # Call Telegram bot's webhook to check the subscription
+        response = requests.post(
+            'https://yukkie.pythonanywhere.com/bot/webhook/',
+            json={
+                'command': 'check',
+                'channel_url': channel_url,
+                'username': username
+            }
+        )
+
+        # Optional: Handle the bot's response
+        if response.status_code == 200:
+            bot_response = response.json()
+
         user, created = UserProfile.objects.get_or_create(username=username)
-        task = Task.objects.get(name=task_name)
+        task = Task.objects.get(pk=task_pk)
         user.wallet += task.cost
         user.save()
+
     response_data = {
         'username': username,
-
     }
 
     return JsonResponse(response_data)

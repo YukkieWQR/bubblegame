@@ -1,7 +1,12 @@
 from aiogram import Bot, Dispatcher, types, executor
 from aiogram.types.web_app_info import WebAppInfo
+from aiogram.utils.exceptions import ChatNotFound
 import sqlite3
 import atexit
+import requests
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+
 
 # Initialize bot and dispatcher
 bot = Bot('7348387250:AAHu-3ik9G3vcS1oG6FTkxnL0tF_eoiC314')
@@ -58,7 +63,7 @@ async def start(message: types.Message):
 
 @dp.message_handler(commands=['check'])
 async def check_subscription(message: types.Message):
-    user_id = message.from_user.id
+    username = message.from_user.username
     args = message.get_args().split()
 
     if len(args) == 0:
@@ -78,7 +83,7 @@ async def check_subscription(message: types.Message):
 
     try:
         # Check if the user is a member of the channel
-        member = await bot.get_chat_member(chat_id, user_id)
+        member = await bot.get_chat_member(chat_id, username)
         if member.is_chat_member():
             youtube_url = 'https://www.youtube.com/'  # Replace with your desired YouTube URL
             markup = types.InlineKeyboardMarkup()
@@ -89,7 +94,7 @@ async def check_subscription(message: types.Message):
             markup.add(types.InlineKeyboardButton('Subscribe to the channel', url=channel_url))
             await message.answer("Please subscribe to the channel first.", reply_markup=markup)
     except ChatNotFound:
-        await message.answer("Username not found.")
+        await message.answer("Channel not found.")
     except Exception as e:
         await message.answer("An error occurred while checking your subscription. Please try again later.")
         print(f"Error checking subscription: {e}")
@@ -98,3 +103,36 @@ executor.start_polling(dp)
 
 # Close the database connection on exit
 atexit.register(bot.close)
+
+
+@csrf_exempt
+def telegram_subscription(request):
+    username = request.POST.get('username')
+    task_pk = request.POST.get('task_pk')
+    channel_url = request.POST.get('channel_url')
+
+    if username and channel_url:
+        # Call Telegram bot's webhook to check the subscription
+        response = requests.post(
+            'https://yukkie.pythonanywhere.com/bot/webhook/',
+            json={
+                'command': 'check',
+                'channel_url': channel_url,
+                'username': username
+            }
+        )
+
+        # Optional: Handle the bot's response
+        if response.status_code == 200:
+            bot_response = response.json()
+
+        user, created = UserProfile.objects.get_or_create(username=username)
+        task = Task.objects.get(pk=task_pk)
+        user.wallet += task.cost
+        user.save()
+
+    response_data = {
+        'username': username,
+    }
+
+    return JsonResponse(response_data)
