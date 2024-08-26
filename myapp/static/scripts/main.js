@@ -374,7 +374,6 @@ $(document).ready(function () {
                 // Update the content on the page with the received HTML
                 $('#dynamicContent').html(response);
                 getNewData(); // Synchronize with server on friends page load
-                taskList()
             },
             error: function(response){
                 alert('Error loading content');

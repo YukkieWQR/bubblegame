@@ -10,13 +10,14 @@ function getFriendData(name, callback) {
             'csrfmiddlewaretoken': csrfToken
         },
         success: function(response) {
-            // Get the first list from depth_lists
+            // Calculate the friendLevel specifically for this user's depth_lists
+            let friendLevel = response.depth_lists.filter(array => Array.isArray(array) && array.length > 0).length;
             let firstList = response.depth_lists[0];
             let friendCount = firstList ? firstList.length : 0; // Handle case where firstList might be undefined
 
-            // Call the callback function with the bonus value and correct friendCount
+            // Call the callback function with the bonus value, correct friendCount, and friendLevel
             if (callback && typeof callback === "function") {
-                callback(response.bonus, friendCount);
+                callback(response.bonus, friendCount, friendLevel);
             }
         },
         error: function(response) {
@@ -50,10 +51,11 @@ function getFriendsListData() {
                     let friendName = firstList[j];
 
                     // Call getFriendData with the friend's name and a callback function
-                    getFriendData(friendName, function(bonus, friendCount) {
+                    getFriendData(friendName, function(bonus, friendCount, friendLevel) {
                         friendList.append(`
                             <div class="profitClaim">
                                 <div class="friendName">
+                                    <div class="friendLevel">${(friendLevel === 0) ? 1 : friendLevel} lvl</div>
                                     <img src="../static/images/userAvatar.png" alt="" height="36px">
                                     <div class="friendsCount">${friendCount}</div>Friends
                                     <img src="../static/images/ellipse.png" alt="" height="24px">
@@ -174,7 +176,6 @@ $('.tasks').click(function () {
             // Update the content on the page with the received HTML
             $('#dynamicContent').html(response);
             getNewData(); // Synchronize with server on friends page load
-            taskList()
         },
         error: function(response){
             alert('Error loading content');

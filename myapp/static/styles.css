@@ -980,6 +980,7 @@ img {
     color: #fff;
 }
 .friendName {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1226,6 +1227,18 @@ img {
     justify-content: center;
     width: 82%;
     gap: 9px;
+}
+.friendLevel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    height: 36px;
+    width: 36px;
+    left: 0;
+    font: 800 12px var(--font-family);
+    letter-spacing: -0.04em;
+    color: var(--white);
 }
 .timerSet {
     font: 500 12px var(--font-family);
