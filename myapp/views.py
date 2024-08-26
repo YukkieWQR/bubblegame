@@ -13,9 +13,6 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 
-
-
-
 def index(request):
     username = request.GET.get('username')
 
