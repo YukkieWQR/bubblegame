@@ -4,7 +4,7 @@ from .views import *
 
 
 urlpatterns = [
-    path('index', index, name='index'),
+    path('index/', index, name='index'),
     path('referral/', index_referral, name='index_referral'),
 
     path('load_boost_html/', load_boost_html, name='load_boost_html'),
@@ -33,9 +33,6 @@ urlpatterns = [
     path('get_hour12_bonus_into_wallet/', get_hour12_bonus_into_wallet, name='get_hour12_bonus_into_wallet'),
     path('get_3fr_bonus_into_wallet/', get_3fr_bonus_into_wallet, name='get_3fr_bonus_into_wallet'),
 
-    path('telegram_subscription/', telegram_subscription, name='telegram_subscription'),
-    path('reward/', telegram_subscription, name='telegram_subscription_reward'),
-    path('bot/webhook', telegram_subscription , name='telegram_subscription_webhook'),
 ]
 
 

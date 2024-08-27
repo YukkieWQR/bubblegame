@@ -609,36 +609,3 @@ def get_hour12_bonus_into_wallet(request):
 #
 #     return JsonResponse(response_data)
 
-
-
-@csrf_exempt
-def telegram_subscription(request):
-    username = request.POST.get('username')
-    task_pk = request.POST.get('task_pk')
-    channel_url = request.POST.get('channel_url')
-
-    if username:
-        # Call Telegram bot's webhook to check the subscription
-        response = requests.post(
-            'https://yukkie.pythonanywhere.com/bot/webhook/',
-            json={
-                'command': 'check',
-                'channel_url': channel_url,
-                'username': username
-            }
-        )
-
-        # Optional: Handle the bot's response
-        if response.status_code == 200:
-            bot_response = response.json()
-
-        user, created = UserProfile.objects.get_or_create(username=username)
-        task = Task.objects.get(pk=task_pk)
-        user.wallet += task.cost
-        user.save()
-
-    response_data = {
-        'username': username,
-    }
-
-    return JsonResponse(response_data)
