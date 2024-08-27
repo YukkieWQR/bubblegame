@@ -8,28 +8,38 @@ from aiogram.types.web_app_info import WebAppInfo
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 
-# Initialize the bot and dispatcher
+# token here is token of telegram bot, you get it from @BotFather
+# токен здесь - это токен бота Telegram, вы получаете его от @BotFather
 bot = Bot(token="7348387250:AAHu-3ik9G3vcS1oG6FTkxnL0tF_eoiC314")
 dp = Dispatcher()
 user_data = {}
 
-subscribe_button_1 = InlineKeyboardButton(text="Subscribe to Channel 1", url="https://t.me/testChannelYea")
-subscribe_button_2 = InlineKeyboardButton(text="Subscribe to Channel 2", url="https://t.me/testChannelYea")
-subscribe_button_3 = InlineKeyboardButton(text="Subscribe to Channel 3", url="https://t.me/testChannelYea")
 
+
+
+#HERE IS url='', dont change structure, Bot must be admin in that channel to see users list
+subscribe_button_1 = InlineKeyboardButton(text="Subscribe to Channel", url="https://t.me/testChannelYea")
+subscribe_button_2 = InlineKeyboardButton(text="Subscribe to Channel", url="https://t.me/testChannelYea")
+subscribe_button_3 = InlineKeyboardButton(text="Subscribe to Channel", url="https://t.me/testChannelYea")
+#ЗДЕСЬ url='', не меняйте структуру, бот должен быть администратором на этом канале, чтобы видеть список пользователей
+
+
+#same structure with urls upper, here must be your telergam channel id
 chat_id_1 = "-1002172423606"
 chat_id_2 = "-1002172423606"
 chat_id_3 = "-1002172423606"
+#та же структура с URL-адресами вверху, здесь должен быть ваш идентификатор (id) канала Telegram
 
-# Task selection buttons
 
-# Check subscription button
+
+
+
 check_button = InlineKeyboardButton(text="Check Subscription", callback_data="check_subscription")
 
-# Inline button to open Google
-google_button = InlineKeyboardButton(text="Open Google", url="https://www.google.com")
 
-# State management for selected task
+google_button = InlineKeyboardButton(text="Open Google", url="https://yukkie.pythonanywhere.com/reward_for_subscription")
+
+
 user_tasks = {}
 
 
@@ -76,29 +86,29 @@ async def load_game_referral(message: types.Message, command: CommandStart):
 
 @dp.callback_query(F.data == "checkbuttons")
 async def checkbuttons(callback_query: types.CallbackQuery):
-    # Define task selection buttons
+
     task_button_1 = InlineKeyboardButton(text="Task 1", callback_data="task_1")
     task_button_2 = InlineKeyboardButton(text="Task 2", callback_data="task_2")
     task_button_3 = InlineKeyboardButton(text="Task 3", callback_data="task_3")
 
-    # Create the keyboard with task selection buttons
+
     task_keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [task_button_1],
         [task_button_2],
         [task_button_3]
     ])
 
-    # Send the message with the task keyboard
+
     await callback_query.message.answer("Choose a task:", reply_markup=task_keyboard)
 
 @dp.callback_query(F.data.in_({"task_1", "task_2", "task_3"}))
 async def select_task(callback_query: types.CallbackQuery):
     user_id = callback_query.from_user.id
 
-    # Save the selected task for the user
+
     user_tasks[user_id] = callback_query.data
 
-    # Prompt the user to subscribe
+
     if callback_query.data == "task_1":
         await callback_query.message.answer(
             "You selected Task 1. Please subscribe to the channel and then check your subscription.",
@@ -138,7 +148,7 @@ async def check_subscription(callback_query: types.CallbackQuery):
 
     if chat_member.status in ['member', 'administrator', 'creator']:
         await callback_query.message.answer(
-            "You are subscribed! Here's your button:",
+            "You are subscribed! Take your reward: ",
             reply_markup=InlineKeyboardMarkup(inline_keyboard=[[google_button]])
         )
     else:

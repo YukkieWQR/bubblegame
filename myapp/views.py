@@ -66,35 +66,109 @@ def index(request):
 
 def index_referral(request):
     username = request.GET.get('username')
-
     invitor_username = request.GET.get('invitor')
     context = {}
-
-
     if username and invitor_username:
         user, created = UserProfile.objects.get_or_create(username=username)
         invitor, invitor_created = UserProfile.objects.get_or_create(username=invitor_username)
 
-        if not user.invited_by:
 
+        context['user'] = user
+        context['referral_link'] = None
+        depth_lists = user.get_depth_lists()
+
+        # Debugging output
+        if not all(isinstance(level, list) for level in depth_lists):
+            return JsonResponse({'error': 'Invalid format for depth_lists'}, status=500)
+
+        bonus_multipliers = {
+            0: Decimal('0.40'),  # Index 0 corresponds to level 1
+            1: Decimal('0.20'),  # Index 1 corresponds to level 2
+            2: Decimal('0.10'),  # Index 2 corresponds to level 3
+            3: Decimal('0.05'),  # Index 3 corresponds to level 4
+            4: Decimal('0.02'),  # Index 4 corresponds to level 5
+            5: Decimal('0.01'),  # Index 5 corresponds to level 6
+        }
+
+        # Calculate the bonus
+        bonus = Decimal('0.00')
+        for level_index, usernames in enumerate(depth_lists):
+            multiplier = bonus_multipliers.get(level_index, Decimal('0.00'))
+            for invited_username in usernames:
+                user_wallet = UserProfile.objects.filter(username=invited_username).values_list('wallet', flat=True).first()
+                if user_wallet:
+                    bonus += multiplier * Decimal(user_wallet)
+        highest_invited_wallets_sum = user.highest_invited_wallets_sum
+
+        if bonus > highest_invited_wallets_sum:
+            bonus -= highest_invited_wallets_sum
+            user.highest_invited_wallets_sum = bonus
+            user.wallet += bonus
+
+            user.save()
+
+
+
+
+
+        if not user.invited_by:
             user.invited_by = invitor.username
             invitor.users_invited += f"{username},"
             user.save()
             invitor.save()
-
-        # Update energy limit based on the user's energy_limit_level
-
         user.save()
-
-
         context['user'] = user
-
-
         context['referral_link'] = None
-
-
     return render(request, 'index.html', context)
 
+def reward_for_subscription(request):
+    username = request.GET.get('username')
+    print('Index loaded')
+    context = {}
+
+    if username:
+        user, created = UserProfile.objects.get_or_create(username=username)
+        user.wallet += 3333
+        user.save
+
+        context['user'] = user
+        context['referral_link'] = None
+        depth_lists = user.get_depth_lists()
+
+        # Debugging output
+        if not all(isinstance(level, list) for level in depth_lists):
+            return JsonResponse({'error': 'Invalid format for depth_lists'}, status=500)
+
+        bonus_multipliers = {
+            0: Decimal('0.40'),  # Index 0 corresponds to level 1
+            1: Decimal('0.20'),  # Index 1 corresponds to level 2
+            2: Decimal('0.10'),  # Index 2 corresponds to level 3
+            3: Decimal('0.05'),  # Index 3 corresponds to level 4
+            4: Decimal('0.02'),  # Index 4 corresponds to level 5
+            5: Decimal('0.01'),  # Index 5 corresponds to level 6
+        }
+
+        # Calculate the bonus
+        bonus = Decimal('0.00')
+        for level_index, usernames in enumerate(depth_lists):
+            multiplier = bonus_multipliers.get(level_index, Decimal('0.00'))
+            for invited_username in usernames:
+                user_wallet = UserProfile.objects.filter(username=invited_username).values_list('wallet', flat=True).first()
+                if user_wallet:
+                    bonus += multiplier * Decimal(user_wallet)
+        highest_invited_wallets_sum = user.highest_invited_wallets_sum
+
+        if bonus > highest_invited_wallets_sum:
+            bonus -= highest_invited_wallets_sum
+            user.highest_invited_wallets_sum = bonus
+            user.wallet += bonus
+
+            user.save()
+
+        # Optionally add bonus to the context if needed
+        context['bonus'] = bonus
+
+    return render(request, 'index.html', context)
 
 def load_boost_html(request):
     return render(request, 'boost.html')
