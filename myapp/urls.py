@@ -4,7 +4,7 @@ from .views import *
 
 
 urlpatterns = [
-    path('index/', index, name='index'),
+    path('', index, name='index'),
     path('referral/', index_referral, name='index_referral'),
 
     path('load_boost_html/', load_boost_html, name='load_boost_html'),
