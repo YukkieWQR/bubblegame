@@ -203,10 +203,7 @@ $('#copyButton').click(function () {
     let username = $('body').data('username');
     navigator.clipboard.writeText(`https://t.me/lionkombatgame_bot?start=startapp=${username}
 
-Play with me, grow your financial empire and get tokens on TON after Airdrop
-
-💸 +5k coins as your first gift
-🔥 +A lot of extra bonuses for Early Adopters`).then(function() {
+Play with me, grow your financial empire and get tokens on TON after Airdrop`).then(function() {
         alert('Link copied successfully!');
     })
 });
@@ -215,10 +212,7 @@ $('#generate-referral-link').click(function () {
     let username = $('body').data('username');
     let url = `https://t.me/lionkombatgame_bot?start=startapp=${username}`
     let text = `
-Play with me, grow your financial empire and get tokens on TON after Airdrop
-
-💸 +5k coins as your first gift
-🔥 +A lot of extra bonuses for Early Adopters`
+Play with me, grow your financial empire and get tokens on TON after Airdrop`
     const shareUrl = 'https://t.me/share/url?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(text);
 
     window.location.href = shareUrl
