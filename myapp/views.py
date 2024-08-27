@@ -74,7 +74,6 @@ def index_referral(request):
     if username and invitor_username:
         user, created = UserProfile.objects.get_or_create(username=username)
         invitor, invitor_created = UserProfile.objects.get_or_create(username=invitor_username)
-        user.regenerate_energy()
 
         if not user.invited_by:
 
