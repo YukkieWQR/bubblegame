@@ -149,7 +149,7 @@ async def check_subscription(callback_query: types.CallbackQuery):
         google_button = InlineKeyboardButton(
             text="Get reward!",
             web_app=WebAppInfo(
-                url=f"https://yukkie.pythonanywhere.com/reward_for_subscription/?username={callback_query.from_user.username}")
+                url=f"https://yukkie.pythonanywhere.com/reward_for_subscription/?username={callback_query.from_user.username}&reward_id={chat_id}")
         )
 
         # Send the reward message with the google_button

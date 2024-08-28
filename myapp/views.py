@@ -121,21 +121,19 @@ def index_referral(request):
         context['referral_link'] = None
     return render(request, 'index.html', context)
 
-
 def reward_for_subscription(request):
     username = request.GET.get('username')
-    print('Index loaded')
+    reward_id = request.GET.get('reward_id')
     context = {}
 
-    if username:
+    if username and reward_id:
         user, created = UserProfile.objects.get_or_create(username=username)
-        user.wallet += 3333
-        user.save()  # Add parentheses to call the save method
 
         context['user'] = user
         context['referral_link'] = None
         depth_lists = user.get_depth_lists()
 
+        # Debugging output
         if not all(isinstance(level, list) for level in depth_lists):
             return JsonResponse({'error': 'Invalid format for depth_lists'}, status=500)
 
@@ -156,6 +154,7 @@ def reward_for_subscription(request):
                 user_wallet = UserProfile.objects.filter(username=invited_username).values_list('wallet', flat=True).first()
                 if user_wallet:
                     bonus += multiplier * Decimal(user_wallet)
+
         highest_invited_wallets_sum = user.highest_invited_wallets_sum
 
         if bonus > highest_invited_wallets_sum:
@@ -163,10 +162,13 @@ def reward_for_subscription(request):
             user.highest_invited_wallets_sum = bonus
             user.wallet += bonus
 
-            user.save()
+        # Check if the reward_id already exists in telegram_rewards
+        existing_rewards = user.telegram_rewards.split(',')
+        if reward_id not in existing_rewards:
+            user.wallet += Decimal('3333')  # Add 3333 to the user's wallet
+            user.telegram_rewards = f"{user.telegram_rewards},{reward_id}" if user.telegram_rewards else reward_id
 
-        # Optionally add bonus to the context if needed
-        context['bonus'] = bonus
+        user.save()
 
     return render(request, 'index.html', context)
 
