@@ -201,7 +201,7 @@ $('.airdrop').click(function () {
 
 $('#copyButton').click(function () {
     let username = $('body').data('username');
-    navigator.clipboard.writeText(`https://t.me/lionkombatgame_bot?start=startapp=${username}
+    navigator.clipboard.writeText(`https://t.me/lionkombatgame_bot?start={username}
 
 Play with me, grow your financial empire and get tokens on TON after Airdrop`).then(function() {
         alert('Link copied successfully!');
@@ -210,7 +210,7 @@ Play with me, grow your financial empire and get tokens on TON after Airdrop`).t
 
 $('#generate-referral-link').click(function () {
     let username = $('body').data('username');
-    let url = `https://t.me/lionkombatgame_bot?start=startapp=${username}`
+    let url = `https://t.me/lionkombatgame_bot?start={username}`
     let text = `
 Play with me, grow your financial empire and get tokens on TON after Airdrop`
     const shareUrl = 'https://t.me/share/url?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(text);
