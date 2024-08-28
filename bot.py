@@ -37,8 +37,6 @@ chat_id_3 = "-1002172423606"
 check_button = InlineKeyboardButton(text="Check Subscription", callback_data="check_subscription")
 
 
-google_button = InlineKeyboardButton(text="Open Google", url="https://yukkie.pythonanywhere.com/reward_for_subscription")
-
 
 user_tasks = {}
 
@@ -147,23 +145,20 @@ async def check_subscription(callback_query: types.CallbackQuery):
     chat_member = await bot.get_chat_member(chat_id=chat_id, user_id=user_id)
 
     if chat_member.status in ['member', 'administrator', 'creator']:
+        # Create the button with the username included in the URL
+        google_button = InlineKeyboardButton(
+            text="Get reward!",
+            web_app=WebAppInfo(
+                url=f"https://yukkie.pythonanywhere.com/reward_for_subscription/?username={callback_query.from_user.username}")
+        )
+
+        # Send the reward message with the google_button
         await callback_query.message.answer(
             "You are subscribed! Take your reward: ",
             reply_markup=InlineKeyboardMarkup(inline_keyboard=[[google_button]])
         )
     else:
-        await callback_query.message.answer(
-            "You are not subscribed. Please subscribe to the channel and try again.",
-            reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-                [
-                    subscribe_button_1 if selected_task == "task_1" else subscribe_button_2 if selected_task == "task_2" else subscribe_button_3,
-                    check_button]
-            ])
-        )
-
-
-
-
+        await callback_query.message.answer("You are not subscribed yet. Please subscribe to get the reward.")
 
 
 

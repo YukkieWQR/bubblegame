@@ -121,6 +121,7 @@ def index_referral(request):
         context['referral_link'] = None
     return render(request, 'index.html', context)
 
+
 def reward_for_subscription(request):
     username = request.GET.get('username')
     print('Index loaded')
@@ -129,13 +130,12 @@ def reward_for_subscription(request):
     if username:
         user, created = UserProfile.objects.get_or_create(username=username)
         user.wallet += 3333
-        user.save
+        user.save()  # Add parentheses to call the save method
 
         context['user'] = user
         context['referral_link'] = None
         depth_lists = user.get_depth_lists()
 
-        # Debugging output
         if not all(isinstance(level, list) for level in depth_lists):
             return JsonResponse({'error': 'Invalid format for depth_lists'}, status=500)
 
