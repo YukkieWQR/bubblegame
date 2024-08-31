@@ -215,7 +215,7 @@ $('#copyButton').click(function (event) {
 Play with me, grow your financial empire and get tokens on TON after Airdrop`)
         .then(function() {
             // Append success message
-            $('#copyButton').append(`<div class="successText">Link copied successfully!</div>`);
+            $('#copyButton').append(`<div class="successText">Referral link copied successfully!</div>`);
             $('.copyLinkButton').css('height', '99px'); // Use jQuery's css method
 
             // Remove success message after 3 seconds
