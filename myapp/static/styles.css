@@ -1302,6 +1302,7 @@ img {
 }
 .inviteContainerBackground {
     position: fixed;
+    z-index: 1;
     bottom: 77px;
     height: 70px;
     padding-top: 15px;
