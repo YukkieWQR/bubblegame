@@ -76,7 +76,7 @@ window.addEventListener('load', function() {
             <div class="claimBubblesProgress">
                 <div class="farmingInfo">
                     <div class="farmingText">Farming</div>
-                    <div class="progressCount">B ${(response.income_per_hour).toFixed(3)}</div>
+                    <div class="progressCount"><img src="../static/images/newCoinImage.png" alt="" height="14px"> ${(response.income_per_hour).toFixed(3)}</div>
                 </div>
                 <div class="timerInfo" id="timerInfo"></div>
             </div>
@@ -108,7 +108,8 @@ window.addEventListener('load', function() {
                     const incomePerHour = parseFloat(response.income_per_hour);
                     const tokenIncrementPerMinute = incomePerHour / 60;
                     tokensEarned += tokenIncrementPerMinute;
-                    progressCount.text(`B ${(tokensEarned).toFixed(3)}`);
+                    progressCount.append(`<img src="../static/images/newCoinImage.png" alt="" height="14px">`)
+                    progressCount.text(`${(tokensEarned).toFixed(3)}`);
                 },
                 error: function () {
                     alert('Error fetching updated income_per_hour');
@@ -131,6 +132,16 @@ window.addEventListener('load', function() {
                 'csrfmiddlewaretoken': csrfToken
             },
             success: function () {
+
+                let popSound = new Audio('../static/sounds/pop.mp3');
+                popSound.play();
+
+                confetti({
+                    particleCount: 100,    // Количество частиц конфетти
+                    spread: 70,            // Рассеивание конфетти
+                    origin: { y: 0.85 }     // Позиция начала конфетти (0 - верх, 1 - низ)
+                });
+
                 // After successfully claiming the prize, fetch updated data from /get_bonus/
                 $.ajax({
                     url: bonusUrl,

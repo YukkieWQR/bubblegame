@@ -199,13 +199,40 @@ $('.airdrop').click(function () {
     });
 });
 
-$('#copyButton').click(function () {
-    let username = $('body').data('username');
-    navigator.clipboard.writeText(`https://t.me/lionkombatgame_bot?start={username}
+$('#copyButton').click(function (event) {
+    // Check if the button is disabled
+    if ($('#copyButton').prop('disabled')) {
+        event.preventDefault(); // Prevent button action if already disabled
+        return; // Exit the function early
+    }
 
-Play with me, grow your financial empire and get tokens on TON after Airdrop`).then(function() {
-        alert('Link copied successfully!');
-    })
+    // Disable the button
+    $('#copyButton').prop('disabled', true);
+
+    let username = $('body').data('username');
+    navigator.clipboard.writeText(`https://t.me/lionkombatgame_bot?start=${username}
+
+Play with me, grow your financial empire and get tokens on TON after Airdrop`)
+        .then(function() {
+            // Append success message
+            $('#copyButton').append(`<div class="successText">Link copied successfully!</div>`);
+            $('.copyLinkButton').css('height', '99px'); // Use jQuery's css method
+
+            // Remove success message after 3 seconds
+            setTimeout(function () {
+                $('.successText').remove(); // This will remove the success message when it's no longer needed
+                $('.copyLinkButton').css('height', '54px'); // Use jQuery's css method
+
+                // Re-enable the button
+                $('#copyButton').prop('disabled', false);
+            }, 3000);
+        })
+        .catch(function(error) {
+            console.error('Could not copy text: ', error);
+
+            // Re-enable the button in case of error
+            $('#copyButton').prop('disabled', false);
+        });
 });
 
 $('#generate-referral-link').click(function () {

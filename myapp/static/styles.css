@@ -592,7 +592,7 @@ img {
     align-items: center;
     justify-content: space-between;
     width: -webkit-fill-available;
-    margin: 5px 1rem 46px 1rem;
+    margin: 0 1rem;
     gap: 11px;
 }
 .copyInvite {
@@ -664,7 +664,50 @@ img {
     align-items: flex-start;
     width: -webkit-fill-available;
     margin: 0 1rem;
-    margin-bottom: 50px;
+    margin-bottom: 150px;
+}
+.copyLinkContainer {
+    display: flex;
+    width: 100%;
+}
+.copyLinkButton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    background: #121212;
+    border-radius: 8px;
+    min-height: 54px;
+    height: 54px;
+    width: 100%;
+    padding: 0 1rem;
+    margin: 0 1rem 50px 1rem;
+    transition: height 0.3s ease;
+}
+.successText {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 45px;
+    font: 700 15px var(--font-family);
+    letter-spacing: -0.03em;
+    background: linear-gradient(90deg, #dd273d 0%, #e14d37 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.copyLinkButton span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 54px;
+    width: 100%;
+    font: 700 15px var(--font-family);
+    letter-spacing: -0.03em;
+    background: linear-gradient(90deg, #dd273d 0%, #e14d37 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 .friendsContainerHeader {
     font: 600 18px var(--font-family);
@@ -1256,6 +1299,15 @@ img {
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+.inviteContainerBackground {
+    position: fixed;
+    bottom: 77px;
+    height: 70px;
+    padding-top: 15px;
+    background: #121212;
+    width: 100%;
+    border-radius: 12px 12px 0 0;
 }
 .claimBubblesContainer {
     position: absolute;
