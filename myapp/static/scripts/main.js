@@ -33,6 +33,7 @@ window.addEventListener('load', function() {
 });
 
 (function () {
+    let popSound = new Audio('../static/sounds/pop.mp3');
     const bonusUrl = "/get_bonus/";
     const claimUrl = "/get_daily_bonus_into_wallet/";
     let claimBubblesContainer = $('.claimBubblesContainer');
@@ -132,8 +133,6 @@ window.addEventListener('load', function() {
                 'csrfmiddlewaretoken': csrfToken
             },
             success: function () {
-
-                let popSound = new Audio('../static/sounds/pop.mp3');
                 popSound.play();
 
                 confetti({
