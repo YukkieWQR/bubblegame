@@ -93,7 +93,25 @@ window.addEventListener('load', function() {
             claimBubblesContainer.append(`
                 <div class="claimBubbles">Claim</div>
             `);
-            $('.claimBubbles').on('click', claimPrize);
+            $('.claimBubbles').on('click', function (event) {
+                // Проверяем, отключена ли кнопка
+                if ($('.claimBubbles').prop('disabled')) {
+                    event.preventDefault();  // Предотвращаем дальнейшее выполнение, если кнопка отключена
+                    return; // Выход из функции
+                }
+
+                // Блокируем кнопку
+                $('.claimBubbles').prop('disabled', true);
+
+                // Вызываем функцию claimPrize
+                claimPrize();
+
+                // Восстанавливаем кнопку через 3 секунды
+                setTimeout(function () {
+                    $('.claimBubbles').prop('disabled', false);
+                }, 3000);
+            });
+
         });
 
         // Update token count every minute
@@ -178,7 +196,24 @@ window.addEventListener('load', function() {
                 claimBubblesContainer.append(`
                     <div class="claimBubbles">Claim</div>
                 `);
-                $('.claimBubbles').on('click', claimPrize);
+                $('.claimBubbles').on('click', function (event) {
+                    // Проверяем, отключена ли кнопка
+                    if ($('.claimBubbles').prop('disabled')) {
+                        event.preventDefault();  // Предотвращаем дальнейшее выполнение, если кнопка отключена
+                        return; // Выход из функции
+                    }
+
+                    // Блокируем кнопку
+                    $('.claimBubbles').prop('disabled', true);
+
+                    // Вызываем функцию claimPrize
+                    claimPrize();
+
+                    // Восстанавливаем кнопку через 3 секунды
+                    setTimeout(function () {
+                        $('.claimBubbles').prop('disabled', false);
+                    }, 3000);
+                });
             } else {
                 displayProgress(response);
             }
