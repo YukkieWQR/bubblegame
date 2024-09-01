@@ -37,11 +37,70 @@ function getFriendData(name, callback) {
             let firstList = response.depth_lists[0];
             let friendCount = firstList ? firstList.length : 0; // Handle case where firstList might be undefined
 
+            // Calculate `friendCountTwoCount` dynamically if needed
+            let friendCountTwoCount = response.depth_lists.flat().length;
+
             // Now call getBonusData and pass in a callback
             getBonusData(function() {
                 // Now we can safely call the final callback with the updated totalBonus
                 if (callback && typeof callback === "function") {
-                    callback((totalBonus += parseFloat(response.bonus)), friendCount, friendLevel);
+                    callback((totalBonus += parseFloat(response.bonus)), friendCount, friendLevel, friendCountTwoCount);
+                }
+            });
+        },
+        error: function(response) {
+            alert('Error loading content');
+        }
+    });
+}
+
+function getFriendData(name, callback) {
+    const url = "/get_user_bonus/";
+    const url2 = "/add_to_bonus/";
+    let username = name;
+    let csrfToken = $('body').data('csrftoken');
+    let totalBonus = 0;
+
+    function getBonusData(callback) {
+        $.ajax({
+            url: url2,
+            method: "POST",
+            data: {
+                'username': username,
+                'csrfmiddlewaretoken': csrfToken
+            },
+            success: function(response) {
+                totalBonus += parseFloat(response.addtobonus);
+                console.log(totalBonus);
+                // Call the callback here; only after bonus data has been fetched
+                callback();
+            },
+            error: function(response) {
+                alert('Error loading content');
+            }
+        });
+    }
+
+    $.ajax({
+        url: url,
+        method: "POST",
+        data: {
+            'username': username,
+            'csrfmiddlewaretoken': csrfToken
+        },
+        success: function(response) {
+            let friendLevel = response.depth_lists.filter(array => Array.isArray(array) && array.length > 0).length;
+            let firstList = response.depth_lists[0];
+            let friendCount = firstList ? firstList.length : 0; // Handle case where firstList might be undefined
+
+            // Calculate `friendCountTwoCount` dynamically if needed
+            let friendCountTwoCount = response.depth_lists.flat().length;
+
+            // Now call getBonusData and pass in a callback
+            getBonusData(function() {
+                // Now we can safely call the final callback with the updated totalBonus
+                if (callback && typeof callback === "function") {
+                    callback((totalBonus += parseFloat(response.bonus)), friendCount, friendLevel, friendCountTwoCount);
                 }
             });
         },
@@ -65,25 +124,26 @@ function getFriendsListData() {
             const friendList = $('.friendList');
             friendList.empty(); // Clear the friends list before adding new names
 
-            // Retrieve friends only from the first element of depth_lists
-            const firstList = response.depth_lists[0];
+            // Retrieve friends from all depth levels
+            const allFriends = response.depth_lists.flat(); // Flatten the array of arrays
 
-            if (firstList && firstList.length > 0) {
-                let friendCount = firstList.length; // Number of friends in the first list
+            if (allFriends.length > 0) {
+                for (let j = 0; j < response.depth_lists[0].length; j++) {
+                    let friendName = response.depth_lists[0][j];
 
-                for (let j = 0; j < firstList.length; j++) {
-                    let friendName = firstList[j];
+                    // Calculate dynamic friend count for this specific friend
+                    let friendCountTwoCount = allFriends.length; // Adjust this based on specific criteria if needed
 
                     // Call getFriendData with the friend's name and a callback function
-                    getFriendData(friendName, function(bonus, friendCount, friendLevel) {
+                    getFriendData(friendName, function(bonus, friendCount, friendLevel, dynamicCount) {
                         friendList.append(`
                             <div class="profitClaim">
                                 <div class="friendName">
-                                    <div class="friendLevel">${(friendLevel === 0) ? 1 : friendLevel} lvl</div>
+                                    <div class="friendLevel">${(friendLevel === 0) ? 1 : (friendLevel + 1)} lvl</div>
                                     <img src="../static/images/userAvatar.png" alt="" height="36px">
-                                    <div class="friendsCount">${friendCount}</div>Friends
+                                    <div class="friendsCount">${dynamicCount}</div>Friends
                                     <img src="../static/images/ellipse.png" alt="" height="24px">
-                                    <div class="earnedContainer">${bonus} Earned</div>
+                                    <div class="earnedContainer">${Math.round(bonus)} Earned</div>
                                 </div>
                             </div>`);
                     });
