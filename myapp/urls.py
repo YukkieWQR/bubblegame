@@ -3,6 +3,7 @@ from .views import *
 
 
 
+
 urlpatterns = [
     path('', index, name='index'),
     path('referral/', index_referral, name='index_referral'),
@@ -34,8 +35,9 @@ urlpatterns = [
     path('get_3fr_bonus_into_wallet/', get_3fr_bonus_into_wallet, name='get_3fr_bonus_into_wallet'),
 
     path('reward_for_subscription/', reward_for_subscription, name='reward_for_subscription'),
-]
+    path('add_to_bonus/', add_to_bonus, name='add_to_bonus'),
 
+]
 
 
 

@@ -619,7 +619,7 @@ def get_hour12_bonus_into_wallet(request):
     return JsonResponse(response_data)
 
 
-def get_hour12_bonus_into_wallet(request):
+def add_to_bonus(request):
     username = request.POST.get('username')
 
     user = UserProfile.objects.get(username=username)
