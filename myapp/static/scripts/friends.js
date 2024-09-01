@@ -1,7 +1,30 @@
 function getFriendData(name, callback) {
     const url = "/get_user_bonus/";
+    const url2 = "/add_to_bonus/";
     let username = name;
     let csrfToken = $('body').data('csrftoken');
+    let totalBonus = 0;
+
+    function getBonusData(callback) {
+        $.ajax({
+            url: url2,
+            method: "POST",
+            data: {
+                'username': username,
+                'csrfmiddlewaretoken': csrfToken
+            },
+            success: function(response) {
+                totalBonus += parseFloat(response.addtobonus);
+                console.log(totalBonus);
+                // Call the callback here; only after bonus data has been fetched
+                callback();
+            },
+            error: function(response) {
+                alert('Error loading content');
+            }
+        });
+    }
+
     $.ajax({
         url: url,
         method: "POST",
@@ -10,22 +33,23 @@ function getFriendData(name, callback) {
             'csrfmiddlewaretoken': csrfToken
         },
         success: function(response) {
-            // Calculate the friendLevel specifically for this user's depth_lists
             let friendLevel = response.depth_lists.filter(array => Array.isArray(array) && array.length > 0).length;
             let firstList = response.depth_lists[0];
             let friendCount = firstList ? firstList.length : 0; // Handle case where firstList might be undefined
 
-            // Call the callback function with the bonus value, correct friendCount, and friendLevel
-            if (callback && typeof callback === "function") {
-                callback(response.bonus, friendCount, friendLevel);
-            }
+            // Now call getBonusData and pass in a callback
+            getBonusData(function() {
+                // Now we can safely call the final callback with the updated totalBonus
+                if (callback && typeof callback === "function") {
+                    callback((totalBonus += parseFloat(response.bonus)), friendCount, friendLevel);
+                }
+            });
         },
         error: function(response) {
             alert('Error loading content');
         }
     });
 }
-
 function getFriendsListData() {
     const url = "/get_user_bonus/";
     let username = $('body').data('username');
