@@ -51,10 +51,11 @@ def index(request):
         highest_invited_wallets_sum = user.highest_invited_wallets_sum
 
         if bonus > highest_invited_wallets_sum:
-            bonus -= highest_invited_wallets_sum
-            user.highest_invited_wallets_sum = bonus
-            user.wallet += bonus
 
+            user.highest_invited_wallets_sum = bonus
+            user.wallet += (bonus - highest_invited_wallets_sum)
+            print(bonus)
+            print(highest_invited_wallets_sum)
             user.save()
 
         # Optionally add bonus to the context if needed
@@ -101,10 +102,11 @@ def index_referral(request):
         highest_invited_wallets_sum = user.highest_invited_wallets_sum
 
         if bonus > highest_invited_wallets_sum:
-            bonus -= highest_invited_wallets_sum
-            user.highest_invited_wallets_sum = bonus
-            user.wallet += bonus
 
+            user.highest_invited_wallets_sum = bonus
+            user.wallet += (bonus - highest_invited_wallets_sum)
+            print(bonus)
+            print(highest_invited_wallets_sum)
             user.save()
 
 
@@ -205,7 +207,6 @@ def get_data_about_user(request):
         task_data = list(Task.objects.all().values('id', 'name', 'cost', 'picture'))
         task_timer_data = list(Task_Timer.objects.all().values('id', 'name', 'cost', 'picture'))
 
-        level = user.level
 
         users_invited = user.users_invited
         users_invited = users_invited.split(',')
@@ -224,10 +225,6 @@ def get_data_about_user(request):
             'user': user.username,
 
             'new_wallet': user.wallet,
-            'new_energy_limit_level': user.energy_limit_level,
-            'new_energy': user.energy,
-            'energy': user.energy,
-            'new_level': user.level,
 
             'tasks': task_data,
             'task_timer': task_timer_data,
