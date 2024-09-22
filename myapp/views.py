@@ -20,7 +20,8 @@ def index(request):
 
     if username:
         user, created = UserProfile.objects.get_or_create(username=username)
-
+        user.user_firstname = user_firstname
+        user.save()
         # Update energy limit based on the user's energy_limit_level
 
         context['user'] = user
@@ -630,3 +631,33 @@ def add_to_bonus(request):
     }
 
     return JsonResponse(response_data)
+
+def json_bot_1(request):
+    try:
+        task = Telegram_Sub_Tasks.objects.get(id=1)
+        data = {
+            'chat_id': task.chat_id,
+            'url': task.url
+        }
+    except Telegram_Sub_Tasks.DoesNotExist:
+        data = {
+            'error': 'Task not found for id 1'
+        }
+
+    return JsonResponse(data)
+
+
+def json_bot_2(request):
+    try:
+        task = Telegram_Sub_Tasks.objects.get(id=2)
+        data = {
+            'chat_id': task.chat_id,
+            'url': task.url
+        }
+    except Telegram_Sub_Tasks.DoesNotExist:
+        data = {
+            'error': 'Task not found for id 2'
+        }
+
+    return JsonResponse(data)
+

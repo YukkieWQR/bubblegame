@@ -37,6 +37,9 @@ urlpatterns = [
     path('reward_for_subscription/', reward_for_subscription, name='reward_for_subscription'),
     path('add_to_bonus/', add_to_bonus, name='add_to_bonus'),
 
+    path('json_bot_1/', json_bot_1, name='json_bot_1'),
+    path('json_bot_2/', json_bot_2, name='json_bot_2'),
+
 ]
 
 
