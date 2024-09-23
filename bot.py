@@ -32,10 +32,14 @@ async def start(message: types.Message):
 
 @dp.message_handler(commands=['adminpanel'])
 async def admin(message: types.Message):
-    invited = message.from_user.id
-    url = f'{domen}/admin'
-    markup = types.InlineKeyboardMarkup()
-    markup.add(types.InlineKeyboardButton('Open app', web_app=WebAppInfo(url=url)))
-    await message.answer("Let's start, open the admin panel.", reply_markup=markup)
-
+    print(message.from_user.id)
+    if message.from_user.id == 1351813206 or 6436266975:
+        url = f'{domen}/admin'
+        markup = types.InlineKeyboardMarkup()
+        markup.add(types.InlineKeyboardButton('Open app', web_app=WebAppInfo(url=url)))
+        await message.answer("Let's start, open the admin panel.", reply_markup=markup)
+    else:
+        print('not allowed')
+        pass
 executor.start_polling(dp)
+

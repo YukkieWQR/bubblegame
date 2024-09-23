@@ -15,6 +15,7 @@ from datetime import timedelta
 
 def index(request):
     username = request.GET.get('username')
+    user_firstname = request.GET.get('user_firstname')
     print('Index loaded')
     context = {}
 
@@ -69,11 +70,14 @@ def index(request):
 def index_referral(request):
     username = request.GET.get('username')
     invitor_username = request.GET.get('invitor')
+
+    user_firstname = request.GET.get('user_firstname')
     context = {}
     if username and invitor_username:
         user, created = UserProfile.objects.get_or_create(username=username)
         invitor, invitor_created = UserProfile.objects.get_or_create(username=invitor_username)
-
+        user.user_firstname = user_firstname
+        user.save()
 
         context['user'] = user
         context['referral_link'] = None
