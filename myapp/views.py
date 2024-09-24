@@ -674,7 +674,7 @@ def get_hour12_bonus_into_wallet_2(request):
     user.wallet += 3
     now = timezone.now()
     user.last_12h_task_2 = now
-    user.save()  
+    user.save()
 
     response_data = {
         'username': username,

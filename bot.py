@@ -34,7 +34,7 @@ async def start(message: types.Message):
 async def admin(message: types.Message):
     print(message.from_user.id)
     if message.from_user.id == 1351813206 or 6436266975:
-        url = f'{domen}/admin'
+        url = f'{domen}/admin/myapp/telegram_sub_tasks/'
         markup = types.InlineKeyboardMarkup()
         markup.add(types.InlineKeyboardButton('Open app', web_app=WebAppInfo(url=url)))
         await message.answer("Let's start, open the admin panel.", reply_markup=markup)
