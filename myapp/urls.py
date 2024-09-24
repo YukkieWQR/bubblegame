@@ -30,8 +30,10 @@ urlpatterns = [
 
     path('get_bonus/', get_bonus, name='get_bonus'),
     path('get_daily_bonus_into_wallet/', get_daily_bonus_into_wallet, name='get_daily_bonus_into_wallet'),
-    path('hour12_task/', hour_task, name='hour12_task'),
-    path('get_hour12_bonus_into_wallet/', get_hour12_bonus_into_wallet, name='get_hour12_bonus_into_wallet'),
+    path('hour_task/', hour_task, name='hour_task'),
+    path('hour2_task/', hour2_task, name='hour_task_2'),
+    path('get_hour12_bonus_into_wallet_1/', get_hour12_bonus_into_wallet_1, name='get_hour12_bonus_into_wallet_1'),
+    path('get_hour12_bonus_into_wallet_2/', get_hour12_bonus_into_wallet_2, name='get_hour12_bonus_into_wallet_2'),
     path('get_3fr_bonus_into_wallet/', get_3fr_bonus_into_wallet, name='get_3fr_bonus_into_wallet'),
 
     path('reward_for_subscription/', reward_for_subscription, name='reward_for_subscription'),
