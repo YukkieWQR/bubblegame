@@ -164,14 +164,14 @@ function threeFriendsTaskEligible(disabledElem) {
 })();
 
 (function () {
-    const url = "/hour12_task/";
+    const url = "/hour_task/";
     let username = $('body').data('username');
     let csrfToken = $('body').data('csrftoken');
 
     function attachStartButtonListener(redirectUrl) {
         // Attach the event listener to the .startButton
         $('.startButton').on('click', function() {
-            const claimUrl = "/get_hour12_bonus_into_wallet/";
+            const claimUrl = "/get_hour12_bonus_into_wallet_1/";
             $.ajax({
                 url: claimUrl,
                 method: "POST",
@@ -269,6 +269,120 @@ function threeFriendsTaskEligible(disabledElem) {
 
                 // Update the interface inside .timerSet
                 $('.timerSet').text(countdownDisplay);
+            }
+        }, 1000);
+    }
+
+    // Start the initial fetch of task data
+    fetchTaskData();
+})();
+
+(function () {
+    const url = "/hour2_task/";
+    let username = $('body').data('username');
+    let csrfToken = $('body').data('csrftoken');
+
+    function attachStartButtonListener(redirectUrl) {
+        // Attach the event listener to the .startButton
+        $('.secondStartButton').on('click', function() {
+            const claimUrl = "/get_hour12_bonus_into_wallet_2/";
+            $.ajax({
+                url: claimUrl,
+                method: "POST",
+                data: {
+                    'username': username,
+                    'csrfmiddlewaretoken': csrfToken
+                },
+                success: function(response) {
+                    // Handle successful reward claim here
+                    console.log('Reward claimed successfully');
+                    // After claiming the reward, start the cycle again
+                    fetchTaskData();
+                    Telegram.WebApp.openLink(redirectUrl);
+                },
+                error: function(response) {
+                    console.error('Error processing reward.');
+                }
+            });
+        });
+    }
+
+    function fetchTaskData() {
+        $.ajax({
+            url: url,
+            method: "POST",
+            data: {
+                'username': username,
+                'csrfmiddlewaretoken': csrfToken
+            },
+            success: function(response) {
+                let taskTimer = response.time_until_active;
+
+                if (response.status === false) {
+                    // Status is false: Set button to inactive
+                    $('.second12hTaskClaimContainer').css('opacity', '0.5');
+                    $('.second12hTaskClaimContainer').attr('disabled', true);
+                    $('.second12hTaskClaimContainer').html('<div class="startButton secondStartButton">Start</div>');
+
+                    // Prevent actions if the button is inactive
+                    $('.second12hTaskClaimContainer').on('click', function(e) {
+                        e.preventDefault();
+                    });
+
+                    if (taskTimer <= 0) {
+                        $('.secondTimerSettimerSet').text('Now!');
+                    } else {
+                        startCountdown(taskTimer, response.link);
+                    }
+
+                } else {
+                    // Status is true: Set button to active
+                    $('.second12hTaskClaimContainer').css('opacity', '1');
+                    $('.second12hTaskClaimContainer').attr('disabled', false);
+                    $('.second12hTaskClaimContainer').html('<div class="startButton secondStartButton">Start</div>');
+
+                    attachStartButtonListener(response.link);
+
+                    if (taskTimer <= 0) {
+                        $('.secondTimerSet').text('Now!');
+                    } else {
+                        startCountdown(taskTimer, response.link);
+                    }
+                }
+            },
+            error: function(response) {
+                console.error('Error processing task.');
+            }
+        });
+    }
+
+    function startCountdown(taskTimer, redirectUrl) {
+        let totalSeconds = Math.floor(taskTimer * 3600);
+
+        let countdown = setInterval(function() {
+            if (totalSeconds <= 0) {
+                clearInterval(countdown);
+                console.log('Timer finished');
+
+                // Replace content in .12hTaskClaimContainer and set timer text to 'Now!'
+                $('.second12hTaskClaimContainer').empty();
+                $('.second12hTaskClaimContainer').html('<div class="startButton secondStartButton">Start</div>');
+                $('.second12hTaskClaimContainer').css('opacity', '1');
+                $('.secondTimerSet').text('Now!');
+
+                // Re-attach event listener after timer finishes
+                attachStartButtonListener(redirectUrl);
+
+            } else {
+                totalSeconds--;
+                let countdownHours = Math.floor(totalSeconds / 3600);
+                let countdownMinutes = Math.floor((totalSeconds % 3600) / 60);
+                let countdownSeconds = totalSeconds % 60;
+
+                let countdownDisplay = `${countdownHours}h ${countdownMinutes}m`;
+
+                // Update the interface inside .timerSet
+                $('.secondTimerSet').text(countdownDisplay);
             }
         }, 1000);
     }
