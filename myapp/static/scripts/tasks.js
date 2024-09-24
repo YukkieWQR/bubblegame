@@ -284,7 +284,7 @@ function threeFriendsTaskEligible(disabledElem) {
 
     function attachStartButtonListener(redirectUrl) {
         // Attach the event listener to the .startButton
-        $('.secondStartButton').on('click', function() {
+        $('#startButton').on('click', function() {
             const claimUrl = "/get_hour12_bonus_into_wallet_2/";
             $.ajax({
                 url: claimUrl,
@@ -297,7 +297,7 @@ function threeFriendsTaskEligible(disabledElem) {
                     // Handle successful reward claim here
                     console.log('Reward claimed successfully');
                     // After claiming the reward, start the cycle again
-                    fetchTaskData();
+                    fetchTaskData2();
                     Telegram.WebApp.openLink(redirectUrl);
                 },
                 error: function(response) {
@@ -307,7 +307,7 @@ function threeFriendsTaskEligible(disabledElem) {
         });
     }
 
-    function fetchTaskData() {
+    function fetchTaskData2() {
         $.ajax({
             url: url,
             method: "POST",
@@ -320,31 +320,31 @@ function threeFriendsTaskEligible(disabledElem) {
 
                 if (response.status === false) {
                     // Status is false: Set button to inactive
-                    $('.second12hTaskClaimContainer').css('opacity', '0.5');
-                    $('.second12hTaskClaimContainer').attr('disabled', true);
-                    $('.second12hTaskClaimContainer').html('<div class="startButton secondStartButton">Start</div>');
+                    $('#12hTaskClaimContainer').css('opacity', '0.5');
+                    $('#12hTaskClaimContainer').attr('disabled', true);
+                    $('#12hTaskClaimContainer').html('<div id="startButton">Start</div>');
 
                     // Prevent actions if the button is inactive
-                    $('.second12hTaskClaimContainer').on('click', function(e) {
+                    $('#12hTaskClaimContainer').on('click', function(e) {
                         e.preventDefault();
                     });
 
                     if (taskTimer <= 0) {
-                        $('.secondTimerSettimerSet').text('Now!');
+                        $('#timerSet').text('Now!');
                     } else {
                         startCountdown(taskTimer, response.link);
                     }
 
                 } else {
                     // Status is true: Set button to active
-                    $('.second12hTaskClaimContainer').css('opacity', '1');
-                    $('.second12hTaskClaimContainer').attr('disabled', false);
-                    $('.second12hTaskClaimContainer').html('<div class="startButton secondStartButton">Start</div>');
+                    $('#12hTaskClaimContainer').css('opacity', '1');
+                    $('#12hTaskClaimContainer').attr('disabled', false);
+                    $('#12hTaskClaimContainer').html('<div id="startButton">Start</div>');
 
                     attachStartButtonListener(response.link);
 
                     if (taskTimer <= 0) {
-                        $('.secondTimerSet').text('Now!');
+                        $('#timerSet').text('Now!');
                     } else {
                         startCountdown(taskTimer, response.link);
                     }
@@ -365,10 +365,10 @@ function threeFriendsTaskEligible(disabledElem) {
                 console.log('Timer finished');
 
                 // Replace content in .12hTaskClaimContainer and set timer text to 'Now!'
-                $('.second12hTaskClaimContainer').empty();
-                $('.second12hTaskClaimContainer').html('<div class="startButton secondStartButton">Start</div>');
-                $('.second12hTaskClaimContainer').css('opacity', '1');
-                $('.secondTimerSet').text('Now!');
+                $('#12hTaskClaimContainer').empty();
+                $('#12hTaskClaimContainer').html('<div id="startButton">Start</div>');
+                $('#12hTaskClaimContainer').css('opacity', '1');
+                $('#timerSet').text('Now!');
 
                 // Re-attach event listener after timer finishes
                 attachStartButtonListener(redirectUrl);
@@ -382,13 +382,13 @@ function threeFriendsTaskEligible(disabledElem) {
                 let countdownDisplay = `${countdownHours}h ${countdownMinutes}m`;
 
                 // Update the interface inside .timerSet
-                $('.secondTimerSet').text(countdownDisplay);
+                $('#timerSet').text(countdownDisplay);
             }
         }, 1000);
     }
 
     // Start the initial fetch of task data
-    fetchTaskData();
+    fetchTaskData2();
 })();
 
 $('.moreTasksRedirectButton').on('click', function () {

@@ -898,6 +898,18 @@ img {
     letter-spacing: -0.03em;
     color: #fff;
 }
+#startButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: 600 13px var(--font-family);
+    letter-spacing: -0.03em;
+    color: var(--white);
+    border-radius: 14px;
+    width: 60px;
+    height: 29px;
+    background: linear-gradient(89deg, #d1317a 0%, #da294c 17.57%, #dd263d 35.33%, #e87d31 81.66%, #eda62c 91.09%, #f2d026 98.64%);
+}
 #splash-screen {
     position: fixed;
     width: 100%;
@@ -1284,6 +1296,14 @@ img {
     color: var(--white);
 }
 .timerSet {
+    font: 500 12px var(--font-family);
+    letter-spacing: -0.03em;
+    background: linear-gradient(90deg, #ea8e2f 0%, #eb962d 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+#timerSet {
     font: 500 12px var(--font-family);
     letter-spacing: -0.03em;
     background: linear-gradient(90deg, #ea8e2f 0%, #eb962d 100%);
