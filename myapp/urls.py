@@ -41,7 +41,10 @@ urlpatterns = [
 
     path('json_bot_1/', json_bot_1, name='json_bot_1'),
     path('json_bot_2/', json_bot_2, name='json_bot_2'),
+    path('get_domen/', get_domen, name='get_domen'),
+    path('get_bot_url/', get_bot_url, name='get_bot_url'),
 
+    path('json_bot_stats/', json_bot_stats, name='json_bot_stats'),
 ]
 
 

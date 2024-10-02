@@ -1,2 +1,2 @@
-bot_token = '7348387250:AAHu-3ik9G3vcS1oG6FTkxnL0tF_eoiC314'
-bot_token_community = '7348387250:AAHu-3ik9G3vcS1oG6FTkxnL0tF_eoiC314'
+bot_token = '7009090188:AAE_604qqnbdZphvQOjj_PTSbuxt3dreZnE'
+bot_token_community = '7936148260:AAH7nLuzGtqC6B6wWCJce8C-KSs5J23CYoo'

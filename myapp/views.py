@@ -22,8 +22,9 @@ def index(request):
     if username:
         user, created = UserProfile.objects.get_or_create(username=username)
         user.user_firstname = user_firstname
+        now = timezone.now()
+        user.last_online = now
         user.save()
-        # Update energy limit based on the user's energy_limit_level
 
         context['user'] = user
         context['referral_link'] = None
@@ -724,3 +725,41 @@ def json_bot_2(request):
 
     return JsonResponse(data)
 
+
+
+
+def json_bot_stats(request):
+    now = timezone.now()
+    today = now.date()
+    total_users = UserProfile.objects.count()
+    users_joined_today = UserProfile.objects.filter(joined__date=today).count()
+    users_joined_this_month = UserProfile.objects.filter(joined__year=today.year, joined__month=today.month).count()
+    users_online_today = UserProfile.objects.filter(last_online__date=today).count()
+
+    data = {
+        'total_users': total_users,
+        'users_joined_today': users_joined_today,
+        'users_joined_this_month': users_joined_this_month,
+        'users_online_today': users_online_today,
+    }
+
+    return JsonResponse(data)
+
+from url import *
+def get_bot_url(request):
+
+    response = {
+        'bot_url': bot_url,
+
+    }
+
+    return JsonResponse(response)
+
+def get_domen(request):
+
+    response = {
+        'domen': domen,
+
+    }
+
+    return JsonResponse(response)
