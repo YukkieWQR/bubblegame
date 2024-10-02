@@ -125,7 +125,31 @@ function threeFriendsTaskEligible(disabledElem) {
         }
     });
 }
-
+function leaveTheMatrixTaskEligible(disabledElem) {
+    const url = "/hour2_task/";
+    let username = $('body').data('username');
+    let csrfToken = $('body').data('csrftoken');
+    $.ajax({
+        url: url,
+        method: "POST",
+        data: {
+            'username': username,
+            'csrfmiddlewaretoken': csrfToken
+        },
+        success: function(response){
+            if (!response.status) {
+                disabledElem.disabled = true;  // Properly disable the button
+                disabledElem.style.opacity = '0.5';  // Visually indicate it's disabled
+                disabledElem.textContent = "Done"
+            } else {
+                disabledElem.textContent = "Start"
+            }
+        },
+        error: function(response){
+            console.error('Error checking eligibility.');
+        }
+    });
+}
 (function () {
     let friendsTaskClaim = document.querySelector('.friendsTaskClaim');
     let friendsTaskClaimContainer = document.querySelector('.taskClaimContainer');
@@ -278,120 +302,38 @@ function threeFriendsTaskEligible(disabledElem) {
 })();
 
 (function () {
+    let friendsTaskClaim = document.querySelector('#startButton');
+    leaveTheMatrixTaskEligible(friendsTaskClaim);
     const url = "/hour2_task/";
     let username = $('body').data('username');
     let csrfToken = $('body').data('csrftoken');
-
-    function attachStartButtonListener(redirectUrl) {
-        // Attach the event listener to the .startButton
-        $('#startButton').on('click', function() {
-            const claimUrl = "/get_hour12_bonus_into_wallet_2/";
-            $.ajax({
-                url: claimUrl,
-                method: "POST",
-                data: {
-                    'username': username,
-                    'csrfmiddlewaretoken': csrfToken
-                },
-                success: function(response) {
-                    // Handle successful reward claim here
-                    console.log('Reward claimed successfully');
-                    // After claiming the reward, start the cycle again
-                    fetchTaskData2();
-                    Telegram.WebApp.openLink(redirectUrl);
-                },
-                error: function(response) {
-                    console.error('Error processing reward.');
-                }
-            });
-        });
-    }
-
-    function fetchTaskData2() {
+    // Attach the event listener to the .startButton
+    $('#startButton').on('click', function() {
+        let friendsTaskClaim = document.querySelector('#startButton');
+        if (friendsTaskClaim.disabled) {
+            event.preventDefault();  // Prevent the click event if button is disabled
+            return;  // Stop further execution
+        }
+        leaveTheMatrixTaskEligible(friendsTaskClaim);
+        const claimUrl = "/get_hour12_bonus_into_wallet_2/";
         $.ajax({
-            url: url,
+            url: claimUrl,
             method: "POST",
             data: {
                 'username': username,
                 'csrfmiddlewaretoken': csrfToken
             },
-            success: function(response) {
-                let taskTimer = response.time_until_active;
-
-                if (response.status === false) {
-                    // Status is false: Set button to inactive
-                    $('#12hTaskClaimContainer').css('opacity', '0.5');
-                    $('#12hTaskClaimContainer').attr('disabled', true);
-                    $('#12hTaskClaimContainer').html('<div id="startButton">Start</div>');
-
-                    // Prevent actions if the button is inactive
-                    $('#12hTaskClaimContainer').on('click', function(e) {
-                        e.preventDefault();
-                    });
-
-                    if (taskTimer <= 0) {
-                        $('#timerSet').text('Now!');
-                    } else {
-                        startCountdown(taskTimer, response.link);
-                    }
-
-                } else {
-                    // Status is true: Set button to active
-                    $('#12hTaskClaimContainer').css('opacity', '1');
-                    $('#12hTaskClaimContainer').attr('disabled', false);
-                    $('#12hTaskClaimContainer').html('<div id="startButton">Start</div>');
-
-                    attachStartButtonListener(response.link);
-
-                    if (taskTimer <= 0) {
-                        $('#timerSet').text('Now!');
-                    } else {
-                        startCountdown(taskTimer, response.link);
-                    }
-                }
+            success: function (response) {
+                Telegram.WebApp.openLink(redirectUrl);
             },
-            error: function(response) {
-                console.error('Error processing task.');
+            error: function (response) {
+                console.error('Error processing reward.');
             }
         });
-    }
-
-    function startCountdown(taskTimer, redirectUrl) {
-        let totalSeconds = Math.floor(taskTimer * 3600);
-
-        let countdown = setInterval(function() {
-            if (totalSeconds <= 0) {
-                clearInterval(countdown);
-                console.log('Timer finished');
-
-                // Replace content in .12hTaskClaimContainer and set timer text to 'Now!'
-                $('#12hTaskClaimContainer').empty();
-                $('#12hTaskClaimContainer').html('<div id="startButton">Start</div>');
-                $('#12hTaskClaimContainer').css('opacity', '1');
-                $('#timerSet').text('Now!');
-
-                // Re-attach event listener after timer finishes
-                attachStartButtonListener(redirectUrl);
-
-            } else {
-                totalSeconds--;
-                let countdownHours = Math.floor(totalSeconds / 3600);
-                let countdownMinutes = Math.floor((totalSeconds % 3600) / 60);
-                let countdownSeconds = totalSeconds % 60;
-
-                let countdownDisplay = `${countdownHours}h ${countdownMinutes}m`;
-
-                // Update the interface inside .timerSet
-                $('#timerSet').text(countdownDisplay);
-            }
-        }, 1000);
-    }
-
-    // Start the initial fetch of task data
-    fetchTaskData2();
+    });
 })();
 
 $('.moreTasksRedirectButton').on('click', function () {
-    Telegram.WebApp.openLink('https://t.me/lionkombatgame_bot')
+    Telegram.WebApp.openLink('https://t.me/BubblesNice_bot')
 })
 

@@ -444,4 +444,5 @@ $(document).ready(function () {
 });
 Telegram.WebApp.ready();
 Telegram.WebApp.expand();
+Telegram.WebApp.setHeaderColor("#000000")
 Telegram.WebApp.setSwipeEnabled(false);
