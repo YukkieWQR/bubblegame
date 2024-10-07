@@ -18,13 +18,16 @@ async def start(message: types.Message):
     args = message.get_args().split('=')
     if len(args) == 2 and args[0] == 'startapp':
         invitor = args[1]
+
         url = f'{domen}/referral/?username={invited}&invitor={invitor}&user_firstname={name}'
+        print(url)
         markup = types.InlineKeyboardMarkup()
         markup.add(types.InlineKeyboardButton('Open app', web_app=WebAppInfo(url=url)))
         await message.answer(f"Let's start, open the web app. You were invited by {invitor}.",
                              reply_markup=markup)
     else:
         url = f'{domen}/?username={invited}&user_firstname={name}'
+        print(url)
         markup = types.InlineKeyboardMarkup()
         markup.add(types.InlineKeyboardButton('Open app', web_app=WebAppInfo(url=url)))
         await message.answer("Let's start, open the web app.", reply_markup=markup)

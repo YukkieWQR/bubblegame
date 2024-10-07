@@ -33,7 +33,7 @@ async def load_game(message: types.Message):
         [types.InlineKeyboardButton(text="Tasks", callback_data="checkbuttons")]
     ]
     keyboard = types.InlineKeyboardMarkup(inline_keyboard=buttonsstart)
-    await message.answer(f"Hello, {message.from_user.full_name}, let's start!", reply_markup=keyboard)
+    await message.answer(f"Hello, {message.from_user.full_name}, let's see community tasks!", reply_markup=keyboard)
 
 
 @dp.callback_query(F.data == "checkbuttons")
