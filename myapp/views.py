@@ -173,7 +173,7 @@ def reward_for_subscription(request):
         # Check if the reward_id already exists in telegram_rewards
         existing_rewards = user.telegram_rewards.split(',')
         if reward_id not in existing_rewards:
-            user.wallet += Decimal('3333')  # Add 3333 to the user's wallet
+            user.wallet += Decimal('999')
             user.telegram_rewards = f"{user.telegram_rewards},{reward_id}" if user.telegram_rewards else reward_id
 
         user.save()
@@ -640,7 +640,7 @@ def get_hour12_bonus_into_wallet_1(request):
     username = request.POST.get('username')
 
     user = UserProfile.objects.get(username=username)
-    user.wallet += 3
+    user.wallet += 333
     now = timezone.now()
     user.last_12h_task_1 = now
     user.save()  # Save the changes
@@ -657,7 +657,7 @@ def get_hour12_bonus_into_wallet_2(request):
     username = request.POST.get('username')
 
     user = UserProfile.objects.get(username=username)
-    user.wallet += 3
+    user.wallet += 333
     now = timezone.now()
     user.last_12h_task_2 = now
     user.save()

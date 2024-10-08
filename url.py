@@ -1,3 +1,2 @@
-domen = 'https://yukkie.pythonanywhere.com'
-bot_url = 'https://t.me/lionkombatgame_bot'
-
+domen = 'https://yukkiewqr.eu.pythonanywhere.com'
+bot_url = 'https://t.me/BubblesNice_bot'
