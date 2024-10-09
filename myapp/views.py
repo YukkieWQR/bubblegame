@@ -120,11 +120,13 @@ def index_referral(request):
 
 
         if not user.invited_by:
+
             user.invited_by = invitor.username
             invitor.users_invited += f"{username},"
+
             user.save()
             invitor.save()
-        user.save()
+
         context['user'] = user
         context['referral_link'] = None
     return render(request, 'index.html', context)
