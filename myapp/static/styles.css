@@ -590,10 +590,12 @@ img {
 }
 .inviteFriendsHeader {
     margin: 15px 2rem 0 2rem;
-    font: 500 28px var(--font-family);
-    letter-spacing: -0.01em;
+    font-family: var(--font-family);
+    font-weight: 800;
+    font-size: 28px;
+    line-height: 100%;
     text-align: center;
-    color: var(--white);
+    color: #fff;
 }
 .inviteContainer {
     display: flex;
@@ -685,8 +687,9 @@ img {
     align-items: center;
     justify-content: space-between;
     flex-direction: column;
-    background: #121212;
-    border-radius: 8px;
+    background: linear-gradient(138deg, #1c3415 0%, #193112 100%);
+    border: 1px solid springgreen;
+    border-radius: 49px;
     min-height: 54px;
     height: 54px;
     width: 100%;
@@ -712,9 +715,10 @@ img {
     align-items: center;
     height: 54px;
     width: 100%;
-    font: 700 15px var(--font-family);
-    letter-spacing: -0.03em;
-    background: linear-gradient(90deg, #dd273d 0%, #e14d37 100%);
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 15px;
+    background: linear-gradient(180deg, #457432 0%, #81d060 100%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -725,11 +729,13 @@ img {
     color: var(--white);
 }
 .refferalText {
-    font: 500 16px var(--font-family);
-    letter-spacing: -0.03em;
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 100%;
     text-align: center;
-    color: var(--white);
-    margin: 0 2rem 28px 2rem;
+    color: #fff;
+    margin: 0 0 30px 0;
 }
 .earnedContainer {
     font: 600 18px var(--font-family);
