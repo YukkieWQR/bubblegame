@@ -89,12 +89,12 @@ def index_referral(request):
             return JsonResponse({'error': 'Invalid format for depth_lists'}, status=500)
 
         bonus_multipliers = {
-            0: Decimal('0.40'),  # Index 0 corresponds to level 1
-            1: Decimal('0.20'),  # Index 1 corresponds to level 2
-            2: Decimal('0.10'),  # Index 2 corresponds to level 3
-            3: Decimal('0.05'),  # Index 3 corresponds to level 4
-            4: Decimal('0.02'),  # Index 4 corresponds to level 5
-            5: Decimal('0.01'),  # Index 5 corresponds to level 6
+            0: Decimal('0.40'),
+            1: Decimal('0.20'),
+            2: Decimal('0.10'),
+            3: Decimal('0.05'),
+            4: Decimal('0.02'),
+            5: Decimal('0.01'),
         }
 
         # Calculate the bonus
