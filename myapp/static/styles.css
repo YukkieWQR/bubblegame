@@ -1,8 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Nova+Mono&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nova+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 :root {
-    --font-family: "Montserrat", sans-serif;
-    --second-family: "Nova Mono", sans-serif;
+    --font-family: "Poppins", sans-serif;
 }
 :root {
     --gray-nav-bar: #7f7f7f;
@@ -34,7 +32,7 @@ img {
     height: 100vh;
     display: flex;
     flex-direction: column;
-    background: #19181d;
+    background: linear-gradient(180deg, #1f4614 0%, #192416 100%);
 }
 .wheel-container {
     position: relative;
@@ -291,13 +289,14 @@ img {
     display: flex;
     align-items: center;
     justify-content: center;
-    font: 600 13px var(--font-family);
-    letter-spacing: -0.03em;
-    color: var(--white);
+    font-family: var(--font-family), serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: #fff;
     border-radius: 14px;
     width: 60px;
     height: 29px;
-    background: #727272;
+    background: linear-gradient(138deg, #448a27 0%, #81d060 100%);
 }
 .doneButton {
     display: flex;
@@ -315,14 +314,15 @@ img {
 .startButton {
     display: flex;
     align-items: center;
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 15px;
+    color: #27481b;
     justify-content: center;
-    font: 600 13px var(--font-family);
-    letter-spacing: -0.03em;
-    color: var(--white);
     border-radius: 14px;
     width: 60px;
     height: 29px;
-    background: linear-gradient(89deg, #d1317a 0%, #da294c 17.57%, #dd263d 35.33%, #e87d31 81.66%, #eda62c 91.09%, #f2d026 98.64%);
+    background: #fff;
 }
 .booster {
     display: flex;
@@ -373,10 +373,11 @@ img {
     background: #151515;
 }
 .menuSection {
-    font: 600 10px var(--font-family);
-    letter-spacing: -0.04em;
+    font-family: var(--font-family);
+    font-weight: 700;
+    font-size: 12px;
     text-align: center;
-    color: var(--gray-nav-bar);
+    color: #465940;
     gap: 0.5rem;
     display: flex;
     align-items: center;
@@ -387,9 +388,6 @@ img {
     width: inherit;
     margin: 0 0.175rem;
     padding: 0.2rem 0;
-}
-.menuSection img {
-    width: 33px;
 }
 .menuSection div {
     display: flex;
@@ -405,14 +403,24 @@ img {
     color: #fff !important;
     background: #6588cc;
 }
+#game img {
+    width: 38px;
+    height: 49px;
+}
+.tasks img {
+    width: 40px;
+    height: 36px;
+}
+.friends img {
+    width: 44px;
+    height: 34px;
+}
 .activePage {
-    font: 600 10px var(--font-family);
-    letter-spacing: -0.04em;
+    font-family: var(--font-family);
+    font-weight: 700;
+    font-size: 12px;
     text-align: center;
-    background: linear-gradient(89deg, #d1317a 0%, #da294c 17.57%, #dd263d 35.33%, #e87d31 81.66%, #eda62c 91.09%, #f2d026 98.64%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #fff;
 }
 .dailyBoost {
     display: flex;
@@ -632,9 +640,11 @@ img {
     padding: 18px 16px;
 }
 #rewardCost {
-    font: 600 11px var(--font-family);
-    letter-spacing: -0.04em;
-    background: linear-gradient(89deg, #d1317a 0%, #da294c 17.57%, #dd263d 35.33%, #e87d31 81.66%, #eda62c 91.09%, #f2d026 98.64%);
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 112%;
+    background: linear-gradient(138deg, #448a27 0%, #81d060 100%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -793,11 +803,11 @@ img {
     align-items: center;
     justify-content: flex-start;
     width: -webkit-fill-available;
-    margin: 0 1rem;
-    margin-top: 40px;
-    font: 600 18px var(--font-family);
-    letter-spacing: -0.02em;
-    color: var(--white);
+    margin: 15px 1rem;
+    font-family: var(--font-family), serif;
+    font-weight: 800;
+    font-size: 30px;
+    color: #fff;
 }
 .taskContainer {
     display: flex;
@@ -901,14 +911,15 @@ img {
 #startButton {
     display: flex;
     align-items: center;
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 15px;
+    color: #27481b;
     justify-content: center;
-    font: 600 13px var(--font-family);
-    letter-spacing: -0.03em;
-    color: var(--white);
     border-radius: 14px;
     width: 60px;
     height: 29px;
-    background: linear-gradient(89deg, #d1317a 0%, #da294c 17.57%, #dd263d 35.33%, #e87d31 81.66%, #eda62c 91.09%, #f2d026 98.64%);
+    background: #fff;
 }
 #splash-screen {
     position: fixed;
@@ -1226,12 +1237,10 @@ img {
     }
 }
 #wallet {
-    font: 1000 28px var(--second-family);
-    letter-spacing: -0.01em;
-    background: linear-gradient(89deg, #d1317a 0%, #da294c 17.57%, #dd263d 35.33%, #e87d31 81.66%, #eda62c 91.09%, #f2d026 98.64%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-family: var(--font-family);
+    font-weight: 800;
+    font-size: 71px;
+    color: #fff;
 }
 .bubbles {
     font: 400 20px var(--font-family);
@@ -1296,9 +1305,11 @@ img {
     color: var(--white);
 }
 .timerSet {
-    font: 500 12px var(--font-family);
-    letter-spacing: -0.03em;
-    background: linear-gradient(90deg, #ea8e2f 0%, #eb962d 100%);
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 112%;
+    background: linear-gradient(138deg, #448a27 0%, #81d060 100%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -1343,17 +1354,24 @@ img {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
+.walletContainer {
+    position: absolute;
+    bottom: 6rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+}
 .footer {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding-bottom: 15px;
-    padding-top: 10px;
-    border-radius: 12px 12px 0 0;
-    height: 61px;
+    bottom: 10px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    width: 96%;
+    border-radius: 90px;
+    height: 71px;
     display: flex;
-    background: #121212;
+    background: rgba(0, 0, 0, 0.2);
     align-items: center;
     justify-content: space-between;
 }

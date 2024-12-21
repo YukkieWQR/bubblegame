@@ -16,9 +16,14 @@
         <div id="dynamicContent">
             <div style="position: fixed; width: 100%; height: 100%">
             <div class="main">
-                <img src="../static/images/bubbles.png" alt="" height="192px" style="margin-top: 8rem">
-                <div id="wallet">{{ user.wallet|floatformat:"0" }}</div>
-                <div class="bubbles">BUBBLES</div>
+                <div>
+                    <img src="../static/images/backgroundAdd.png" alt=""  style="width: 75%;max-width: 400px;position: absolute;left: 50%;top: 35%;transform: translate(-50%, -50%);">
+                    <img src="../static/images/bubbles.png"  alt="" style="width: 50%;max-width: 280px;position: absolute;left: 50%;top: 35%;transform: translate(-50%, -50%);">
+                </div>
+                <div class="walletContainer">
+                    <img src="../static/images/pickleCoin.png" alt="" height="59px">
+                    <div id="wallet">{{ user.wallet|floatformat:"0" }}</div>
+                </div>
                 <div class="claimBubblesContainer">
 
                 </div>
